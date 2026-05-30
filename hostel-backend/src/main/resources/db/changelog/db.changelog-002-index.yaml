@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: initial-index
+      author: Leroy
+      changes:
+        - sqlFile:
+            path: scripts/index.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+            stripComments: true
+
+

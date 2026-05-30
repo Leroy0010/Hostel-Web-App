@@ -1,0 +1,132 @@
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  docker:
+    compose:
+      enabled: false
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        jdbc:
+          time_zone: UTC
+    open-in-view: false
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+  application:
+    name: ${APPLICATION_NAME:HOSTELBOOKING}
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            # Spring Security OAuth2 callback URI
+            redirect-uri: ${GOOGLE_REDIRECT_URI:http://localhost:8080/oauth2/code/google}
+            scope:
+              - email
+              - profile
+              - openid
+            authorization-grant-type: authorization_code
+            client-name: Google
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v2/userinfo
+            jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+            user-name-attribute: email
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:465}
+    username: ${MAIL_USERNAME:fallback-email@gmail.com}
+    password: ${MAIL_PASSWORD:fallback-password}
+    properties:
+      mail:
+        debug: false
+        smtp:
+          auth: ${MAIL_SMTP_AUTH:true}
+          starttls:
+            enabled: ${MAIL_SMTP_STARTTLS_ENABLED:false}
+            required: ${MAIL_SMTP_STARTTLS_REQUIRED:false}
+          ssl:
+            enable: true
+            protocols: ${MAIL_SMTP_SSL_PROTOCOLS:TLSv1.2}
+        test-connection: ${MAIL_TEST_CONNECTION:false} # You might want to set this to false for production if it causes issues on startup
+  task:
+    execution:
+      pool:
+        core-size: 2
+        max-size: 10
+        queue-capacity: 100
+      thread-name-prefix: MailSender-
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION:1800000} # 30 minutes in milliseconds
+  refresh:
+    expiration: ${JWT_REFRESH_EXPIRATION:7200000} # 2 hours in milliseconds
+    max-tokens-per-user: ${JWT_MAX_TOKENS_PER_USER:5}
+  cookie:
+    name: ${JWT_COOKIE_NAME:jwt}
+    refresh:
+      name: ${JWT_REFRESH_COOKIE_NAME:refreshToken}
+    domain: ${JWT_COOKIE_DOMAIN:}
+    path: ${JWT_COOKIE_PATH:/}
+    secure: ${JWT_COOKIE_SECURE:false}
+    http-only: ${JWT_COOKIE_HTTP_ONLY:true}
+    same-site: ${JWT_COOKIE_SAME_SITE:Lax}
+
+vapid:
+  public-key: ${VAPID_PUBLIC_KEY}   # generate once with VapidKeyGenerator util below
+  private-key: ${VAPID_PRIVATE_KEY}
+  subject: ${VAPID_SUBJECT}
+
+# Server Configuration for Production
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    session:
+      cookie:
+        same-site: ${COOKIE_SAME_SITE:LAX}
+        secure: ${COOKIE_SECURE:true}
+        max-age: 1800 # 30 minutes
+    context-path: ${SERVER_CONTEXT_PATH:}
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+  http2:
+    enabled: true
+  tomcat:
+    max-connections: 10000
+    connection-timeout: 20000
+    max-http-form-post-size: 2MB
+    max-swallow-size: 2MB
+    threads:
+      max: 200
+      min-spare: 10
+  error:
+    whitelabel:
+      enabled: false
+
+app:
+  frontend:
+    base-url: ${FRONTEND_BASE_URL}
+
+
+logging:
+  level:
+    org.springframework.boot.autoconfigure.liquibase: DEBUG
+    org.springframework.boot.autoconfigure: DEBUG

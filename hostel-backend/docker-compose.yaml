@@ -1,0 +1,137 @@
+services:
+  # PostgreSQL Database
+  # PostgreSQL Database
+  postgres:
+    image: postgis/postgis:18-3.6-alpine
+    container_name: hostel-booking-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-hostel-booking-db}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+      # ADD THIS LINE FOR POSTGRES 18+:
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      # Bind to localhost
+      - "5432:5432"
+    volumes:
+      # CHANGE THIS LINE FOR POSTGRES 18+:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - hostel-booking-network
+    healthcheck:
+      test:
+        [ "CMD-SHELL", "pg_isready -U postgres -d hostel-booking-db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  # Spring Boot Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: hostel-booking-network-app-dev
+    develop:
+      watch:
+        - action: rebuild
+          path: ./src
+          target: /app/src
+
+    env_file:
+      - .env
+    environment:
+      # Database Configuration
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/hostel-booking-db}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-postgres}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none # Or 'create', 'create-drop' etc.
+
+      # Application Configuration
+      SPRING_PROFILES_ACTIVE: dev
+      SERVER_PORT: 8080
+
+      # OAuth2 Configuration (Development)
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-your_dev_client_id}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-your_dev_client_secret}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI}
+
+      # JWT Configuration
+      JWT_SECRET: ${JWT_SECRET:-dev_jwt_secret_key_very_long_and_secure}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-1800000}
+      # JWT Cookie flags for local HTTP
+      JWT_COOKIE_NAME: ${JWT_COOKIE_NAME:-jwt}
+      JWT_REFRESH_COOKIE_NAME: ${JWT_REFRESH_COOKIE_NAME:-refreshToken}
+      JWT_COOKIE_DOMAIN: ${JWT_COOKIE_DOMAIN:-}
+      JWT_COOKIE_PATH: ${JWT_COOKIE_PATH:-/}
+      JWT_COOKIE_SECURE: ${JWT_COOKIE_SECURE:-false}
+      JWT_COOKIE_HTTP_ONLY: ${JWT_COOKIE_HTTP_ONLY:-true}
+      JWT_COOKIE_SAME_SITE: ${JWT_COOKIE_SAME_SITE:-Lax}
+
+
+      # Frontend Configuration
+      FRONTEND_BASE_URL: ${FRONTEND_BASE_URL:-http://localhost:5173}
+
+      # Cookie Configuration
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN:-localhost}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      COOKIE_SAME_SITE: ${COOKIE_SAME_SITE:-LAX}
+      COOKIE_HTTP_ONLY: ${COOKIE_HTTP_ONLY}
+      COOKIE_MAX_AGE: ${COOKIE_MAX_AGE}
+      COOKIE_PATH: ${COOKIE_PATH}
+
+      # Mail Configuration (Optional for dev)
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+
+    ports:
+      - "8080:8080"
+      # Bind debug port to localhost only
+      - "5005:5005"
+    volumes:
+      - ./src:/app/src # Hot reload
+      - ./logs:/app/logs
+      - ~/.m2:/root/.m2
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - hostel-booking-network
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:8080/actuator/health || exit 1",
+        ]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+
+  # pgAdmin for Database Management (Optional)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: hostel-booking-network-pgadmin-dev
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@hostel-booking-network.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - hostel-booking-network
+    profiles:
+      - tools
+
+volumes:
+  pg_data:
+
+
+networks:
+  hostel-booking-network:
+    driver: bridge
+#  docker exec -it hostel-booking-network-postgres-dev psql -U postgres -l
