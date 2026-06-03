@@ -4,72 +4,82 @@ import com.leroy.hostelbackend.module.hostel.model.Hostel;
 import com.leroy.hostelbackend.module.room.model.Room;
 import com.leroy.hostelbackend.module.user.model.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * A student-raised support ticket targeting a room or an entire hostel.
+ *
+ * <p>{@code roomId} is nullable — hostel-wide issues (generator, water outage)
+ * don't belong to a specific room.
+ *
+ * <p>Status transitions (enforced in {@code ComplaintService}):
+ * <pre>
+ *   OPEN → IN_PROGRESS (manager acknowledges)
+ *   IN_PROGRESS → RESOLVED (manager marks fixed)
+ *   RESOLVED → CLOSED (auto or admin)
+ *   OPEN → CLOSED (admin closes invalid ticket)
+ * </pre>
+ */
 @Getter
 @Setter
 @Entity
 @Table(name = "complaints")
 public class Complaint {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @UuidGenerator
+    @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.RESTRICT)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hostel_id", nullable = false)
     private Hostel hostel;
 
+    /** Nullable — null means the complaint is hostel-wide. */
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @Size(max = 200)
-    @NotNull
-    @Column(name = "title", nullable = false, length = 200)
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @NotNull
-    @Column(name = "description", nullable = false, length = Integer.MAX_VALUE)
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Size(max = 15)
-    @NotNull
-    @Column(name = "status", nullable = false, length = 15)
-    private String status;
+    /**
+     * OPEN | IN_PROGRESS | RESOLVED | CLOSED
+     * Stored as VARCHAR — Java enum {@link ComplaintStatus} is the enforcer.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private ComplaintStatus status = ComplaintStatus.OPEN;
 
-    @Size(max = 15)
-    @NotNull
-    @Column(name = "category", nullable = false, length = 15)
-    private String category;
+    /**
+     * MAINTENANCE | CLEANLINESS | SECURITY | NOISE | BILLING | OTHER
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
+    private ComplaintCategory category = ComplaintCategory.OTHER;
 
-    @NotNull
-    @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-    @NotNull
+    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "resolved_at")
-    private OffsetDateTime resolvedAt;
-
-
+    private LocalDateTime resolvedAt;
 }
+
+

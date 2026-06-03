@@ -15,10 +15,12 @@ spring:
     show-sql: false
     properties:
       hibernate:
+#        dialect: org.hibernate.spatial.dialect.postgis.PostgisDialect
         format_sql: false
         jdbc:
           time_zone: UTC
     open-in-view: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
@@ -74,24 +76,23 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION:1800000} # 30 minutes in milliseconds
-  refresh:
-    expiration: ${JWT_REFRESH_EXPIRATION:7200000} # 2 hours in milliseconds
-    max-tokens-per-user: ${JWT_MAX_TOKENS_PER_USER:5}
-  cookie:
-    name: ${JWT_COOKIE_NAME:jwt}
-    refresh:
-      name: ${JWT_REFRESH_COOKIE_NAME:refreshToken}
-    domain: ${JWT_COOKIE_DOMAIN:}
-    path: ${JWT_COOKIE_PATH:/}
-    secure: ${JWT_COOKIE_SECURE:false}
-    http-only: ${JWT_COOKIE_HTTP_ONLY:true}
-    same-site: ${JWT_COOKIE_SAME_SITE:Lax}
+  tokenExpiration: ${JWT_EXPIRATION:1800000} # 30 minutes in milliseconds
+  refreshTokenExpiration: ${JWT_REFRESH_EXPIRATION:7200000}
 
 vapid:
   public-key: ${VAPID_PUBLIC_KEY}   # generate once with VapidKeyGenerator util below
   private-key: ${VAPID_PRIVATE_KEY}
   subject: ${VAPID_SUBJECT}
+
+hostel:
+  sweeper:
+    rate: ${HOSTEL_SWEEPER_RATE}
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
 
 # Server Configuration for Production
 server:
@@ -117,9 +118,6 @@ server:
     threads:
       max: 200
       min-spare: 10
-  error:
-    whitelabel:
-      enabled: false
 
 app:
   frontend:
@@ -128,5 +126,6 @@ app:
 
 logging:
   level:
+    org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer: ERROR
     org.springframework.boot.autoconfigure.liquibase: DEBUG
     org.springframework.boot.autoconfigure: DEBUG

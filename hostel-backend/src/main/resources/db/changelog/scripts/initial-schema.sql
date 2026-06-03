@@ -2,7 +2,7 @@
 -- Hostel Booking System — Initial Schema
 -- University of Cape Coast
 -- =============================================================================
--- Stack      : PostgreSQL 15+ with PostGIS extension
+-- Stack      : PostgreSQL 18+ with PostGIS extension
 -- Naming     : snake_case, plural table names, uuid PKs
 -- Enums      : NO PostgreSQL TYPE enums — all enum-like columns use VARCHAR
 --              with CHECK constraints. Values are validated in Java via
@@ -65,9 +65,6 @@ CREATE TABLE users (
                        last_name      VARCHAR(100) NOT NULL,
                        phone          VARCHAR(20),
 
-    -- University student ID. NULL for ADMIN / MANAGER rows.
-                       student_id     VARCHAR(50)  UNIQUE,
-
     -- Values: ADMIN | MANAGER | STUDENT  (enforced by UserRole Java enum)
                        role           VARCHAR(20)  NOT NULL DEFAULT 'STUDENT',
 
@@ -81,7 +78,6 @@ CREATE TABLE users (
 
 COMMENT ON TABLE  users IS 'All system users — students, managers, and admins.';
 COMMENT ON COLUMN users.role       IS 'Java enum UserRole: ADMIN | MANAGER | STUDENT';
-COMMENT ON COLUMN users.student_id IS 'University student ID. NULL for non-student roles.';
 COMMENT ON COLUMN users.fcm_token  IS 'Firebase device token for offline push notifications. Updated on each login.';
 
 
@@ -101,8 +97,8 @@ CREATE TABLE hostels (
                          address        VARCHAR(300) NOT NULL,
                          description    TEXT,
 
-    -- PostGIS geography point stored as WGS 84 lat/lon.
-                         location       GEOGRAPHY(POINT, 4326),
+    -- PostGIS geometry point stored as WGS 84 lat/lon.
+                         location       GEOMETRY(POINT, 4326),
 
     -- Values: MALE_ONLY | FEMALE_ONLY | MIXED  (enforced by GenderPolicy Java enum)
                          gender_policy  VARCHAR(15)  NOT NULL DEFAULT 'MIXED',
@@ -118,7 +114,7 @@ CREATE TABLE hostels (
 );
 
 COMMENT ON TABLE  hostels IS 'Physical hostel / accommodation blocks on or near campus.';
-COMMENT ON COLUMN hostels.location      IS 'PostGIS geography point (WGS 84). Enables distance queries with ST_Distance.';
+COMMENT ON COLUMN hostels.location      IS 'PostGIS geometry point (WGS 84). Enables distance queries with ST_Distance.';
 COMMENT ON COLUMN hostels.gender_policy IS 'Java enum GenderPolicy: MALE_ONLY | FEMALE_ONLY | MIXED';
 COMMENT ON COLUMN hostels.manager_id    IS 'The manager user assigned to this hostel.';
 
@@ -155,6 +151,7 @@ CREATE TABLE rooms (
                        status              VARCHAR(20)   NOT NULL DEFAULT 'AVAILABLE',
 
                        floor_number        SMALLINT,
+                        image_url TEXT NOT NULL,
 
     -- JPA @Version field. Never set or update this manually.
                        version             INTEGER       NOT NULL DEFAULT 0,
@@ -182,6 +179,7 @@ CREATE TABLE room_amenities (
                                 id       UUID         PRIMARY KEY DEFAULT uuid_generate_v4(),
                                 room_id  UUID         NOT NULL REFERENCES rooms(id) ON DELETE CASCADE,
                                 amenity  VARCHAR(100) NOT NULL,
+                                image_url TEXT,
 
                                 UNIQUE (room_id, amenity)
 );
@@ -379,7 +377,7 @@ COMMENT ON TABLE  reviews IS 'Hostel reviews. booking_id FK guarantees the revie
 
 /**
  * landmarks
- * Major UCC campus points of interest stored as PostGIS geography points.
+ * Major UCC campus points of interest stored as PostGIS geometry points.
  * Seeded by an admin via the /admin/landmarks endpoint.
  *
  * Distance query pattern:
@@ -397,8 +395,8 @@ CREATE TABLE landmarks (
     -- Values: ACADEMIC | LIBRARY | ADMINISTRATIVE | CAFETERIA | MEDICAL | SPORTS | HOSTEL | OTHER
                            category     VARCHAR(20)  NOT NULL DEFAULT 'OTHER',
 
-    -- PostGIS geography point, WGS 84.
-                           location     GEOGRAPHY(POINT, 4326) NOT NULL,
+    -- PostGIS geometry point, WGS 84.
+                           location     GEOMETRY(POINT, 4326) NOT NULL,
 
                            description  TEXT,
                            created_at   TIMESTAMPTZ  NOT NULL DEFAULT NOW()
@@ -454,22 +452,39 @@ COMMENT ON TABLE  student_preferences IS 'Lifestyle tags for roommate matching. 
  */
 CREATE TABLE notifications (
                                id          UUID        PRIMARY KEY DEFAULT uuid_generate_v4(),
-                               user_id     UUID        NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                               recipient_id     UUID        NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                                title       VARCHAR(200) NOT NULL,
-                               body        TEXT         NOT NULL,
+                               message        TEXT         NOT NULL,
 
     -- Values: BOOKING_APPROVED | BOOKING_REJECTED | BOOKING_CANCELLED |
     --         CHECKIN_REMINDER | WAITLIST_PROMOTED | COMPLAINT_UPDATED | GENERAL
-                               type        VARCHAR(25)  NOT NULL DEFAULT 'GENERAL',
+                               type        VARCHAR(100)  NOT NULL DEFAULT 'GENERAL',
 
                                is_read     BOOLEAN      NOT NULL DEFAULT FALSE,
 
     -- Optional reference to the related domain entity (booking, complaint, etc.)
-                               ref_id      UUID,
+                               entity_id      UUID,
+                               entity_type VARCHAR(200),
+    navigate_url TEXT,
+    read_at TIMESTAMPTZ,
 
                                created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
 COMMENT ON TABLE  notifications IS 'Persisted notification records delivered via WebSocket and Firebase FCM.';
 COMMENT ON COLUMN notifications.type   IS 'Java enum NotificationType: BOOKING_APPROVED|BOOKING_REJECTED|BOOKING_CANCELLED|CHECKIN_REMINDER|WAITLIST_PROMOTED|COMPLAINT_UPDATED|GENERAL';
-COMMENT ON COLUMN notifications.ref_id IS 'Optional UUID of the related booking, complaint, or other entity for frontend deep-linking.';
+COMMENT ON COLUMN notifications.entity_id IS 'Optional UUID of the related booking, complaint, or other entity for frontend deep-linking.';
+
+CREATE TABLE push_subscriptions
+(
+    id         UUID PRIMARY KEY   DEFAULT gen_random_uuid(),
+    user_id    UUID      NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    endpoint   TEXT      NOT NULL UNIQUE,
+    p256dh     TEXT      NOT NULL,   -- client public key
+    auth       TEXT      NOT NULL,   -- client auth secret
+    user_agent TEXT,
+    is_active  BOOLEAN   NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+

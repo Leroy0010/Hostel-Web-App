@@ -1,16 +1,15 @@
 package com.leroy.hostelbackend.module.room.model;
 
 import com.leroy.hostelbackend.module.hostel.model.Hostel;
+import com.leroy.hostelbackend.module.room.dto.CreateRoomRequest;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
+import org.jspecify.annotations.NonNull;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -19,57 +18,72 @@ import java.util.UUID;
 @Table(name = "rooms")
 public class Room {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @UuidGenerator
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "hostel_id", nullable = false)
     private Hostel hostel;
 
-    @Size(max = 20)
-    @NotNull
-    @Column(name = "room_number", nullable = false, length = 20)
+
+    @Column(name = "room_number", nullable = false)
     private String roomNumber;
 
-    @Size(max = 15)
-    @NotNull
-    @Column(name = "room_type", nullable = false, length = 15)
-    private String roomType;
+    @Column(name = "room_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RoomType roomType;
 
-    @NotNull
     @Column(name = "capacity", nullable = false)
     private Short capacity;
 
-    @NotNull
     @Column(name = "current_occupancy", nullable = false)
     private Short currentOccupancy;
 
-    @NotNull
-    @Column(name = "price_per_semester", nullable = false, precision = 10, scale = 2)
+    @Column(name = "price_per_semester", nullable = false)
     private BigDecimal pricePerSemester;
 
-    @Size(max = 20)
-    @NotNull
-    @Column(name = "status", nullable = false, length = 20)
-    private String status;
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RoomStatus status;
 
     @Column(name = "floor_number")
     private Short floorNumber;
 
-    @NotNull
+    /**
+     * URL of the room's cover image (S3 key or full URL).
+     * Required when creating a room — stored as TEXT in PostgreSQL.
+     */
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Version
     @Column(name = "version", nullable = false)
     private Integer version;
 
-    @NotNull
     @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
-    @NotNull
     @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updatedAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
+    public static @NonNull Room createRoom(CreateRoomRequest request, Hostel hostel) {
+        var room = new Room();
+        room.setHostel(hostel);
+        room.setRoomNumber(request.roomNumber().trim());
+        room.setRoomType(request.roomType());
+        room.setCapacity(request.capacity());
+        room.setCurrentOccupancy((short) 0);
+        room.setPricePerSemester(request.pricePerSemester());
+        room.setStatus(RoomStatus.AVAILABLE);
+        room.setImageUrl(request.imageUrl());
+        if (request.floorNumber() != null) {
+            room.setFloorNumber(request.floorNumber().shortValue());
+        }
+        return room;
+    }
 
 }

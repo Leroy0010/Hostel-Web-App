@@ -16,7 +16,4 @@ public enum RoomType {
 
     /** Four beds. */
     QUAD,
-
-    /** Large shared space with more than four beds. */
-    DORMITORY
 }

@@ -1,0 +1,1 @@
+ALTER TABLE bookings ADD payment_expires_at TIMESTAMPTZ;

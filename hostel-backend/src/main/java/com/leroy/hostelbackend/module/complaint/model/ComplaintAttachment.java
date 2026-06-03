@@ -1,43 +1,41 @@
 package com.leroy.hostelbackend.module.complaint.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * A photo or document uploaded as evidence for a complaint.
+ * {@code fileUrl} is an S3 URL (or key) returned by the file upload service.
+ */
 @Getter
 @Setter
 @Entity
 @Table(name = "complaint_attachments")
 public class ComplaintAttachment {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @UuidGenerator
+    @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "complaint_id", nullable = false)
     private Complaint complaint;
 
-    @NotNull
-    @Column(name = "file_url", nullable = false, length = Integer.MAX_VALUE)
+    @Column(name = "file_url", nullable = false, columnDefinition = "TEXT")
     private String fileUrl;
 
-    @Size(max = 50)
-    @Column(name = "file_type", length = 50)
+    /** MIME type e.g. "image/jpeg". Informational only. */
+    @Column(name = "file_type")
     private String fileType;
 
-    @NotNull
-    @Column(name = "uploaded_at", nullable = false)
-    private OffsetDateTime uploadedAt;
-
-
+    @CreationTimestamp
+    @Column(name = "uploaded_at", nullable = false, updatable = false)
+    private LocalDateTime uploadedAt;
 }

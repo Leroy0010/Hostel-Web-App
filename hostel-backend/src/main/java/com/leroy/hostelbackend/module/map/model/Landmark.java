@@ -1,43 +1,76 @@
 package com.leroy.hostelbackend.module.map.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UuidGenerator;
+import org.locationtech.jts.geom.Point;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * A named point of interest on the UCC campus stored as a PostGIS geometry point.
+ *
+ * <p>Landmarks are seeded by an ADMIN via the {@code POST /admin/landmarks} endpoint
+ * using real GPS coordinates. The map feature then lets students calculate the
+ * walking distance from any hostel to any landmark.
+ *
+ * <p><strong>Coordinate convention (PostGIS):</strong>
+ * <ul>
+ *   <li>{@code Point.getX()} = longitude</li>
+ *   <li>{@code Point.getY()} = latitude</li>
+ * </ul>
+ *
+ * <p><strong>Distance query:</strong>
+ * {@code ST_Distance(h.location::geography, l.location::geography)} returns
+ * metres when both columns are cast to {@code geography}. The service wraps
+ * this in a named JPQL/native query.
+ *
+ * <p><strong>SRID 4326:</strong> WGS 84 — the same coordinate system used by
+ * Google Maps, OpenStreetMap, and the Mapbox/Leaflet frontend.
+ *
+ * <p><strong>LandmarkCategory values</strong> (VARCHAR, Java enum enforcer):
+ * ACADEMIC | LIBRARY | ADMINISTRATIVE | CAFETERIA | MEDICAL | SPORTS | HOSTEL | OTHER
+ */
 @Getter
 @Setter
 @Entity
 @Table(name = "landmarks")
 public class Landmark {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @UuidGenerator
+    @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @Size(max = 200)
-    @NotNull
-    @Column(name = "name", nullable = false, length = 200)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Size(max = 20)
-    @NotNull
-    @Column(name = "category", nullable = false, length = 20)
-    private String category;
+    /**
+     * Category for map filtering and icon selection.
+     * Values: ACADEMIC | LIBRARY | ADMINISTRATIVE | CAFETERIA | MEDICAL | SPORTS | HOSTEL | OTHER
+     * Stored as VARCHAR; Java enum {@link LandmarkCategory} is the enforcer.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
+    private LandmarkCategory category = LandmarkCategory.OTHER;
 
-    @Column(name = "location", columnDefinition = "geography not null")
-    private Object location;
+    /**
+     * PostGIS GEOGRAPHY point, WGS 84 (SRID 4326).
+     * Mapped by Hibernate Spatial — requires the {@code hibernate-spatial} dependency.
+     * Note: the schema uses {@code GEOGRAPHY} for the landmarks table and
+     * {@code GEOMETRY} for the hostels table. The distance query casts both to
+     * geography to get metre-accurate results.
+     */
+    @Column(name = "location", nullable = false)
+    private Point location;
 
-    @Column(name = "description", length = Integer.MAX_VALUE)
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @NotNull
-    @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
-
-
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 }

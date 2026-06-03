@@ -1,12 +1,11 @@
 package com.leroy.hostelbackend.module.room.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 
@@ -16,20 +15,22 @@ import java.util.UUID;
 @Table(name = "room_amenities")
 public class RoomAmenity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @UuidGenerator
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
-    @Size(max = 100)
-    @NotNull
-    @Column(name = "amenity", nullable = false, length = 100)
+    @Column(name = "amenity", nullable = false)
     private String amenity;
 
-
+    /**
+     * Optional URL to an icon/image representing this amenity.
+     * Stored as TEXT (S3 URL or key). May be {@code null}.
+     */
+    @Column(name = "image_url", columnDefinition = "TEXT")
+    private String imageUrl;
 }

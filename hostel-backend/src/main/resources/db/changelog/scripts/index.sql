@@ -28,9 +28,9 @@ CREATE INDEX idx_users_role
     ON users (role);
 
 -- Lookup by student ID (e.g. self-service portal search)
-CREATE INDEX idx_users_student_id
-    ON users (student_id)
-    WHERE student_id IS NOT NULL;
+-- CREATE INDEX idx_users_student_id
+--     ON users (student_id)
+--     WHERE student_id IS NOT NULL;
 
 
 -- ---------------------------------------------------------------------------
@@ -38,7 +38,7 @@ CREATE INDEX idx_users_student_id
 -- ---------------------------------------------------------------------------
 
 -- Spatial index: fast ST_Distance / ST_DWithin queries (map feature)
--- GiST is required for PostGIS geography columns
+-- GiST is required for PostGIS geometry columns
 CREATE INDEX idx_hostels_location
     ON hostels USING GIST (location);
 
@@ -238,7 +238,7 @@ CREATE INDEX idx_landmarks_category
 
 -- FK: lookup preferences for a student
 CREATE INDEX idx_student_preferences_student_id
-    ON student_preferences (student_id);
+   ON student_preferences (student_id);
 
 -- GIN index on the tags TEXT array — enables fast overlap queries
 -- "Find students whose tags overlap with ARRAY['Quiet', 'Neat']"
@@ -252,12 +252,12 @@ CREATE INDEX idx_student_preferences_tags
 -- ---------------------------------------------------------------------------
 
 -- FK: all notifications for a user (notification centre)
-CREATE INDEX idx_notifications_user_id
-    ON notifications (user_id);
+CREATE INDEX idx_notifications_recipient_id
+    ON notifications (recipient_id);
 
 -- Unread notifications filter (badge count, notification dot)
-CREATE INDEX idx_notifications_user_unread
-    ON notifications (user_id, is_read)
+CREATE INDEX idx_notifications_recipient_unread
+    ON notifications (recipient_id, is_read)
     WHERE is_read = FALSE;
 
 -- Time ordering (most recent first in the notification centre)
@@ -267,3 +267,5 @@ CREATE INDEX idx_notifications_created_at
 -- Type-based filtering (e.g., only show booking-related notifications)
 CREATE INDEX idx_notifications_type
     ON notifications (type);
+
+CREATE INDEX idx_push_subs_user_active ON push_subscriptions (user_id) WHERE is_active = true;
