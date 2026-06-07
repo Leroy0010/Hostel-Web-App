@@ -1,74 +1,81 @@
-import React from 'react';
-import {
-    Combobox,
-    ComboboxChip,
-    ComboboxChips,
-    ComboboxChipsInput,
-    ComboboxContent,
-    ComboboxEmpty,
-    ComboboxItem,
-    ComboboxList,
-    ComboboxValue,
-    useComboboxAnchor,
-} from './components/ui/combobox';
+import { BrowserRouter } from 'react-router-dom';
+import { useAuthInit } from '@/features/auth/hooks/useAuthInit';
+import { AppRoutes } from '@/routes/AppRoutes';
+import { ThemeProvider } from '@/components/theme-provider';
+import { AppLoader } from '@/components/ui/AppLoader';
+import { Toaster } from 'sonner';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './lib/react-query';
+import { ErrorBoundary } from './components/ui/ErrorBoundary';
+import { AppErrorFallback } from './components/ui/AppErrorFallback';
+import { Suspense } from 'react';
 
-const items = [
-    'React',
-    'Vue',
-    'Angular',
-    'Spring Boot',
-    'Django',
-    'Flask',
-    'Express',
-    'ASP.NET',
-    'Ruby on Rails',
-    'Go',
-    'Rust',
-] as const;
+// ---------------------------------------------------------------------------
+// RootAppEngine
+// ---------------------------------------------------------------------------
 
-export function App() {
-    const anchor = useComboboxAnchor();
+/**
+ * Inner engine that runs inside all providers.
+ *
+ * Separated from `App` so `useAuthInit` can consume the QueryClient and
+ * BrowserRouter contexts that wrap it.
+ *
+ * `useAuthInit` fires the bootstrap refresh cycle exactly once on mount.
+ * Until `isInitialized` flips to true in the auth store, both ProtectedRoute
+ * and PublicRoute render <AppLoader /> — guaranteeing zero premature redirects.
+ */
+function RootAppEngine() {
+    useAuthInit();
+
     return (
-        <div className="flex min-h-svh p-6">
-            <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-                <div>
-                    <Combobox
-                        multiple
-                        autoHighlight
-                        items={items}
-                        defaultValue={[items[0]]}
-                    >
-                        <ComboboxChips ref={anchor} className="w-full max-w-xs">
-                            <ComboboxValue>
-                                {(values) => (
-                                    <React.Fragment>
-                                        {values.map((value: string) => (
-                                            <ComboboxChip key={value}>
-                                                {value}
-                                            </ComboboxChip>
-                                        ))}
-                                        <ComboboxChipsInput />
-                                    </React.Fragment>
-                                )}
-                            </ComboboxValue>
-                        </ComboboxChips>
-                        <ComboboxContent anchor={anchor}>
-                            <ComboboxEmpty>No items found.</ComboboxEmpty>
-                            <ComboboxList>
-                                {(item) => (
-                                    <ComboboxItem key={item} value={item}>
-                                        {item}
-                                    </ComboboxItem>
-                                )}
-                            </ComboboxList>
-                        </ComboboxContent>
-                    </Combobox>
-                </div>
-                <div className="font-mono text-xs text-muted-foreground">
-                    (Press <kbd>d</kbd> to toggle dark mode)
-                </div>
-            </div>
-        </div>
+        <ErrorBoundary
+            fallback={
+                <AppErrorFallback
+                    error={new Error('App initialisation failed')}
+                    resetError={() => window.location.reload()}
+                />
+            }
+        >
+            <Suspense fallback={<AppLoader />}>
+                <AppRoutes />
+            </Suspense>
+        </ErrorBoundary>
+    );
+}
+
+// ---------------------------------------------------------------------------
+// App
+// ---------------------------------------------------------------------------
+
+/**
+ * Application root.
+ *
+ * Provider order matters:
+ *  1. ThemeProvider  — reads/writes `localStorage` for theme persistence
+ *  2. BrowserRouter  — must wrap anything that uses React Router hooks
+ *  3. QueryClientProvider — must wrap anything that uses React Query hooks
+ *
+ * The global <Toaster /> lives here (not inside AppLayout) so notifications
+ * are visible even on public pages like /login.
+ */
+export function App() {
+    return (
+        <ThemeProvider
+            defaultTheme="system"
+            storageKey="hostel-management-system:theme"
+        >
+            <BrowserRouter>
+                <QueryClientProvider client={queryClient}>
+                    <RootAppEngine />
+                    <Toaster
+                        closeButton
+                        position="top-right"
+                        richColors
+                        duration={5000}
+                    />
+                </QueryClientProvider>
+            </BrowserRouter>
+        </ThemeProvider>
     );
 }
 
