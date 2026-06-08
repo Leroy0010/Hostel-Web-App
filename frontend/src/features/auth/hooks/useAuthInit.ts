@@ -3,7 +3,8 @@ import { useAuthStore } from '../store/useAuthStore';
 import { tokenManager } from '@/lib/tokenManager';
 import axios from 'axios';
 import { apiClient } from '@/lib/axios';
-import type { MeResponse } from '../types';
+import type { LoginResponse } from '../types';
+import type { ApiResponse } from '@/types/api';
 
 /**
  * Application bootstrap hook — runs exactly once on app mount.
@@ -42,7 +43,9 @@ export function useAuthInit() {
                 // ── Step 1: Refresh token exchange ──────────────────────────
                 // Use a bare axios instance (not apiClient) to avoid the
                 // response interceptor triggering another refresh cycle.
-                const refreshResponse = await axios.post(
+                const refreshResponse = await axios.post<
+                    ApiResponse<LoginResponse>
+                >(
                     `${apiClient.defaults.baseURL}/auth/refresh`,
                     {},
                     { withCredentials: true }
@@ -50,20 +53,13 @@ export function useAuthInit() {
 
                 // Strip envelope wrapper if the backend sends one; handle both
                 // wrapped `{ success: true, data: { token } }` and bare `{ token }`.
-                const refreshPayload = refreshResponse.data?.success
-                    ? refreshResponse.data.data
-                    : refreshResponse.data;
+                const refreshPayload = refreshResponse.data.data;
 
+                const profile = refreshResponse.data.data.user;
                 const token: string = refreshPayload.token;
 
                 // Persist token in memory and schedule silent pre-expiry refresh.
                 tokenManager.setToken(token);
-
-                // ── Step 2: Fetch full user profile ─────────────────────────
-                // apiClient interceptor unwraps the envelope → result is MeResponse.
-                const profile = await apiClient.get<never, MeResponse>(
-                    '/users/me'
-                );
 
                 // ── Step 3: Hydrate store ────────────────────────────────────
                 setAuth(token, profile.user, profile.hostel);

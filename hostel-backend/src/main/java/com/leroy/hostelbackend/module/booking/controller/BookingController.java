@@ -33,14 +33,14 @@ import java.util.UUID;
  * DELETE /bookings/{id}/cancel              STUDENT: cancel own booking
  * POST   /bookings/{id}/payment             STUDENT: submit payment reference
  * GET    /bookings/my                       STUDENT: own booking history
- * GET    /bookings/{id}                     STUDENT/MANAGER/ADMIN: booking detail
+ * GET    /bookings/{id}                     STUDENT/MANAGER booking detail
  *
  * GET    /manager/bookings/pending          MANAGER: PENDING bookings for their hostels
  * POST   /manager/bookings/{id}/action      MANAGER: approve or reject
  * POST   /manager/bookings/{id}/checkin     MANAGER: check student in
  * POST   /manager/bookings/{id}/checkout    MANAGER: check student out
  *
- * GET    /admin/hostels/{hostelId}/bookings ADMIN: all bookings for a hostel
+ * GET    /manager/hostels/{hostelId}/bookings MANAGER: all bookings for a hostel
  * </pre>
  */
 @RestController

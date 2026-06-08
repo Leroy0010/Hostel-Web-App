@@ -4,6 +4,7 @@ import com.leroy.hostelbackend.module.hostel.dto.*;
 import com.leroy.hostelbackend.module.hostel.mapper.HostelMapper;
 import com.leroy.hostelbackend.module.hostel.model.Hostel;
 import com.leroy.hostelbackend.module.hostel.repository.HostelRepository;
+import com.leroy.hostelbackend.module.hostel.specification.HostelSpecifications;
 import com.leroy.hostelbackend.module.user.model.User;
 import com.leroy.hostelbackend.module.user.model.UserRole;
 import com.leroy.hostelbackend.module.user.repository.UserRepository;
@@ -17,6 +18,7 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,8 +58,10 @@ public class HostelService {
      * @return page of {@link HostelSummaryDto}
      */
     @Transactional(readOnly = true)
-    public Page<HostelSummaryDto> listActiveHostels(Pageable pageable) {
-        return hostelRepository.findAllActiveWithManager(pageable)
+    public Page<HostelSummaryDto> listActiveHostels(String search, String genderPolicy, Pageable pageable) {
+        Specification<Hostel> spec = HostelSpecifications.filterHostels(search, genderPolicy, true);
+
+        return hostelRepository.findAll(spec, pageable)
                 .map(hostelMapper::toSummaryDto);
     }
 

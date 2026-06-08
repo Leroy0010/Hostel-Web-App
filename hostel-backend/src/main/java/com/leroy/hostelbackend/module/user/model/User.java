@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 import com.leroy.hostelbackend.module.user.service.CustomUserDetailsService;
 import com.leroy.hostelbackend.shared.exception.UserDeactivatedException;
+import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -74,9 +75,6 @@ public class User {
     @Column(name = "role", nullable = false)
     private UserRole role = UserRole.STUDENT;
 
-    /** Firebase Cloud Messaging token. Updated on every successful login. */
-    @Column(name = "fcm_token", columnDefinition = "TEXT")
-    private String fcmToken;
 
     /**
      * Soft-delete / suspension flag. When {@code false}, {@link CustomUserDetailsService}
@@ -97,5 +95,15 @@ public class User {
     /** Convenience method — used in JWT claim generation. */
     public String getName() {
         return firstName + " " + lastName;
+    }
+
+    public static @NonNull User create(String email, String firstName, String lastName, String phone, boolean isActive) {
+        var user = new User();
+        user.setEmail(email.toLowerCase().trim());
+        user.setFirstName(firstName.trim());
+        user.setLastName(lastName.trim());
+        user.setPhone(phone);
+        user.setIsActive(isActive);
+        return user;
     }
 }

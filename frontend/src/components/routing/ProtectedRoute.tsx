@@ -1,7 +1,8 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/features/auth/store/useAuthStore';
 import { AppLoader } from '@/components/ui/AppLoader';
-import type { UserRole } from '@/features/auth/types';
+import type { UserRole } from '@/features/user/types/user.types';
+
 
 interface ProtectedRouteProps {
     /** Roles that are permitted to access this subtree */

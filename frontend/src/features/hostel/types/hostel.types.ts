@@ -61,7 +61,6 @@ export interface HostelSummaryDto {
     isActive: boolean;
 }
 
-
 // =============================================================================
 // Zod schemas — used for form validation
 // =============================================================================
@@ -70,29 +69,35 @@ export interface HostelSummaryDto {
  * WGS 84 coordinate validator, reused for both latitude and longitude fields.
  * Accepts a string (from an HTML input) and coerces to a number.
  */
-const latitudeSchema = z.preprocess(
-    (val) =>
-        val === '' || val === null || val === undefined
-            ? undefined
-            : Number(val),
-    z
-        .number({ error: 'Latitude must be a number' })
-        .min(-90, 'Latitude must be between -90 and 90')
-        .max(90, 'Latitude must be between -90 and 90')
-        .optional()
-);
+const latitudeSchema = z
+    .union([z.number()])
+    .transform((val) => {
+        if (val === undefined || val === null) return undefined;
+        const num = Number(val);
+        return isNaN(num) ? undefined : num;
+    })
+    .pipe(
+        z
+            .number({ message: 'Latitude must be a number' })
+            .min(-90, 'Latitude must be between -90 and 90')
+            .max(90, 'Latitude must be between -90 and 90')
+    )
+    .optional();
 
-const longitudeSchema = z.preprocess(
-    (val) =>
-        val === '' || val === null || val === undefined
-            ? undefined
-            : Number(val),
-    z
-        .number({ error: 'Longitude must be a number' })
-        .min(-180, 'Longitude must be between -180 and 180')
-        .max(180, 'Longitude must be between -180 and 180')
-        .optional()
-);
+const longitudeSchema = z
+    .union([z.number()])
+    .transform((val) => {
+        if (val === undefined || val === null) return undefined;
+        const num = Number(val);
+        return isNaN(num) ? undefined : num;
+    })
+    .pipe(
+        z
+            .number({ message: 'Longitude must be a number' })
+            .min(-180, 'Longitude must be between -180 and 180')
+            .max(180, 'Longitude must be between -180 and 180')
+    )
+    .optional();
 
 /**
  * Zod schema for hostel creation.
@@ -126,11 +131,7 @@ export const createHostelSchema = z.object({
     imageUrl: z.string().min(1, 'Please upload a cover image'),
     latitude: latitudeSchema,
     longitude: longitudeSchema,
-    managerId: z
-        .string()
-        .uuid('Invalid manager ID')
-        .optional()
-        .or(z.literal('')),
+    managerId: z.uuid('Invalid manager ID').optional().or(z.literal('')),
 });
 
 /**
@@ -167,11 +168,17 @@ export const assignManagerSchema = z.object({
 // Inferred form types
 // =============================================================================
 
-/** Form values for the create hostel form. */
-export type CreateHostelFormValues = z.infer<typeof createHostelSchema>;
+// =============================================================================
+// Inferred form types
+// =============================================================================
 
-/** Form values for the update hostel form. */
-export type UpdateHostelFormValues = z.infer<typeof updateHostelSchema>;
+/** Form values for the react-hook-form inputs. */
+export type CreateHostelInputValues = z.input<typeof createHostelSchema>;
+export type UpdateHostelInputValues = z.input<typeof updateHostelSchema>;
+
+/** Cleaned values sent to your backend API. */
+export type CreateHostelFormValues = z.output<typeof createHostelSchema>;
+export type UpdateHostelFormValues = z.output<typeof updateHostelSchema>;
 
 /** Form values for the assign manager dialog. */
 export type AssignManagerFormValues = z.infer<typeof assignManagerSchema>;
@@ -220,4 +227,4 @@ export interface AssignManagerPayload {
 // =============================================================================
 
 /** Pagination query parameters forwarded to paginated hostel endpoints. */
-export type HostelPageParams  = PaginationParams;
+export type HostelPageParams = PaginationParams;

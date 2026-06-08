@@ -1,154 +1,163 @@
-import {
-    Building,
-    CalendarCheck,
-    Home,
-    LogOut,
-    Loader2,
-    Settings,
-    Users,
-} from 'lucide-react';
-import { Button } from '../ui/button';
+import { LogOut, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '@/features/auth/api/auth';
 import { useAuthStore } from '@/features/auth/store/useAuthStore';
-import type { UserRole } from '@/features/auth/types';
+import type { UserRole } from '@/features/user/types/user.types';
+import { motion, AnimatePresence } from 'framer-motion';
+import { navigation } from './navigation';
 
-// ---------------------------------------------------------------------------
-// Navigation link definitions
-// ---------------------------------------------------------------------------
-
-interface NavItem {
+export interface NavItem {
     name: string;
     href: string;
     icon: React.ElementType;
-    /** Restrict visibility to specific roles; omit to show to all. */
     roles?: UserRole[];
 }
 
-/**
- * Master navigation configuration.
- * Add or remove items here as features are built out.
- */
-const navigation: NavItem[] = [
-    { name: 'Dashboard', href: '/dashboard', icon: Home },
-    { name: 'Hostels', href: '/hostels', icon: Building },
-    { name: 'Bookings', href: '/bookings', icon: CalendarCheck },
-    {
-        name: 'Users',
-        href: '/users',
-        icon: Users,
-        roles: ['ADMIN'],
-    },
-    { name: 'Settings', href: '/settings', icon: Settings },
-];
-
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
-
 interface NavContentProps {
-    /** Called after a nav item is clicked — used to close the mobile sheet. */
     onItemClick?: () => void;
+    isCollapsed?: boolean;
 }
 
-/**
- * Sidebar navigation content.
- *
- * Renders a filtered list of navigation links based on the current user's
- * role, and a logout button that invalidates the session server-side before
- * clearing local auth state.
- */
-export function NavContent({ onItemClick }: NavContentProps) {
+// Animation variants for text elements
+const textVariants = {
+    hidden: { opacity: 0, width: 0, transition: { duration: 0.2 } },
+    visible: {
+        opacity: 1,
+        width: 'auto',
+        transition: { duration: 0.2, delay: 0.1 },
+    },
+};
+
+export function NavContent({
+    onItemClick,
+    isCollapsed = false,
+}: NavContentProps) {
     const user = useAuthStore((state) => state.user);
     const navigate = useNavigate();
     const { mutate: logout, isPending: isLoggingOut } = useLogoutMutation();
 
-    /** Filter nav items to only those the current role is allowed to see. */
-    const visibleItems = navigation.filter(
-        (item) => !item.roles || (user && item.roles.includes(user.role))
+    const visibleItems = navigation.filter((item) =>
+        user ? item.roles?.includes(user.role) : !item.roles
     );
 
     const handleLogout = () => {
         logout(undefined, {
-            onSettled: () => {
-                navigate('/login', { replace: true });
-            },
+            onSettled: () => navigate('/login', { replace: true }),
         });
     };
 
     return (
-        <div className="flex h-full flex-col gap-4">
-            {/* ── Logo / Brand ───────────────────────────────────────────── */}
-            <div className="flex h-14 items-center border-b border-gray-200 px-4 dark:border-gray-800">
-                <span className="text-lg font-bold tracking-tight text-gray-900 dark:text-gray-100">
-                    Leroy Hostels
-                </span>
-            </div>
-
+        <div className="flex h-full flex-col gap-4 overflow-hidden">
             {/* ── Navigation Links ───────────────────────────────────────── */}
-            <nav className="flex-1 space-y-0.5 px-2">
+            <nav className="flex-1 scrollbar-none space-y-1 overflow-x-hidden overflow-y-auto px-2">
                 {visibleItems.map((item) => {
                     const Icon = item.icon;
-
                     return (
                         <NavLink
                             key={item.name}
                             to={item.href}
                             onClick={onItemClick}
+                            title={isCollapsed ? item.name : undefined} // Native tooltip when collapsed
                             className={({ isActive }) =>
                                 [
                                     'group flex items-center rounded-md px-3 py-2.5 text-sm font-medium transition-colors duration-150',
                                     isActive
                                         ? 'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-white'
                                         : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white',
+                                    isCollapsed ? 'justify-center' : '',
                                 ].join(' ')
                             }
                         >
                             <Icon
-                                className="mr-3 h-4 w-4 shrink-0 text-gray-400 transition-colors group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-white"
+                                className={`h-5 w-5 shrink-0 transition-colors ${
+                                    isCollapsed ? '' : 'mr-3'
+                                } text-gray-400 group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-white`}
                                 aria-hidden="true"
                             />
-                            {item.name}
+                            <AnimatePresence initial={false}>
+                                {!isCollapsed && (
+                                    <motion.span
+                                        variants={textVariants}
+                                        initial="hidden"
+                                        animate="visible"
+                                        exit="hidden"
+                                        className="whitespace-nowrap"
+                                    >
+                                        {item.name}
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
                         </NavLink>
                     );
                 })}
             </nav>
 
             {/* ── User info + Logout ─────────────────────────────────────── */}
-            <div className="space-y-2 border-t border-gray-200 p-3 dark:border-gray-800">
-                {/* Current user pill */}
-                {user && (
-                    <div className="rounded-md px-3 py-2">
-                        <p className="truncate text-xs font-semibold text-gray-800 dark:text-gray-200">
-                            {user.name}
-                        </p>
-                        <p className="truncate text-xs text-gray-500 dark:text-gray-400">
-                            {user.email}
-                        </p>
+            {!!user && (
+                <div className="space-y-2 overflow-x-hidden border-t border-gray-200 p-3 dark:border-gray-800">
+                    <div
+                        className={`flex items-center rounded-md ${isCollapsed ? 'justify-center' : 'px-3 py-2'}`}
+                    >
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-200 font-bold text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                            {user.name.charAt(0)}
+                        </div>
+                        <AnimatePresence initial={false}>
+                            {!isCollapsed && (
+                                <motion.div
+                                    variants={textVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="hidden"
+                                    className="ml-3 flex flex-col whitespace-nowrap"
+                                >
+                                    <p className="text-xs font-semibold text-gray-800 dark:text-gray-200">
+                                        {user.name}
+                                    </p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                        {user.email}
+                                    </p>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
-                )}
 
-                {/* Logout button */}
-                <Button
-                    variant="ghost"
-                    className="w-full justify-start text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
-                    onClick={handleLogout}
-                    disabled={isLoggingOut}
-                    aria-label="Log out of your account"
-                >
-                    {isLoggingOut ? (
-                        <>
-                            <Loader2 className="mr-3 h-4 w-4 animate-spin" />
-                            Logging out…
-                        </>
-                    ) : (
-                        <>
-                            <LogOut className="mr-3 h-4 w-4" />
-                            Logout
-                        </>
-                    )}
-                </Button>
-            </div>
+                    <Button
+                        variant="ghost"
+                        className={`w-full text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white ${
+                            isCollapsed
+                                ? 'justify-center px-0'
+                                : 'justify-start px-3'
+                        }`}
+                        onClick={handleLogout}
+                        disabled={isLoggingOut}
+                        title={isCollapsed ? 'Logout' : undefined}
+                    >
+                        {isLoggingOut ? (
+                            <Loader2
+                                className={`h-5 w-5 animate-spin ${isCollapsed ? '' : 'mr-3'}`}
+                            />
+                        ) : (
+                            <LogOut
+                                className={`h-5 w-5 ${isCollapsed ? '' : 'mr-3'}`}
+                            />
+                        )}
+                        <AnimatePresence initial={false}>
+                            {!isCollapsed && (
+                                <motion.span
+                                    variants={textVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="hidden"
+                                    className="whitespace-nowrap"
+                                >
+                                    {isLoggingOut ? 'Logging out…' : 'Logout'}
+                                </motion.span>
+                            )}
+                        </AnimatePresence>
+                    </Button>
+                </div>
+            )}
         </div>
     );
 }

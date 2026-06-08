@@ -1,0 +1,182 @@
+[
+  {
+    "roomNumber": "RM-101",
+    "roomType": "SINGLE",
+    "capacity": 1,
+    "pricePerSemester": "1600",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 0,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-102",
+    "roomType": "DOUBLE",
+    "capacity": 2,
+    "pricePerSemester": "2000",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 0,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-103",
+    "roomType": "TRIPLE",
+    "capacity": 3,
+    "pricePerSemester": "2400",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 0,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-104",
+    "roomType": "QUAD",
+    "capacity": 4,
+    "pricePerSemester": "2800",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 0,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-105",
+    "roomType": "SINGLE",
+    "capacity": 1,
+    "pricePerSemester": "1650",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 0,
+    "amenities": [{ "amenity": "Wi-Fi" }]
+  },
+  {
+    "roomNumber": "RM-201",
+    "roomType": "SINGLE",
+    "capacity": 1,
+    "pricePerSemester": "1700",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 1,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-202",
+    "roomType": "DOUBLE",
+    "capacity": 2,
+    "pricePerSemester": "2100",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 1,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-203",
+    "roomType": "TRIPLE",
+    "capacity": 3,
+    "pricePerSemester": "2500",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 1,
+    "amenities": [{ "amenity": "Wi-Fi" }]
+  },
+  {
+    "roomNumber": "RM-204",
+    "roomType": "QUAD",
+    "capacity": 4,
+    "pricePerSemester": "2900",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 1,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-205",
+    "roomType": "SINGLE",
+    "capacity": 1,
+    "pricePerSemester": "1750",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 1,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-301",
+    "roomType": "SINGLE",
+    "capacity": 1,
+    "pricePerSemester": "1800",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 2,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-302",
+    "roomType": "DOUBLE",
+    "capacity": 2,
+    "pricePerSemester": "2200",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 2,
+    "amenities": [{ "amenity": "Wi-Fi" }]
+  },
+  {
+    "roomNumber": "RM-303",
+    "roomType": "TRIPLE",
+    "capacity": 3,
+    "pricePerSemester": "2600",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 2,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-304",
+    "roomType": "QUAD",
+    "capacity": 4,
+    "pricePerSemester": "3000",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 2,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-305",
+    "roomType": "DOUBLE",
+    "capacity": 2,
+    "pricePerSemester": "2250",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 2,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-401",
+    "roomType": "SINGLE",
+    "capacity": 1,
+    "pricePerSemester": "1900",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 3,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-402",
+    "roomType": "DOUBLE",
+    "capacity": 2,
+    "pricePerSemester": "2300",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 3,
+    "amenities": [{ "amenity": "Wi-Fi" }]
+  },
+  {
+    "roomNumber": "RM-403",
+    "roomType": "TRIPLE",
+    "capacity": 3,
+    "pricePerSemester": "2700",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 3,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-404",
+    "roomType": "QUAD",
+    "capacity": 4,
+    "pricePerSemester": "3100",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 3,
+    "amenities": [{ "amenity": "Wi-Fi" }, { "amenity": "AC" }]
+  },
+  {
+    "roomNumber": "RM-405",
+    "roomType": "SINGLE",
+    "capacity": 1,
+    "pricePerSemester": "1950",
+    "imageUrl": "https://unsplash.com",
+    "floorNumber": 4,
+    "amenities": null
+  }
+]

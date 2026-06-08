@@ -4,6 +4,7 @@ import com.leroy.hostelbackend.module.hostel.model.Hostel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -16,7 +17,7 @@ import java.util.UUID;
  * <p><strong>N+1 prevention:</strong> All queries that load the {@code manager}
  * association use {@code JOIN FETCH} so Hibernate issues one query, not one per hostel.
  */
-public interface HostelRepository extends JpaRepository<Hostel, UUID> {
+public interface HostelRepository extends JpaRepository<Hostel, UUID>, JpaSpecificationExecutor<Hostel> {
 
     /**
      * Paginated list of active hostels with their manager eagerly loaded.

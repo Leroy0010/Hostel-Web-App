@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import type { HostelData, ProfileUser } from '@/features/auth/types';
 import { tokenManager } from '@/lib/tokenManager';
+import type { HostelDto } from '@/features/hostel/types/hostel.types';
+import type { ProfileUser } from '@/features/user/types/user.types';
 
 // ---------------------------------------------------------------------------
 // State shape
@@ -14,7 +15,7 @@ interface AuthState {
      * The hostel associated with the current user's role context.
      * Null for students who haven't booked, or for admin users.
      */
-    hostel: HostelData | null;
+    hostel: HostelDto | null;
 
     // ── Status flags ────────────────────────────────────────────────────────
     /**
@@ -39,7 +40,7 @@ interface AuthState {
     setAuth: (
         accessToken: string,
         user: ProfileUser,
-        hostel: HostelData | null
+        hostel: HostelDto | null
     ) => void;
 
     /**

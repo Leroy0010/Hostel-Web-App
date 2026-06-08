@@ -1,43 +1,45 @@
 package com.leroy.hostelbackend.module.auth.service;
 
+import com.leroy.hostelbackend.config.JwtConfig;
+import com.leroy.hostelbackend.module.auth.dto.*;
+import com.leroy.hostelbackend.module.auth.model.AuthToken;
+import com.leroy.hostelbackend.module.auth.model.AuthTokenType;
+import com.leroy.hostelbackend.module.auth.repository.AuthTokenRepository;
+import com.leroy.hostelbackend.module.email.service.EmailService;
 import com.leroy.hostelbackend.module.user.model.CustomUserDetails;
 import com.leroy.hostelbackend.module.user.model.User;
 import com.leroy.hostelbackend.module.user.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.util.HexFormat;
 import java.util.UUID;
 
-/**
- * Helper service for accessing the currently authenticated user.
- *
- * <p>The {@link org.springframework.security.core.context.SecurityContext} principal is
- * set by {@link com.leroy.hostelbackend.module.auth.security.JwtAuthenticationFilter}.
- * It stores a {@link CustomUserDetails} instance, so we can extract the UUID directly
- * from the security context <em>without</em> an extra database query in the common case.
- *
- * <p>A database fetch is only needed when callers require the full {@link User} entity
- * (e.g. to update fields). For read-only uses — such as checking the caller's role or ID
- * inside a service method — prefer {@link #getAuthenticatedUserDetails()} instead.
- */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final AuthTokenRepository authTokenRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final SecureRandom secureRandom = new SecureRandom();
+    private final EmailService emailService;
+    private final JwtConfig jwtConfig;
 
-    /**
-     * Returns the {@link CustomUserDetails} snapshot from the current security context.
-     *
-     * <p>This is a zero-database-query operation. Use it when you only need the caller's
-     * {@code userId} or {@code role} (e.g., to build a query predicate).
-     *
-     * @return the authenticated user's details
-     * @throws IllegalStateException if called outside a secured request (no authentication present)
-     */
     public CustomUserDetails getAuthenticatedUserDetails() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails details)) {
@@ -46,24 +48,151 @@ public class AuthService {
         return details;
     }
 
-    /**
-     * Fetches the full {@link User} entity for the currently authenticated principal.
-     *
-     * <p>Incurs one database query. Use only when the full entity is required
-     * (e.g. updating profile data). For ID / role checks alone, prefer
-     * {@link #getAuthenticatedUserDetails()}.
-     *
-     * @return the authenticated user's full entity
-     * @throws UsernameNotFoundException if the user no longer exists in the database
-     *                                   (e.g. account deleted between token issue and request)
-     */
+    /** Fixed bug: Safely extract the UUID from our CustomUserDetails wrapper principal */
     public User getAuthenticatedUser() {
-        var userId = UUID.fromString(
-                Objects.requireNonNull(Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getPrincipal()).toString()
-        );
+        UUID userId = getAuthenticatedUserDetails().getUserId();
         return userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "Authenticated user no longer exists: " + userId
-                ));
+                .orElseThrow(() -> new UsernameNotFoundException("Authenticated user no longer exists: " + userId));
+    }
+
+    // -------------------------------------------------------------------------
+    // 1. Email Verification Flow
+    // -------------------------------------------------------------------------
+
+    @Transactional
+    public String createEmailVerificationToken(User user) {
+        // Enforce account initialization policy: user starts inactive until verified
+        user.setIsActive(false);
+        userRepository.save(user);
+
+        return generateAndSaveToken(user, AuthTokenType.EMAIL_VERIFICATION, 24 * 60); // 24-hour window
+    }
+
+    @Transactional
+    public void verifyEmail(String rawToken) {
+        String hash = hashToken(rawToken);
+        AuthToken tokenEntity = authTokenRepository.findByTokenHashAndType(hash, AuthTokenType.EMAIL_VERIFICATION)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid or non-existent verification token."));
+
+        if (tokenEntity.isExpired()) {
+            authTokenRepository.delete(tokenEntity);
+            throw new IllegalStateException("Verification token has expired. Please register again.");
+        }
+
+        User user = tokenEntity.getUser();
+        user.setIsActive(true);
+        userRepository.save(user);
+
+        authTokenRepository.delete(tokenEntity); // Single-use guarantee
+        log.info("Email verified successfully for user ID: {}", user.getId());
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. Authenticated Password Modification
+    // -------------------------------------------------------------------------
+
+    @Transactional
+    public void changePassword(PasswordChangeRequest request) {
+        User user = getAuthenticatedUser();
+
+        // Security Guard: Defend against session-hijack password changes
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
+            throw new BadCredentialsException("The current password provided is incorrect.");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+        log.info("Password changed securely via user settings for ID: {}", user.getId());
+    }
+
+    // -------------------------------------------------------------------------
+    // 3. Lost Password Recovery Flow
+    // -------------------------------------------------------------------------
+
+    @Transactional
+    public void initiatePasswordReset(PasswordResetRequest request) {
+        // Use standard data leak mitigation layout for production security:
+        // Do not throw a 404 if email isn't found. This prevents scanning accounts.
+        var userOpt = userRepository.findByEmailIgnoreCase(request.email().trim());
+        if (userOpt.isEmpty()) {
+            log.info("Password reset requested for non-existent email: {}", request.email());
+            return;
+        }
+
+        User user = userOpt.get();
+        String rawToken = generateAndSaveToken(user, AuthTokenType.PASSWORD_RESET, 15);
+        emailService.sendPasswordResetEmail(user.getEmail(), user.getName(), rawToken);
+
+        log.info("Password reset token generated and emailed safely for user ID: {}", user.getId());
+    }
+
+    @Transactional
+    public void completePasswordReset(PasswordResetConfirmRequest request) {
+        String hash = hashToken(request.token());
+        AuthToken tokenEntity = authTokenRepository.findByTokenHashAndType(hash, AuthTokenType.PASSWORD_RESET)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid or expired reset token."));
+
+        if (tokenEntity.isExpired()) {
+            authTokenRepository.delete(tokenEntity);
+            throw new IllegalStateException("Your password reset link has expired.");
+        }
+
+        User user = tokenEntity.getUser();
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+
+        if(request.type() != null && request.type().equals("activation")){
+            user.setIsActive(true);
+        }
+        userRepository.save(user);
+
+        // Wipe all reset footprints for this specific profile
+        authTokenRepository.deleteByUserIdAndType(user.getId(), AuthTokenType.PASSWORD_RESET);
+        log.info("Password has been successfully recovered and reset for user ID: {}", user.getId());
+    }
+
+    public void setAuthCookie(HttpServletResponse response, String refreshToken) {
+        // HttpOnly + Secure cookie — never readable by JavaScript
+        var cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        cookie.setPath("/api/auth/refresh");   // scoped: only sent to the refresh endpoint
+        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
+        cookie.setAttribute("SameSite", "LAX");
+        cookie.setDomain("localhost");
+        response.addCookie(cookie);
+    }
+
+
+    // -------------------------------------------------------------------------
+    // Cryto Token Engine Helpers
+    // -------------------------------------------------------------------------
+
+    public String generateAndSaveToken(User user, AuthTokenType type, long expiryInMinutes) {
+        // Clear previous matching records out of the stack
+        authTokenRepository.deleteByUserIdAndType(user.getId(), type);
+
+        // Generate a cryptographically strong unguessable value
+        byte[] bytes = new byte[32];
+        secureRandom.nextBytes(bytes);
+        String rawToken = HexFormat.of().formatHex(bytes);
+
+        AuthToken tokenEntity = new AuthToken();
+        tokenEntity.setUser(user);
+        tokenEntity.setTokenHash(hashToken(rawToken));
+        tokenEntity.setType(type);
+        tokenEntity.setExpiresAt(LocalDateTime.now().plusMinutes(expiryInMinutes));
+
+        authTokenRepository.save(tokenEntity);
+        return rawToken;
+    }
+
+    private String hashToken(String rawToken) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(rawToken.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(hashBytes);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 algorithm missing from core environment.", e);
+        }
     }
 }

@@ -15,23 +15,28 @@ import java.util.UUID;
 /**
  * Persistent booking entity.
  *
- * <p><strong>Multiple bookings per student:</strong> A student may hold multiple
- * active bookings simultaneously. There is no unique constraint on
- * {@code (student_id, academic_year, semester)} — that constraint has been replaced
- * by a partial unique index that only prevents booking the <em>same room</em> twice
- * in the same period. The system sends soft reminders when a check-in occurs.
+ * <p><strong>Period-scoped capacity model:</strong> Capacity is no longer tracked by
+ * {@code room.currentOccupancy} alone. Availability for a given
+ * {@code (academicYear, semester)} is computed dynamically by counting active bookings
+ * ({@code APPROVED} or {@code CHECKED_IN}) for that room in that period. This allows
+ * future semesters to be booked while the current semester is still occupied.
  *
- * <p><strong>Capacity locking on APPROVED:</strong> When the manager approves a booking,
- * {@code room.currentOccupancy} is incremented immediately. This prevents the race
- * condition where multiple students are approved for a room that only has one bed left.
+ * <p><strong>Multiple bookings per student:</strong> A student may hold bookings for
+ * multiple different rooms simultaneously. The only hard constraint is that the same
+ * student cannot have two active bookings for the <em>same room</em> in the same period
+ * (enforced by the partial unique index {@code idx_unique_active_room_booking}).
  *
- * <p><strong>Payment expiry:</strong> When approving, the manager sets a grace period
- * (in hours). If the student does not submit a {@code paymentRef} before
- * {@code paymentExpiresAt}, the {@code BookingExpiredSweeper} automatically sets
- * the status to {@link BookingStatus#EXPIRED}, releases the bed, and notifies the waitlist.
+ * <p><strong>Semester linearity rule:</strong> A SECOND semester booking is only permitted
+ * if the FIRST semester for the same room and academic year already has a CHECKED_IN or
+ * CHECKED_OUT booking. Enforced in {@code BookingService.validateSemesterLinearity()}.
  *
- * <p><strong>Payment model:</strong> No gateway is integrated. {@code paymentRef} is
- * an external transaction ID (Mobile Money, bank slip) verified offline by the manager.
+ * <p><strong>Payment expiry:</strong> Manager sets {@code paymentExpiresAt} at approval.
+ * The {@code BookingExpiredSweeper} auto-expires APPROVED bookings past this deadline
+ * with no paymentRef.
+ *
+ * <p><strong>Auto-draft PENDING expiry:</strong> Waitlist-promoted bookings are auto-created
+ * as PENDING with a {@code pendingExpiresAt} deadline. The sweeper auto-rejects them if
+ * not actioned, advancing the waitlist to the next student.
  */
 @Getter
 @Setter
@@ -55,21 +60,19 @@ public class Booking {
     private Room room;
 
     /**
-     * Lifecycle status. Stored as VARCHAR — Java enum is the sole enforcer.
-     * Transitions are managed exclusively in {@code BookingService} and
-     * {@code BookingExpiredSweeper}.
-     *
-     * @see BookingStatus
+     * Current lifecycle status.
+     * Stored as VARCHAR; Java enum {@link BookingStatus} is the enforcer.
+     * Transitions are owned by {@code BookingService} and {@code BookingExpiredSweeper}.
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private BookingStatus status = BookingStatus.PENDING;
 
-    /** e.g. "2024/2025" */
+    /** Academic year, e.g. "2025/2026". Format enforced in BookingService. */
     @Column(name = "academic_year", nullable = false)
     private String academicYear;
 
-    /** FIRST | SECOND | FULL */
+    /** FIRST | SECOND | FULL. Enforced by DTO pattern validation. */
     @Column(name = "semester", nullable = false)
     private String semester;
 
@@ -85,18 +88,32 @@ public class Booking {
     private User approvedBy;
 
     /**
-     * Payment submission deadline set by the manager at approval time.
-     * If the student does not call {@code POST /bookings/{id}/payment} before
-     * this timestamp, the sweeper automatically expires the booking.
-     * Null for PENDING/REJECTED/CANCELLED bookings.
+     * APPROVED payment deadline set by the manager.
+     * If the student does not submit a paymentRef before this time,
+     * the {@code BookingExpiredSweeper} moves the booking to {@link BookingStatus#EXPIRED}.
      */
     @Column(name = "payment_expires_at")
     private LocalDateTime paymentExpiresAt;
 
+    /**
+     * Auto-draft PENDING expiry deadline. Set only when {@code isWaitlistDraft = true}.
+     * If the manager does not approve/reject before this time, the sweeper auto-rejects
+     * the booking and advances the waitlist to the next student.
+     */
+    @Column(name = "pending_expires_at")
+    private LocalDateTime pendingExpiresAt;
+
+    /**
+     * {@code true} when this booking was auto-created by the waitlist promotion flow.
+     * Helps managers identify which PENDING bookings came from the waitlist.
+     */
+    @Column(name = "is_waitlist_draft", nullable = false)
+    private Boolean isWaitlistDraft = false;
+
     @Column(name = "rejected_at")
     private LocalDateTime rejectedAt;
 
-    @Column(name = "rejected_reason", columnDefinition = "TEXT")
+    @Column(name = "rejected_reason")
     private String rejectedReason;
 
     @Column(name = "checked_in_at")
@@ -106,14 +123,15 @@ public class Booking {
     private LocalDateTime checkedOutAt;
 
     /**
-     * Informational amount declared by the student. Not validated against a gateway.
+     * Informational amount declared by the student.
+     * Not validated against any payment gateway.
      */
     @Column(name = "amount_paid", precision = 10, scale = 2)
     private BigDecimal amountPaid;
 
     /**
-     * External payment reference (MTN Mobile Money ID, bank slip number, etc.).
-     * Must be present for the manager to check the student in.
+     * External payment reference (MTN Mobile Money, bank slip, etc.).
+     * Provided by the student; verified offline by the manager before check-in.
      */
     @Column(name = "payment_ref")
     private String paymentRef;
@@ -127,15 +145,11 @@ public class Booking {
     private LocalDateTime updatedAt;
 
     // -------------------------------------------------------------------------
-    // Factory method
+    // Factory methods
     // -------------------------------------------------------------------------
 
     /**
-     * Constructs a new PENDING booking. The service is responsible for saving it.
-     *
-     * @param request the validated booking request from the student
-     * @param student the authenticated student entity
-     * @param room    the room being requested
+     * Creates a standard student-initiated PENDING booking.
      */
     public static Booking createBooking(CreateBookingRequest request, User student, Room room) {
         var booking = new Booking();
@@ -145,6 +159,34 @@ public class Booking {
         booking.setAcademicYear(request.academicYear());
         booking.setSemester(request.semester());
         booking.setRequestedAt(LocalDateTime.now());
+        booking.setIsWaitlistDraft(false);
+        return booking;
+    }
+
+    /**
+     * Creates an auto-drafted PENDING booking on behalf of a waitlisted student.
+     * The manager sees this flagged as a waitlist promotion so they can prioritise it.
+     *
+     * @param student          the waitlisted student being promoted
+     * @param room             the room that just had a bed freed
+     * @param academicYear     the period the waitlist entry was for
+     * @param semester         the semester the waitlist entry was for
+     * @param pendingExpiresAt deadline for the manager to action before it auto-rejects
+     */
+    public static Booking createWaitlistDraft(
+            User student, Room room,
+            String academicYear, String semester,
+            LocalDateTime pendingExpiresAt
+    ) {
+        var booking = new Booking();
+        booking.setStudent(student);
+        booking.setRoom(room);
+        booking.setStatus(BookingStatus.PENDING);
+        booking.setAcademicYear(academicYear);
+        booking.setSemester(semester);
+        booking.setRequestedAt(LocalDateTime.now());
+        booking.setIsWaitlistDraft(true);
+        booking.setPendingExpiresAt(pendingExpiresAt);
         return booking;
     }
 }

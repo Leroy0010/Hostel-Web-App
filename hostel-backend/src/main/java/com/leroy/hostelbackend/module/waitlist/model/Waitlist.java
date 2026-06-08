@@ -12,15 +12,20 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * A student's queued position for a specific hostel.
+ * A student's queued position for a specific hostel and academic period.
  *
- * <p><strong>Position semantics:</strong> 1-based rank within this hostel's waitlist.
- * Position 1 is the next student notified when a bed opens. The service re-ranks
- * remaining entries after a promotion or voluntary removal.
+ * <p><strong>Period-scoped:</strong> The waitlist is now per {@code (hostelId, academicYear, semester)}.
+ * A student can be on the waitlist for Hostel A for FIRST semester AND for SECOND semester
+ * simultaneously. This matches the period-scoped booking model so a freed bed for a specific
+ * period notifies only students waiting for that same period.
  *
- * <p><strong>notified flag:</strong> Set to {@code true} once a push notification
- * has been dispatched. Reset to {@code false} if a new vacancy appears and the
- * student still hasn't booked (so they can be re-notified next time).
+ * <p><strong>Auto-drafting:</strong> When {@code notifyNextInLine} is called, this service
+ * no longer just sends a push notification — it auto-creates a PENDING booking for the
+ * student and removes them from the waitlist. The manager then sees a flagged
+ * ({@code isWaitlistDraft = true}) PENDING booking on their dashboard and simply approves or rejects.
+ *
+ * <p><strong>Position integrity:</strong> Positions are 1-based and kept contiguous.
+ * Every removal calls {@link WaitlistRepository#decrementPositionsAfter} in the same transaction.
  */
 @Getter
 @Setter
@@ -41,17 +46,32 @@ public class Waitlist {
     @JoinColumn(name = "hostel_id", nullable = false)
     private Hostel hostel;
 
-    /** 1-based rank. Managed exclusively by {@code WaitlistService}. */
+    /** 1-based rank within this hostel+period queue. Managed by {@code WaitlistService} only. */
     @Column(name = "position", nullable = false)
     private Integer position;
+
+    /**
+     * The academic year the student is waiting for, e.g. "2025/2026".
+     * Matches the {@code academicYear} on the booking that will be created on promotion.
+     */
+    @Column(name = "academic_year", nullable = false)
+    private String academicYear;
+
+    /**
+     * The semester the student is waiting for: FIRST | SECOND | FULL.
+     * Matches the {@code semester} on the booking that will be created on promotion.
+     */
+    @Column(name = "semester", nullable = false)
+    private String semester;
 
     @CreationTimestamp
     @Column(name = "joined_at", nullable = false, updatable = false)
     private LocalDateTime joinedAt;
 
     /**
-     * {@code true} after a Firebase push has been sent for this entry.
-     * Prevents repeat notifications until the next vacancy cycle.
+     * Set to {@code true} once the student has been promoted (auto-draft created).
+     * After promotion the waitlist entry is deleted, so this flag is mainly for
+     * in-flight audit purposes.
      */
     @Column(name = "notified", nullable = false)
     private Boolean notified = false;

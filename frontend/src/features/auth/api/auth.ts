@@ -5,7 +5,6 @@ import type {
     ChangePasswordForm,
     LoginCredentials,
     LoginResponse,
-    MeResponse,
     PasswordResetConfirmForm,
     PasswordResetRequestForm,
 } from '../types';
@@ -17,20 +16,19 @@ import { authKeys } from './auth.keys';
 // Query hooks
 // ---------------------------------------------------------------------------
 
-/**
- * Fetches the currently authenticated user's profile and hostel context.
- *
- * Disabled by default — invoked programmatically by `useAuthInit`.
- * `staleTime: Infinity` prevents unnecessary background refetches of identity
- * data that only changes on explicit profile updates.
- */
-export function useGetCurrentProfile() {
+export function useVerifyEmail(params: { token: string }) {
     return useQuery({
-        queryKey: authKeys.me(),
-        queryFn: async () => apiClient.get<never, MeResponse>('/users/me'),
+        queryKey: authKeys.verifyEmail(params.token),
+
+        queryFn: () =>
+            apiClient.get<never, void>(`/auth/verify-email`, { params }),
+
+        enabled: !!params.token,
         retry: false,
+        refetchOnWindowFocus: false, // Don't refetch if user switches browser tabs
+        refetchOnMount: false, // Don't refetch if component re-mounts
+        refetchOnReconnect: false, // Don't refetch if network drops and restores
         staleTime: Infinity,
-        enabled: false,
     });
 }
 
@@ -140,21 +138,5 @@ export function useChangePasswordMutation() {
                 toast.error(error.message);
             }
         },
-    });
-}
-
-export function useVerifyEmail(params: { token: string }) {
-    return useQuery({
-        queryKey: authKeys.verifyEmail(params.token),
-
-        queryFn: () =>
-            apiClient.get<never, void>(`/auth/verify-email`, { params }),
-
-        enabled: !!params.token,
-        retry: false,
-        refetchOnWindowFocus: false, // Don't refetch if user switches browser tabs
-        refetchOnMount: false, // Don't refetch if component re-mounts
-        refetchOnReconnect: false, // Don't refetch if network drops and restores
-        staleTime: Infinity,
     });
 }

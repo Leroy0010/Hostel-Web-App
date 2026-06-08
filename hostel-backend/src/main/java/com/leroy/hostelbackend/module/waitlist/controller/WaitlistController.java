@@ -1,12 +1,14 @@
 package com.leroy.hostelbackend.module.waitlist.controller;
 
 import com.leroy.hostelbackend.module.user.model.CustomUserDetails;
+import com.leroy.hostelbackend.module.waitlist.dto.JoinWaitlistRequest;
 import com.leroy.hostelbackend.module.waitlist.dto.WaitlistDto;
 import com.leroy.hostelbackend.module.waitlist.dto.WaitlistEntryDto;
 import com.leroy.hostelbackend.module.waitlist.dto.WaitlistStatusDto;
 import com.leroy.hostelbackend.module.waitlist.service.WaitlistService;
 import com.leroy.hostelbackend.shared.response.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,8 +31,8 @@ import java.util.UUID;
  * DELETE /waitlists/{hostelId}           STUDENT: leave a hostel's waitlist
  * GET    /waitlists/{hostelId}/status    STUDENT: check own position
  * GET    /waitlists/my                   STUDENT: all my waitlist entries
- * GET    /manager/hostels/{hostelId}/waitlist   MANAGER/ADMIN: see the queue
- * DELETE /admin/waitlists/{waitlistId}   ADMIN: force-remove an entry
+ * GET    /manager/hostels/{hostelId}/waitlist   MANAGER: see the queue
+ * DELETE /manager/waitlists/{waitlistId}   MANAGER: force-remove an entry
  * </pre>
  */
 @RestController
@@ -49,13 +51,13 @@ public class WaitlistController {
      * Join the waitlist for a hostel.
      * Returns 201 Created with the student's position.
      */
-    @PostMapping("/waitlists/{hostelId}")
+    @PostMapping("/waitlists")
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ApiResponse<WaitlistDto>> joinWaitlist(
-            @PathVariable UUID hostelId,
+            @Valid @RequestBody JoinWaitlistRequest request,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         var studentId = customUserDetails.getUserId();
-        var entry = waitlistService.joinWaitlist(studentId, hostelId);
+        var entry = waitlistService.joinWaitlist(studentId, request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(
                         "You have joined the waitlist at position " + entry.position() + ".", entry));
@@ -67,23 +69,26 @@ public class WaitlistController {
     @DeleteMapping("/waitlists/{hostelId}")
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ApiResponse<Void>> leaveWaitlist(
+            @Valid @RequestBody JoinWaitlistRequest request,
             @PathVariable UUID hostelId,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         var studentId = customUserDetails.getUserId();
-        waitlistService.leaveWaitlist(studentId, hostelId);
+        waitlistService.leaveWaitlist(studentId, hostelId, request.academicYear(),  request.semester());
         return ResponseEntity.ok(ApiResponse.success("You have been removed from the waitlist."));
     }
 
     /**
      * Check current position on a specific hostel's waitlist.
      */
-    @GetMapping("/waitlists/{hostelId}/status")
+    @GetMapping("/waitlists/status/{hostelId}")
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ApiResponse<WaitlistStatusDto>> getStatus(
             @PathVariable UUID hostelId,
+            @RequestParam(required = false) String semester,
+            @RequestParam(required = false) String academicYear,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         var studentId = customUserDetails.getUserId();
-        var status = waitlistService.getWaitlistStatus(studentId, hostelId);
+        var status = waitlistService.getWaitlistStatus(studentId, hostelId, academicYear, semester);
         return ResponseEntity.ok(ApiResponse.success("Waitlist status fetched.", status));
     }
 
@@ -102,7 +107,7 @@ public class WaitlistController {
     }
 
     // =========================================================================
-    // Manager / Admin endpoints
+    // Manager endpoints
     // =========================================================================
 
     /**
@@ -110,22 +115,24 @@ public class WaitlistController {
      * Used by the manager dashboard to see who is queued.
      */
     @GetMapping("/manager/hostels/{hostelId}/waitlist")
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ApiResponse<Page<WaitlistEntryDto>>> hostelWaitlist(
             @PathVariable UUID hostelId,
+            @RequestParam(required = false) String semester,
+            @RequestParam(required = false) String academicYear,
             @PageableDefault(size = 20) Pageable pageable
     ) {
         return ResponseEntity.ok(ApiResponse.success("Waitlist fetched.",
-                waitlistService.hostelWaitlist(hostelId, pageable)));
+                waitlistService.hostelWaitlist(hostelId, academicYear, semester, pageable)));
     }
 
     /**
-     * Admin force-removes a specific waitlist entry (data correction / misconduct).
+     * Manager force-removes a specific waitlist entry (data correction / misconduct).
      */
-    @DeleteMapping("/admin/waitlists/{waitlistId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<Void>> adminRemove(@PathVariable UUID waitlistId) {
-        waitlistService.adminRemoveEntry(waitlistId);
+    @DeleteMapping("/manager/waitlists/{waitlistId}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<ApiResponse<Void>> managerRemove(@PathVariable UUID waitlistId) {
+        waitlistService.managerRemoveEntry(waitlistId);
         return ResponseEntity.ok(ApiResponse.success("Waitlist entry removed."));
     }
 }

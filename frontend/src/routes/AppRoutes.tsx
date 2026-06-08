@@ -5,17 +5,25 @@ import { PublicRoute } from '@/components/routing/PublicRoute';
 import { AppLoader } from '@/components/ui/AppLoader';
 import { useAuthStore } from '@/features/auth/store/useAuthStore';
 import {
+    AdminHostels,
     Dashboard,
     ForgotPassword,
+    Home,
     Hostels,
+    HostelsDetailsPage,
     Login,
+    ManagerHostels,
+    ManagerRoomsPage,
     NotFound,
+    Notifications,
+    Profile,
     Register,
     ResetPassword,
-    Rooms,
+    RoomDetailsPage,
     Unauthorized,
     VerifyEmail,
 } from './lazyLoadedPages';
+import { AppLayout } from '@/components/layout/AppLayout';
 
 /**
  * Application route tree.
@@ -40,41 +48,85 @@ export function AppRoutes() {
                         path="/forgot-password"
                         element={<ForgotPassword />}
                     />
-
                     <Route path="/setup-password" element={<ResetPassword />} />
-
                     <Route path="/verify-email" element={<VerifyEmail />} />
-                    <Route path="/hostels" element={<Hostels />} />
-                    <Route path="/rooms" element={<Rooms />} />
                 </Route>
 
                 {/* ── Error / informational pages ──────────────────────────── */}
                 <Route path="/unauthorized" element={<Unauthorized />} />
 
-                {/* ── Protected spaces (all authenticated roles) ───────────── */}
-                <Route
-                    element={
-                        <ProtectedRoute
-                            allowedRoles={['ADMIN', 'MANAGER', 'STUDENT']}
+                {/* ── Layout Viewports (Guests AND Authenticated Users) ─────── */}
+                <Route element={<AppLayout />}>
+                    {/* Open Content Pages */}
+
+                    <Route path="/hostels" element={<Hostels />} />
+                    <Route
+                        path="/hostels/:hostelId"
+                        element={<HostelsDetailsPage />}
+                    />
+
+                    <Route
+                        path="/hostels/:hostelId/rooms/:roomId"
+                        element={<RoomDetailsPage />}
+                    />
+
+                    {/* ── Protected spaces (all authenticated roles) ───────────── */}
+                    <Route
+                        element={
+                            <ProtectedRoute
+                                allowedRoles={['ADMIN', 'MANAGER', 'STUDENT']}
+                            />
+                        }
+                    >
+                        {/* 🔴 Move root back inside the guard container */}
+                        <Route path="/" element={<RootIndexRedirect />} />
+
+                        {/* Shared protected routes */}
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route
+                            path="/notifications"
+                            element={<Notifications />}
                         />
-                    }
-                >
-                    {/*
-                     * Root "/" renders a role-aware redirect so each role lands
-                     * on its own workspace. As feature-dashboards are added,
-                     * replace the <Navigate /> with the real page component.
-                     */}
-                    <Route path="/" element={<RootIndexRedirect />} />
 
-                    {/* Shared protected routes */}
-                    <Route path="/dashboard" element={<Dashboard />} />
+                        {/* Admin routes */}
+                        <Route
+                            element={
+                                <ProtectedRoute allowedRoles={['ADMIN']} />
+                            }
+                            path="/admin"
+                        >
+                            <Route path="hostels" element={<AdminHostels />} />
+                        </Route>
 
-                    {/*
-                     * Future feature routes — uncomment when ready:
-                     *   <Route path="/hostels"  element={<HostelsPage />} />
-                     *   <Route path="/bookings" element={<BookingsPage />} />
-                     *   <Route path="/settings" element={<SettingsPage />} />
-                     */}
+                        {/* Manager routes */}
+                        <Route
+                            element={
+                                <ProtectedRoute allowedRoles={['MANAGER']} />
+                            }
+                            path="/manager"
+                        >
+                            <Route
+                                path="hostels"
+                                element={<ManagerHostels />}
+                            />
+                            <Route
+                                path="hostels/:hostelId/rooms"
+                                element={<ManagerRoomsPage />}
+                            />
+                        </Route>
+
+                        {/* Student routes */}
+                        <Route
+                            element={
+                                <ProtectedRoute allowedRoles={['STUDENT']} />
+                            }
+                        ></Route>
+                    </Route>
+                </Route>
+
+                <Route element={<AppLayout isHomePage />}>
+                    <Route path="/" element={<Home />} />
                 </Route>
 
                 {/* ── Catch-all fallback ────────────────────────────────────── */}
@@ -98,19 +150,11 @@ export function AppRoutes() {
 function RootIndexRedirect() {
     const user = useAuthStore((state) => state.user);
 
-    if (!user) {
-        // Defensive fallback — should never reach here inside ProtectedRoute.
-        return <Navigate to="/login" replace />;
+    // If no user or unexpected role, return
+    if (!user || !['ADMIN', 'MANAGER', 'STUDENT'].includes(user.role)) {
+        return;
     }
 
-    switch (user.role) {
-        case 'ADMIN':
-            return <Navigate to="/dashboard" replace />;
-        case 'MANAGER':
-            return <Navigate to="/dashboard" replace />;
-        case 'STUDENT':
-            return <Navigate to="/dashboard" replace />;
-        default:
-            return <Navigate to="/login" replace />;
-    }
+    // Everyone else goes to dashboard
+    return <Navigate to="/dashboard" replace />;
 }

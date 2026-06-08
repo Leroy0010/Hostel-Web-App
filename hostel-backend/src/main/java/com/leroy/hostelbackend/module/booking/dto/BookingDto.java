@@ -1,13 +1,12 @@
 package com.leroy.hostelbackend.module.booking.dto;
 
-import jakarta.validation.constraints.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
  * Full booking detail returned to the client.
+ * Includes the manager-set payment deadline so the frontend can display a countdown.
  */
 public record BookingDto(
         UUID id,
@@ -16,9 +15,12 @@ public record BookingDto(
         String status,
         String academicYear,
         String semester,
+        Boolean isWaitlistDraft,
         LocalDateTime requestedAt,
         LocalDateTime approvedAt,
         ApprovedBySummary approvedBy,
+        LocalDateTime paymentExpiresAt,     // null for PENDING/REJECTED/CANCELLED
+        LocalDateTime pendingExpiresAt,     // non-null only for waitlist auto-drafts
         LocalDateTime rejectedAt,
         String rejectedReason,
         LocalDateTime checkedInAt,

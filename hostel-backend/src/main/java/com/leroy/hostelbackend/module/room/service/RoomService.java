@@ -7,8 +7,10 @@ import com.leroy.hostelbackend.module.room.mapper.RoomMapper;
 import com.leroy.hostelbackend.module.room.model.Room;
 import com.leroy.hostelbackend.module.room.model.RoomAmenity;
 import com.leroy.hostelbackend.module.room.model.RoomStatus;
+import com.leroy.hostelbackend.module.room.model.RoomType;
 import com.leroy.hostelbackend.module.room.repository.RoomAmenityRepository;
 import com.leroy.hostelbackend.module.room.repository.RoomRepository;
+import com.leroy.hostelbackend.module.room.specification.RoomSpecifications;
 import com.leroy.hostelbackend.shared.exception.DuplicateRoomNumberException;
 import com.leroy.hostelbackend.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -62,9 +64,19 @@ public class RoomService {
      */
     @Transactional(readOnly = true)
     public Page<RoomSummaryDto> listAvailableRooms(
-            UUID hostelId, String roomType, BigDecimal maxPrice, Pageable pageable
+            UUID hostelId,
+            RoomType roomType,
+            BigDecimal maxPrice,
+            Pageable pageable
     ) {
-        return roomRepository.findAvailableFiltered(hostelId, roomType, maxPrice, pageable)
+
+        var spec = RoomSpecifications.filterRooms(
+                hostelId,
+                roomType,
+                maxPrice
+        );
+
+        return roomRepository.findAll(spec, pageable)
                 .map(roomMapper::toSummaryDtoWithComputed);
     }
 

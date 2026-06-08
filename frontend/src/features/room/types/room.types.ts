@@ -162,9 +162,7 @@ export const updateRoomSchema = z.object({
         .max(20, 'Room number must not exceed 20 characters')
         .trim()
         .optional(),
-    roomType: z
-        .enum(['SINGLE', 'DOUBLE', 'TRIPLE', 'QUAD', 'SHARED'])
-        .optional(),
+    roomType: z.enum(['SINGLE', 'DOUBLE', 'TRIPLE', 'QUAD']).optional(),
     capacity: z.number().int().min(1).max(20).optional(),
     pricePerSemester: z
         .string()

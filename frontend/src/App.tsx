@@ -9,6 +9,7 @@ import { queryClient } from './lib/react-query';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { AppErrorFallback } from './components/ui/AppErrorFallback';
 import { Suspense } from 'react';
+import { useServiceWorker } from './hooks/useServiceWorker';
 
 // ---------------------------------------------------------------------------
 // RootAppEngine
@@ -25,6 +26,7 @@ import { Suspense } from 'react';
  * and PublicRoute render <AppLoader /> — guaranteeing zero premature redirects.
  */
 function RootAppEngine() {
+    useServiceWorker();
     useAuthInit();
 
     return (

@@ -2,35 +2,45 @@ package com.leroy.hostelbackend.module.user.repository;
 
 import com.leroy.hostelbackend.module.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Spring Data JPA repository for {@link User} entities.
+ * Repository for {@link User} entities.
  *
- * <p>All query methods use {@code IgnoreCase} variants so that
- * {@code alice@example.com} and {@code Alice@Example.COM} resolve to the same account,
- * consistent with how email addresses work in practice.
+ * <p>All query methods use {@code IgnoreCase} variants so that email lookups
+ * are case-insensitive, consistent with how email addresses work in practice.
  */
 public interface UserRepository extends JpaRepository<User, UUID> {
 
     /**
      * Used by {@link com.leroy.hostelbackend.module.user.service.CustomUserDetailsService}
-     * during authentication and by {@link com.leroy.hostelbackend.module.user.service.UserService}
-     * for duplicate-email checks on registration.
-     *
-     * @param email the email address to search for (case-insensitive)
-     * @return an {@link Optional} containing the user if found
+     * during authentication and by {@code UserService} for duplicate-email checks.
      */
     Optional<User> findByEmailIgnoreCase(String email);
 
     /**
-     * Lightweight existence check used before creating a new account.
+     * Lightweight existence check before creating a new account.
      * Avoids loading the full entity when we only need to know if the email is taken.
-     *
-     * @param email the email to check (case-insensitive)
-     * @return {@code true} if an account already exists with that email
      */
     boolean existsByEmailIgnoreCase(String email);
+
+    /**
+     * Returns the MANAGER assigned to a hostel.
+     * Used by {@code BookingService} and {@code WaitlistService} to notify the
+     * relevant manager when a new booking request or waitlist draft arrives.
+     *
+     * <p>Returns empty if the hostel has no manager assigned ({@code manager_id IS NULL}).
+     *
+     * @param hostelId UUID of the hostel
+     */
+    @Query("""
+            SELECT h.manager FROM Hostel h
+            WHERE h.id = :hostelId
+              AND h.manager IS NOT NULL
+            """)
+    Optional<User> findManagerByHostelId(@Param("hostelId") UUID hostelId);
 }

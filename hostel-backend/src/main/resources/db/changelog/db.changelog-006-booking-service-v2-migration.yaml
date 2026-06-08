@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      author: Leroy
+      id: booking-service-v2-migration.
+      changes:
+        - sqlFile:
+            path: scripts/booking-service-v2-migration.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+            stripComments: true

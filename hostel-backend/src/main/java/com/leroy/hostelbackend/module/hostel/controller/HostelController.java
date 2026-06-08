@@ -55,9 +55,11 @@ public class HostelController {
      */
     @GetMapping("/hostels")
     public ResponseEntity<ApiResponse<Page<HostelSummaryDto>>> listHostels(
-            @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable
+            @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+            @RequestParam(required = false) String search,
+            @RequestParam( required = false) String genderPolicy
     ) {
-        return ResponseEntity.ok(ApiResponse.success("Hostels fetched.", hostelService.listActiveHostels(pageable)));
+        return ResponseEntity.ok(ApiResponse.success("Hostels fetched.", hostelService.listActiveHostels(search, genderPolicy,pageable)));
     }
 
     /** Full hostel detail — any authenticated user. */

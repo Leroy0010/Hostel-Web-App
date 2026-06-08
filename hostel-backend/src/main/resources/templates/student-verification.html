@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Student Email</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; color: #333333; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 30px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .header { background-color: #003366; color: #ffffff; padding: 30px; text-align: center; }
+        .header h1 { margin: 0; font-size: 24px; font-weight: 600; }
+        .content { padding: 40px 30px; line-height: 1.6; }
+        .button-wrapper { text-align: center; margin: 30px 0; }
+        .btn { background-color: #d4af37; color: #003366; text-decoration: none; padding: 12px 30px; font-weight: bold; border-radius: 5px; display: inline-block; transition: background-color 0.2s; }
+        .footer { background-color: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #777777; border-top: 1px solid #eeeeee; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>UCC Hostel Management</h1>
+    </div>
+    <div class="content">
+        <p>Hello <strong th:text="${userName}">Student</strong>,</p>
+        <p>Thank you for registering on the UCC Hostel Management portal. Your account has been created successfully.</p>
+        <p>As a final security step, we need to verify your email address before you can log in and apply for accommodation. Please confirm your email by clicking the button below:</p>
+
+        <div class="button-wrapper">
+            <a th:href="${secureLink}" class="btn">Verify Email Address</a>
+        </div>
+
+        <p><strong>Note:</strong> This verification link is secure and will expire in 24 hours. If you did not create an account with us, please ignore this email.</p>
+        <br>
+        <p>Warm regards,<br><strong>Hostel Management System — UCC</strong></p>
+    </div>
+    <div class="footer">
+        <p>&copy; <span th:text="${currentYear}">2026</span> University of Cape Coast. All Rights Reserved.</p>
+    </div>
+</div>
+</body>
+</html>

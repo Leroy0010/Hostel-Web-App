@@ -122,6 +122,8 @@ server:
 app:
   frontend:
     base-url: ${FRONTEND_BASE_URL}
+    password-setup-url: ${FRONTEND_PASSWORD_SETUP_URL}
+    verify-email-url: ${FRONTEND_EMAIL_VERIFICATION_URL}
 
 
 logging:

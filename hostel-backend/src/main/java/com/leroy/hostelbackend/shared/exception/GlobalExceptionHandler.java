@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -69,6 +70,18 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage(), null, ErrorCode.ILLEGAL_STATE);
     }
 
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiError> handleBadCredentials() {
+        return build(HttpStatus.UNAUTHORIZED, "Invalid verification data or bad credentials provided.", null, ErrorCode.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<ApiError> handleDisabledAccount() {
+        return build(HttpStatus.FORBIDDEN, "Your email verification is pending or your account has been suspended.", null, ErrorCode.USER_DEACTIVATED);
+    }
+
+
+
     // -------------------------------------------------------------------------
     // 402 — Payment Required
     // -------------------------------------------------------------------------
@@ -87,10 +100,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.FORBIDDEN, ex.getMessage(), null, ErrorCode.USER_DEACTIVATED);
     }
 
-    @ExceptionHandler(DisabledException.class)
-    public ResponseEntity<ApiError> handleDisabled() {
-        return build(HttpStatus.FORBIDDEN, "This account has been deactivated. Please contact administration.", null, ErrorCode.USER_DEACTIVATED);
-    }
 
     @ExceptionHandler(HostelAccessDeniedException.class)
     public ResponseEntity<ApiError> handleHostelAccess(HostelAccessDeniedException ex) {
@@ -157,7 +166,7 @@ public class GlobalExceptionHandler {
 
     // -------------------------------------------------------------------------
     // 429 — Rate Limiting
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------BS--------------------------
 
     @ExceptionHandler(RateLimitExceededException.class)
     public ResponseEntity<ApiError> handleRateLimit(RateLimitExceededException ex) {

@@ -186,6 +186,18 @@ public class NotificationService {
                 NotificationType.GENERAL, null, null, "/bookings/my");
     }
 
+    public void notifyManagerNewBookingRequest(User manager, String studentName, String roomNumber, UUID bookingId) {
+        notify(manager, "New Booking Request",
+                "Student " + studentName + " has requested room " + roomNumber + ". Review the request.",
+                NotificationType.GENERAL, "BOOKING", bookingId, "/manager/bookings/" + bookingId);
+    }
+
+    public void notifyManagerPaymentSubmitted(User manager, String studentName, String roomNumber, UUID bookingId) {
+        notify(manager, "Payment Reference Received",
+                "Student " + studentName + " has submitted payment details for room " + roomNumber + ". Ready for verification.",
+                NotificationType.GENERAL, "BOOKING", bookingId, "/manager/bookings/" + bookingId);
+    }
+
     // -------------------------------------------------------------------------
     // Push subscription management
     // -------------------------------------------------------------------------

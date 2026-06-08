@@ -85,7 +85,7 @@ export function DetailedRoomCard({ room, hostelId }: DetailedRoomCardProps) {
                     </div>
 
                     {/* Horizontal amenities track with fade-right signal */}
-                    {room.amenities.length > 0 && (
+                    {room.amenities && room.amenities.length > 0 && (
                         <div className="relative mt-3">
                             {/* Fading right edge — signals to user there's more content */}
                             <div

@@ -1,39 +1,27 @@
 package com.leroy.hostelbackend.module.user.service;
 
+import com.leroy.hostelbackend.module.auth.dto.LoginResponse;
+import com.leroy.hostelbackend.module.auth.mapper.AuthMapper;
+import com.leroy.hostelbackend.module.auth.model.AuthTokenType;
+import com.leroy.hostelbackend.module.auth.security.JwtService;
+import com.leroy.hostelbackend.module.auth.service.AuthService;
 import com.leroy.hostelbackend.module.booking.repository.BookingRepository;
-import com.leroy.hostelbackend.module.user.dto.CreateStaffRequest;
-import com.leroy.hostelbackend.module.user.dto.CreateStudentRequest;
-import com.leroy.hostelbackend.module.user.dto.UserDto;
-import com.leroy.hostelbackend.module.user.dto.UserResponse;
+import com.leroy.hostelbackend.module.email.service.EmailService;
+import com.leroy.hostelbackend.module.user.dto.*;
 import com.leroy.hostelbackend.module.user.mapper.UserMapper;
 import com.leroy.hostelbackend.module.user.model.User;
 import com.leroy.hostelbackend.module.user.model.UserRole;
 import com.leroy.hostelbackend.module.user.repository.UserRepository;
 import com.leroy.hostelbackend.shared.exception.ResourceNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-/**
- * Application service for user account management.
- *
- * <p>Two creation flows exist:
- * <ol>
- *   <li><strong>Student self-registration</strong> — open endpoint, no auth required,
- *       always assigns {@link UserRole#STUDENT}.</li>
- *   <li><strong>Admin-created staff</strong> — secured endpoint ({@code ROLE_ADMIN}
- *       only), assigns {@link UserRole#MANAGER} or {@link UserRole#ADMIN}.
- *       Phone number is mandatory for staff accounts.</li>
- * </ol>
- *
- * <p>Duplicate email detection is done with {@code existsByEmailIgnoreCase} which
- * issues a lightweight {@code COUNT} query rather than loading the full entity.
- */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -43,62 +31,56 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final BookingRepository bookingRepository;
+    private final EmailService emailService;
+    private final AuthService authService; // Injected to handle token workflows
+    private final JwtService jwtService;
+    private final AuthMapper authMapper;
 
-    // -------------------------------------------------------------------------
-    // Student self-registration
-    // -------------------------------------------------------------------------
-
-    /**
-     * Registers a new student account. Open to unauthenticated callers.
-     *
-     * @param request validated registration request
-     * @return the created user as a {@link UserDto}
-     * @throws IllegalArgumentException if the email is already in use
-     */
     @Transactional
-    public UserDto registerStudent(CreateStudentRequest request) {
+    public LoginResponse registerStudent(CreateStudentRequest request, HttpServletResponse response) {
         assertEmailAvailable(request.getEmail());
 
-        var user = createNewUser(request.getEmail(), request.getPassword(), request.getFirstName(), request.getLastName(), request.getPhone());
-        user.setRole(UserRole.STUDENT);  // always STUDENT — never trust the client
+        // Set to false initially — student must verify email before logging in
+        var user = User.create(request.getEmail(), request.getFirstName(), request.getLastName(), request.getPhone(), false);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(UserRole.STUDENT);
 
         var saved = userRepository.save(user);
-        log.info("New student account created: id={}, email={}", saved.getId(), saved.getEmail());
-        return userMapper.toDto(saved);
+
+        var accessToken  = jwtService.generateAccessToken(saved);
+        var refreshToken = jwtService.generateRefreshToken(saved);
+
+        // HttpOnly + Secure cookie — never readable by JavaScript
+        authService.setAuthCookie(response, refreshToken.toString());
+
+        var userResponse = userMapper.toResponse(user, null);
+
+        // Generate security token and trigger email asynchronously
+        String rawToken = authService.createEmailVerificationToken(saved);
+        emailService.sendStudentVerificationEmail(saved.getEmail(), user.getName(), rawToken);
+
+        log.info("New student account created (Pending Verification): id={}, email={}", saved.getId(), saved.getEmail());
+        return authMapper.toLoginResponse(userResponse, accessToken.toString());
     }
 
-
-    // -------------------------------------------------------------------------
-    // Admin creates staff (MANAGER or ADMIN)
-    // -------------------------------------------------------------------------
-
-    /**
-     * Creates a new MANAGER or ADMIN account. Callable only by authenticated ADMINs.
-     * The role guard ({@code @PreAuthorize}) is applied at the controller level.
-     *
-     * @param request validated staff creation request
-     * @return the created user as a {@link UserDto}
-     * @throws IllegalArgumentException if the email is already in use, or if the
-     *                                  requested role is {@link UserRole#STUDENT}
-     *                                  (students self-register)
-     */
     @Transactional
     public UserDto createStaff(CreateStaffRequest request) {
-        // Guard: admins cannot use this endpoint to create a student account.
-        // Students self-register via registerStudent() — mixing both paths would
-        // bypass the "phone required for staff" rule.
         if (request.getRole().equals(UserRole.STUDENT)) {
-            throw new IllegalArgumentException(
-                    "Use the student registration endpoint to create student accounts."
-            );
+            throw new IllegalArgumentException("Use the student registration endpoint to create student accounts.");
         }
 
         assertEmailAvailable(request.getEmail());
 
-        var user = createNewUser(request.getEmail(), request.getPassword(), request.getFirstName(), request.getLastName(), request.getPhone());
+        // Admin-created staff can also start as inactive until they set up via the emailed link
+        var user = User.create(request.getEmail(), request.getFirstName(), request.getLastName(), request.getPhone(), false);
         user.setRole(request.getRole());
         var saved = userRepository.save(user);
-        log.info("Staff account created: id={}, email={}, role={}", saved.getId(), saved.getEmail(), saved.getRole());
+
+        String rawToken = authService.generateAndSaveToken(user, AuthTokenType.PASSWORD_RESET, 24 * 60);
+
+        emailService.sendStaffActivationEmail(saved.getEmail(), user.getName(), rawToken);
+
+        log.info("Staff account created (Pending Activation): id={}, email={}, role={}", saved.getId(), saved.getEmail(), saved.getRole());
         return userMapper.toDto(saved);
     }
 
@@ -109,28 +91,31 @@ public class UserService {
         return userMapper.toResponse(user, booking);
     }
 
-    // -------------------------------------------------------------------------
-    // Internal helpers
-    // -------------------------------------------------------------------------
+    /**
+     * Updates the user's profile details.
+     *
+     * @param userId  The ID of the currently authenticated user
+     * @param request The updated profile payload
+     */
+    @Transactional
+    public void updateProfile(UUID userId, UpdateProfileRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-    private @NonNull User createNewUser(String email, String password, String firstName, String lastName, String phone) {
-        var user = new User();
-        user.setEmail(email.toLowerCase().trim());
-        user.setPassword(passwordEncoder.encode(password));
-        user.setFirstName(firstName.trim());
-        user.setLastName(lastName.trim());
-        user.setPhone(phone);
-        user.setIsActive(true);
-        return user;
+        // Update fields safely
+        user.setFirstName(request.getFirstName().trim());
+        user.setLastName(request.getLastName().trim());
+
+        if (request.getPhone() != null) {
+            user.setPhone(request.getPhone().trim());
+        } else {
+            user.setPhone(null);
+        }
+
+        userRepository.save(user);
     }
 
-    /**
-     * Checks whether the supplied email is already registered. Uses the lightweight
-     * {@code EXISTS} query rather than fetching the full entity.
-     *
-     * @param email the email to check
-     * @throws IllegalArgumentException with a user-facing message if already taken
-     */
+
     private void assertEmailAvailable(String email) {
         if (userRepository.existsByEmailIgnoreCase(email)) {
             throw new IllegalArgumentException("An account with this email address already exists.");

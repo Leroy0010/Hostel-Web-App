@@ -1,8 +1,12 @@
 package com.leroy.hostelbackend.module.waitlist.service;
 
+import com.leroy.hostelbackend.module.booking.model.Booking;
+import com.leroy.hostelbackend.module.booking.repository.BookingRepository;
 import com.leroy.hostelbackend.module.hostel.repository.HostelRepository;
 import com.leroy.hostelbackend.module.notification.service.NotificationService;
+import com.leroy.hostelbackend.module.room.model.Room;
 import com.leroy.hostelbackend.module.user.repository.UserRepository;
+import com.leroy.hostelbackend.module.waitlist.dto.JoinWaitlistRequest;
 import com.leroy.hostelbackend.module.waitlist.dto.WaitlistDto;
 import com.leroy.hostelbackend.module.waitlist.dto.WaitlistEntryDto;
 import com.leroy.hostelbackend.module.waitlist.dto.WaitlistStatusDto;
@@ -13,32 +17,42 @@ import com.leroy.hostelbackend.shared.exception.AlreadyOnWaitlistException;
 import com.leroy.hostelbackend.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * Manages the hostel waitlist — joining, leaving, status checks, and the
- * automatic promotion pipeline triggered by vacancies in {@code BookingService}.
+ * Period-scoped hostel waitlist service.
  *
- * <p><strong>Promotion flow (triggered by BookingService):</strong>
+ * <p><strong>Key design change — Auto-drafting:</strong>
+ * When a bed is freed for a specific period, this service no longer just sends
+ * a push notification. It automatically:
  * <ol>
- *   <li>A bed is freed (booking cancelled, rejected, or student checks out).</li>
- *   <li>{@code BookingService} calls {@link #notifyNextInLine(UUID)}.</li>
- *   <li>This service loads position 1 with {@code notified = false}.</li>
- *   <li>It marks the entry as {@code notified = true} and — in a real system —
- *       fires a Firebase push via {@code NotificationService} (Phase 3).
- *       For now a log message stands in its place; the hook is already wired.</li>
- *   <li>The student then has a configurable window to submit a booking before
- *       the slot moves to position 2 (not yet automated — Phase 3 enhancement).</li>
+ *   <li>Finds the next student in line for that hostel+period.</li>
+ *   <li>Creates a PENDING booking ({@code isWaitlistDraft = true}) for the
+ *       freed room, scoped to the correct academic year and semester.</li>
+ *   <li>Notifies the student that a booking has been created for them.</li>
+ *   <li>Notifies the hostel manager that a waitlist candidate is ready to approve.</li>
+ *   <li>Removes the student from the waitlist (they now have a real booking).</li>
  * </ol>
  *
- * <p><strong>Position integrity:</strong> Positions are kept contiguous (no gaps).
- * Every removal calls {@link WaitlistRepository#decrementPositionsAfter} as part
- * of the same transaction.
+ * <p>This eliminates the race condition where multiple students rush to book a
+ * room after a vacancy notification. The manager sees a clean, pre-created booking
+ * and simply approves or rejects it.
+ *
+ * <p><strong>Period-scoped queues:</strong> The waitlist is keyed on
+ * {@code (hostelId, academicYear, semester)}. A student can be on the waitlist
+ * for the same hostel for different semesters simultaneously.
+ *
+ * <p><strong>Auto-draft expiry:</strong> Waitlist-draft PENDING bookings have a
+ * configurable deadline ({@code waitlist.draft.expiry-hours}, default 24h).
+ * If the manager does not action within the window, {@code BookingExpiredSweeper}
+ * auto-rejects the booking and calls this service again to promote the next student.
  */
 @Service
 @RequiredArgsConstructor
@@ -46,90 +60,102 @@ import java.util.UUID;
 public class WaitlistService {
 
     private final WaitlistRepository waitlistRepository;
+    private final BookingRepository  bookingRepository;
     private final HostelRepository   hostelRepository;
     private final UserRepository     userRepository;
     private final WaitlistMapper     waitlistMapper;
     private final NotificationService notificationService;
+
+    /**
+     * How long (hours) a manager has to action a waitlist-draft PENDING booking
+     * before the sweeper auto-rejects it and promotes the next student.
+     * Defaults to 24 hours; override via {@code hostel.waitlist.draft-expiry-hours} in application.yml.
+     */
+    @Value("${hostel.waitlist.draft-expiry-hours:24}")
+    private int draftExpiryHours;
 
     // -------------------------------------------------------------------------
     // Student actions
     // -------------------------------------------------------------------------
 
     /**
-     * Adds a student to the waitlist for a hostel.
-     * Their position is set to {@code currentQueueSize + 1}.
+     * Adds a student to the waitlist for a hostel's specific academic period.
      *
-     * @param studentId the student requesting to join
-     * @param hostelId  the hostel they want to wait for
-     * @return the created {@link WaitlistDto}
-     * @throws AlreadyOnWaitlistException if the student is already on this hostel's list
+     * @param studentId UUID of the student
+     * @param request   contains hostelId, academicYear, semester
+     * @throws AlreadyOnWaitlistException if the student is already waiting for this hostel+period
      */
     @Transactional
-    public WaitlistDto joinWaitlist(UUID studentId, UUID hostelId) {
-        // Guard: prevent duplicate entries
-        if (waitlistRepository.findByStudentIdAndHostelId(studentId, hostelId).isPresent()) {
+    public WaitlistDto joinWaitlist(UUID studentId, JoinWaitlistRequest request) {
+        var hostelId     = request.hostelId();
+        var academicYear = request.academicYear();
+        var semester     = request.semester();
+
+        if (waitlistRepository.findByStudentIdAndHostelIdAndPeriod(
+                studentId, hostelId, academicYear, semester).isPresent()) {
             throw new AlreadyOnWaitlistException();
         }
 
         var student = userRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + studentId));
-        var hostel  = hostelRepository.findById(hostelId)
+        var hostel = hostelRepository.findById(hostelId)
                 .orElseThrow(() -> new ResourceNotFoundException("Hostel not found: " + hostelId));
 
-        // Next position = current queue length + 1
-        long nextPosition = waitlistRepository.countByHostelId(hostelId) + 1;
+        long nextPosition = waitlistRepository
+                .countByHostelIdAndAcademicYearAndSemester(hostelId, academicYear, semester) + 1;
 
         var entry = new Waitlist();
         entry.setStudent(student);
         entry.setHostel(hostel);
         entry.setPosition((int) nextPosition);
+        entry.setAcademicYear(academicYear);
+        entry.setSemester(semester);
         entry.setNotified(false);
 
         var saved = waitlistRepository.save(entry);
-        log.info("Student {} joined waitlist for hostel {} at position {}", studentId, hostelId, nextPosition);
+        log.info("Student {} joined waitlist for hostel {} [{} {}] at position {}",
+                studentId, hostelId, academicYear, semester, nextPosition);
         return waitlistMapper.toDto(saved);
     }
 
     /**
-     * Removes a student from a hostel's waitlist voluntarily.
-     * All positions below the removed entry are shifted up by one.
-     *
-     * @param studentId the student leaving the waitlist
-     * @param hostelId  the hostel they are leaving
-     * @throws ResourceNotFoundException if the student is not on this waitlist
+     * Student voluntarily leaves a waitlist entry.
+     * Positions below the removed entry are shifted up.
      */
     @Transactional
-    public void leaveWaitlist(UUID studentId, UUID hostelId) {
-        var entry = waitlistRepository.findByStudentIdAndHostelId(studentId, hostelId)
+    public void leaveWaitlist(UUID studentId, UUID hostelId,
+                              String academicYear, String semester) {
+        var entry = waitlistRepository
+                .findByStudentIdAndHostelIdAndPeriod(studentId, hostelId, academicYear, semester)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "You are not on the waitlist for this hostel."));
+                        "You are not on the waitlist for this hostel and period."));
 
         int removedPosition = entry.getPosition();
         waitlistRepository.delete(entry);
+        waitlistRepository.decrementPositionsAfter(hostelId, academicYear, semester, removedPosition);
 
-        // Close the gap left by this removal
-        waitlistRepository.decrementPositionsAfter(hostelId, removedPosition);
-        log.info("Student {} left waitlist for hostel {}", studentId, hostelId);
+        log.info("Student {} left waitlist for hostel {} [{} {}]",
+                studentId, hostelId, academicYear, semester);
     }
 
     /**
-     * Returns the student's current position on a hostel's waitlist,
-     * or indicates they are not on it.
-     *
-     * @param studentId the student to check
-     * @param hostelId  the hostel to check against
+     * Returns the student's waitlist status for a specific hostel+period.
      */
     @Transactional(readOnly = true)
-    public WaitlistStatusDto getWaitlistStatus(UUID studentId, UUID hostelId) {
-        var entry = waitlistRepository.findByStudentIdAndHostelId(studentId, hostelId);
-        long total = waitlistRepository.countByHostelId(hostelId);
+    public WaitlistStatusDto getWaitlistStatus(UUID studentId, UUID hostelId,
+                                               String academicYear, String semester) {
+        var entry = waitlistRepository
+                .findByStudentIdAndHostelIdAndPeriod(studentId, hostelId, academicYear, semester);
+        long total = waitlistRepository
+                .countByHostelIdAndAcademicYearAndSemester(hostelId, academicYear, semester);
 
-        return entry.map(w -> new WaitlistStatusDto(true, w.getPosition(), total))
-                .orElse(new WaitlistStatusDto(false, null, total));
+        return entry
+                .map(w -> new WaitlistStatusDto(true, w.getPosition(), total, academicYear, semester))
+                .orElse(new WaitlistStatusDto(false, null, total, academicYear, semester));
     }
 
     /**
-     * A student's own waitlist entries across all hostels they are waiting for.
+     * All waitlist entries for the authenticated student across all hostels and periods.
      */
     @Transactional(readOnly = true)
     public Page<WaitlistDto> myWaitlistEntries(UUID studentId, Pageable pageable) {
@@ -142,67 +168,107 @@ public class WaitlistService {
     // -------------------------------------------------------------------------
 
     /**
-     * Paginated waitlist for a hostel in position order.
-     * Used on the manager's hostel dashboard to see who is queued.
-     *
-     * @param hostelId  the hostel whose waitlist to view
-     * @param pageable  page and sort params
+     * Paginated waitlist for a hostel+period in position order.
+     * Used on the manager's dashboard to see who is queued for a specific semester.
      */
     @Transactional(readOnly = true)
-    public Page<WaitlistEntryDto> hostelWaitlist(UUID hostelId, Pageable pageable) {
+    public Page<WaitlistEntryDto> hostelWaitlist(UUID hostelId,
+                                                 String academicYear,
+                                                 String semester,
+                                                 Pageable pageable) {
         if (!hostelRepository.existsById(hostelId)) {
             throw new ResourceNotFoundException("Hostel not found: " + hostelId);
         }
-        return waitlistRepository.findByHostelIdOrderByPosition(hostelId, pageable)
+        return waitlistRepository
+                .findByHostelIdAndPeriodOrderByPosition(hostelId, academicYear, semester, pageable)
                 .map(waitlistMapper::toEntryDto);
     }
 
     // -------------------------------------------------------------------------
-    // Internal — called by BookingService
+    // Manager/Admin force-remove
     // -------------------------------------------------------------------------
 
     /**
-     * Notifies the next un-notified student in line when a bed becomes available.
-     *
-     * <p>Called internally by {@code BookingService} after a booking is cancelled,
-     * rejected, or a student checks out. Runs in the <em>same transaction</em> as
-     * the booking state change so the notification flag is committed atomically.
-     *
-     * <p><strong>Phase 3 hook:</strong> Replace the {@code log.info} call here with
-     * a call to {@code NotificationService.sendPush(student, WAITLIST_PROMOTED)}
-     * once Firebase is wired up.
-     *
-     * @param hostelId the hostel that just had a vacancy open up
+     * Manager removes a specific waitlist entry by its UUID.
+     * Used for misconduct or data correction. Shifts positions after the removal.
      */
     @Transactional
-    public void notifyNextInLine(UUID hostelId) {
-        waitlistRepository.findNextInLine(hostelId).ifPresent(entry -> {
-            entry.setNotified(true);
-            waitlistRepository.save(entry);
-
-             notificationService.notifyWaitlistPromoted(entry.getStudent(), hostelId);
-
-            log.info("[WAITLIST] Notified student {} (position {}) that a bed is available in hostel {}",
-                    entry.getStudent().getId(), entry.getPosition(), hostelId);
-        });
-    }
-
-    /**
-     * Admin removes a student from a waitlist (e.g. for misconduct or data correction).
-     *
-     * @param waitlistId the specific waitlist entry UUID
-     */
-    @Transactional
-    public void adminRemoveEntry(UUID waitlistId) {
+    public void managerRemoveEntry(UUID waitlistId) {
         var entry = waitlistRepository.findById(waitlistId)
-                .orElseThrow(() -> new ResourceNotFoundException("Waitlist entry not found: " + waitlistId));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Waitlist entry not found: " + waitlistId));
 
-        int removedPosition = entry.getPosition();
-        UUID hostelId       = entry.getHostel().getId();
+        int    removedPosition = entry.getPosition();
+        UUID   hostelId        = entry.getHostel().getId();
+        String academicYear    = entry.getAcademicYear();
+        String semester        = entry.getSemester();
 
         waitlistRepository.delete(entry);
-        waitlistRepository.decrementPositionsAfter(hostelId, removedPosition);
-        log.info("[ADMIN] Waitlist entry {} removed by admin", waitlistId);
+        waitlistRepository.decrementPositionsAfter(hostelId, academicYear, semester, removedPosition);
+        log.info("[MANAGER] Waitlist entry {} removed", waitlistId);
+    }
 
+    // -------------------------------------------------------------------------
+    // Internal — called by BookingService when a bed is freed
+    // -------------------------------------------------------------------------
+
+    /**
+     * Auto-promotes the next student in line for a specific hostel+period.
+     *
+     * <p>When called, this method:
+     * <ol>
+     *   <li>Finds position 1 (un-notified) for the given hostel+period.</li>
+     *   <li>Creates a PENDING, {@code isWaitlistDraft = true} booking for the
+     *       room that was just freed, with a {@code pendingExpiresAt} deadline.</li>
+     *   <li>Notifies the student and the hostel manager.</li>
+     *   <li>Removes the student from the waitlist (they now have a real booking).</li>
+     *   <li>Decrements positions for remaining entries.</li>
+     * </ol>
+     *
+     * <p>This runs in the <strong>same transaction</strong> as the calling
+     * {@code BookingService} method so the promotion and bed release are atomic.
+     *
+     * @param hostelId    the hostel that just had a vacancy
+     * @param freedRoom   the specific room with a newly freed bed
+     * @param academicYear the period the vacancy applies to
+     * @param semester    the semester the vacancy applies to
+     */
+    @Transactional
+    public void promoteNextInLine(UUID hostelId, Room freedRoom,
+                                  String academicYear, String semester) {
+        waitlistRepository.findNextInLine(hostelId, academicYear, semester).ifPresent(entry -> {
+
+            // 1. Build the auto-draft PENDING booking
+            var draft = Booking.createWaitlistDraft(
+                    entry.getStudent(),
+                    freedRoom,
+                    academicYear,
+                    semester,
+                    LocalDateTime.now().plusHours(draftExpiryHours)
+            );
+            bookingRepository.save(draft);
+
+            // 2. Notify the student — a booking has been created for them
+            notificationService.notifyWaitlistPromoted(entry.getStudent(), hostelId);
+
+            // 3. Notify the hostel manager about the auto-drafted booking
+            userRepository.findManagerByHostelId(hostelId).ifPresent(manager ->
+                    notificationService.notifyManagerNewBookingRequest(
+                            manager,
+                            entry.getStudent().getName(),
+                            freedRoom.getRoomNumber(),
+                            draft.getId()
+                    )
+            );
+
+            // 4. Remove the student from the waitlist — they have a booking now
+            int removedPosition = entry.getPosition();
+            waitlistRepository.delete(entry);
+            waitlistRepository.decrementPositionsAfter(hostelId, academicYear, semester, removedPosition);
+
+            log.info("[WAITLIST] Promoted student {} to auto-draft booking {} for room {} [{} {}]",
+                    entry.getStudent().getId(), draft.getId(),
+                    freedRoom.getRoomNumber(), academicYear, semester);
+        });
     }
 }

@@ -1,9 +1,9 @@
 package com.leroy.hostelbackend.module.room.controller;
 
 import com.leroy.hostelbackend.module.room.dto.*;
+import com.leroy.hostelbackend.module.room.model.RoomType;
 import com.leroy.hostelbackend.module.room.service.RoomService;
 import com.leroy.hostelbackend.module.user.model.CustomUserDetails;
-import com.leroy.hostelbackend.module.user.model.UserRole;
 import com.leroy.hostelbackend.shared.response.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -58,7 +58,7 @@ public class RoomController {
     @GetMapping("/hostels/{hostelId}/rooms")
     public ResponseEntity<ApiResponse<Page<RoomSummaryDto>>> listAvailableRooms(
             @PathVariable UUID hostelId,
-            @RequestParam(required = false) String roomType,
+            @RequestParam(required = false) RoomType roomType,
             @RequestParam(required = false) BigDecimal maxPrice,
             @PageableDefault(size = 12, sort = "pricePerSemester", direction = Sort.Direction.ASC) Pageable pageable
     ) {
@@ -160,7 +160,6 @@ public class RoomController {
             @Valid @RequestBody AmenityRequest request,
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
-        boolean isAdmin = customUserDetails.getRole().equals(UserRole.ADMIN);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.success("Amenity added.", roomService.addAmenity(id, request, customUserDetails.getUserId())));
     }

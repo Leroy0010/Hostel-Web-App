@@ -9,7 +9,7 @@ type StrengthLevel = 'empty' | 'weak' | 'fair' | 'good' | 'strong';
 
 interface StrengthResult {
     level: StrengthLevel;
-    score: number; // 0–4
+    score: number; // 0-4
     label: string;
     color: string;
     darkColor: string;
@@ -30,7 +30,7 @@ interface StrengthResult {
  *  5. Contains special character
  *
  * Score → Level:
- *  0–1 → weak | 2 → fair | 3 → good | 4–5 → strong
+ *  0-1 → weak | 2 → fair | 3 → good | 4-5 → strong
  */
 function evaluatePassword(password: string): StrengthResult {
     if (!password) {
@@ -66,7 +66,7 @@ function evaluatePassword(password: string): StrengthResult {
             color: 'bg-amber-400',
             darkColor: 'dark:bg-amber-400',
         };
-    if (score === 3)
+    if (score === 4 || score === 3)
         return {
             level: 'good',
             score,
@@ -106,8 +106,8 @@ export function PasswordStrengthIndicator({
 
     if (result.level === 'empty') return null;
 
-    // Number of filled bars = min(score, 4) to keep it to 4 visual segments
-    const filledBars = Math.min(result.score, 4);
+    // Number of filled bars = min(score, 5) to keep it to 4 visual segments
+    const filledBars = Math.min(result.score, 5);
 
     return (
         <motion.div
@@ -119,7 +119,7 @@ export function PasswordStrengthIndicator({
         >
             {/* Bar segments */}
             <div className="flex gap-1">
-                {Array.from({ length: 4 }).map((_, i) => (
+                {Array.from({ length: 5 }).map((_, i) => (
                     <motion.div
                         key={i}
                         className="h-1 flex-1 rounded-full bg-gray-200 dark:bg-gray-700"

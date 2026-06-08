@@ -7,9 +7,9 @@ import java.util.UUID;
 // Waitlist DTOs
 // =============================================================================
 
+
 /**
- * Response for a single waitlist entry — returned to the student after joining
- * or when viewing their waitlist positions.
+ * Student-facing waitlist entry — shows what they are waiting for.
  */
 public record WaitlistDto(
         UUID id,
@@ -17,6 +17,8 @@ public record WaitlistDto(
         String hostelName,
         String hostelImageUrl,
         Integer position,
+        String academicYear,
+        String semester,
         LocalDateTime joinedAt,
         Boolean notified
 ) {}

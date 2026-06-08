@@ -5,6 +5,7 @@ import com.leroy.hostelbackend.module.booking.model.BookingStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -16,27 +17,23 @@ import java.util.UUID;
 /**
  * Repository for {@link Booking} entities.
  *
- * <p><strong>No more single-booking-per-semester guard:</strong> The
- * {@code hasActiveBooking} method has been removed. Multiple active bookings
- * per student are now permitted by design. The only remaining guard at the
- * database level is a partial unique index that prevents a student from booking
- * the <em>same room</em> twice in the same academic period while that booking
- * is still active.
+ * <p><strong>Period-scoped capacity:</strong> {@link #countReservedBeds} is the
+ * authoritative source for whether a room has space for a given academic period.
+ * It replaces the old {@code room.currentOccupancy} check for booking decisions.
+ * {@code room.currentOccupancy} still tracks physical presence (who is actually in
+ * the room right now) and is used for analytics and room status display.
  *
- * <p><strong>N+1 prevention:</strong> All queries that need associations
- * use {@code JOIN FETCH} to load them in a single SQL statement.
+ * <p><strong>Auto-reject and auto-draft:</strong> {@link #rejectOtherPendingForRoom}
+ * bulk-rejects stale PENDING bookings when the last bed for a period is filled.
+ * The sweeper uses {@link #findExpiredUnpaidBookings} and
+ * {@link #findExpiredWaitlistDrafts} to clean up automatically.
  */
 public interface BookingRepository extends JpaRepository<Booking, UUID> {
 
     // -------------------------------------------------------------------------
-    // Single booking fetch (full detail)
+    // Single booking fetch
     // -------------------------------------------------------------------------
 
-    /**
-     * Loads a booking with all associations needed for the DTO — student, room,
-     * hostel, and approvedBy — in a single JOIN FETCH query.
-     * Used before every state transition.
-     */
     @Query("""
             SELECT b FROM Booking b
             JOIN FETCH b.student
@@ -51,10 +48,6 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     // Student reads
     // -------------------------------------------------------------------------
 
-    /**
-     * All bookings for a student, newest first. No status filter — returns the
-     * complete history including CANCELLED, REJECTED, and EXPIRED entries.
-     */
     @Query("""
             SELECT b FROM Booking b
             JOIN FETCH b.room r
@@ -65,9 +58,8 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     Page<Booking> findByStudentId(@Param("studentId") UUID studentId, Pageable pageable);
 
     /**
-     * A student's currently active bookings — PENDING or APPROVED.
-     * Used to build the "your active bookings" reminder notification when a student
-     * checks in, so they know which other bookings they should cancel.
+     * Active bookings for reminder notification after check-in.
+     * Returns PENDING and APPROVED bookings the student may want to cancel.
      */
     @Query("""
             SELECT b FROM Booking b
@@ -80,25 +72,45 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     List<Booking> findActiveByStudentId(@Param("studentId") UUID studentId);
 
     // -------------------------------------------------------------------------
-    // Duplicate room booking guard
+    // Period-scoped capacity
     // -------------------------------------------------------------------------
 
     /**
-     * Checks whether a student already has an active booking for the <em>same room</em>
-     * in the same academic period. A student cannot book the same room twice.
+     * Core capacity query. Returns the number of beds already spoken for in a
+     * specific room+period. Used instead of {@code room.currentOccupancy} for
+     * all booking availability decisions.
      *
-     * <p>This replaces the old per-semester uniqueness check. Students may now book
-     * multiple different rooms in the same semester, but not the same room twice.
+     * <p>Counts APPROVED + CHECKED_IN bookings only.
+     * PENDING does not lock a bed — approval does.
      *
-     * @param studentId    the student
-     * @param roomId       the specific room
-     * @param academicYear e.g. "2024/2025"
+     * @param roomId       the room to check
+     * @param academicYear e.g. "2025/2026"
      * @param semester     FIRST | SECOND | FULL
      */
     @Query("""
+            SELECT COUNT(b) FROM Booking b
+            WHERE b.room.id      = :roomId
+              AND b.academicYear = :academicYear
+              AND b.semester     = :semester
+              AND b.status IN ('APPROVED', 'CHECKED_IN')
+            """)
+    long countReservedBeds(
+            @Param("roomId")       UUID   roomId,
+            @Param("academicYear") String academicYear,
+            @Param("semester")     String semester
+    );
+
+    /**
+     * Duplicate room booking guard. Prevents a student from submitting two PENDING
+     * or APPROVED bookings for the exact same room in the same period.
+     *
+     * <p>This is also enforced by the partial unique index
+     * {@code idx_unique_active_room_booking} at the DB level.
+     */
+    @Query("""
             SELECT COUNT(b) > 0 FROM Booking b
-            WHERE b.student.id = :studentId
-              AND b.room.id    = :roomId
+            WHERE b.student.id   = :studentId
+              AND b.room.id      = :roomId
               AND b.academicYear = :academicYear
               AND b.semester     = :semester
               AND b.status IN ('PENDING', 'APPROVED', 'CHECKED_IN')
@@ -110,13 +122,104 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
             @Param("semester")     String semester
     );
 
+    /**
+     * Semester linearity check.
+     * Returns {@code true} if the room already has a CHECKED_IN or CHECKED_OUT
+     * booking for the FIRST semester of the given academic year.
+     * Used to gate SECOND semester bookings.
+     *
+     * @param roomId       the room being checked
+     * @param academicYear e.g. "2025/2026"
+     */
+    @Query("""
+            SELECT COUNT(b) > 0 FROM Booking b
+            WHERE b.room.id      = :roomId
+              AND b.academicYear = :academicYear
+              AND b.semester     = 'FIRST'
+              AND b.status IN ('CHECKED_IN', 'CHECKED_OUT')
+            """)
+    boolean hasFirstSemesterOccupancy(
+            @Param("roomId")       UUID   roomId,
+            @Param("academicYear") String academicYear
+    );
+
+    /**
+     * FULL semester booking gate.
+     * A FULL booking covers both halves of an academic year, so we check that
+     * neither FIRST nor SECOND is already occupied for that period.
+     *
+     * @param roomId       the room
+     * @param academicYear e.g. "2025/2026"
+     */
+    @Query("""
+            SELECT COUNT(b) > 0 FROM Booking b
+            WHERE b.room.id      = :roomId
+              AND b.academicYear = :academicYear
+              AND b.semester     IN ('FIRST', 'SECOND', 'FULL')
+              AND b.status       IN ('APPROVED', 'CHECKED_IN')
+            """)
+    boolean hasAnyActiveBookingForYear(
+            @Param("roomId")       UUID   roomId,
+            @Param("academicYear") String academicYear
+    );
+
+    /**
+     * Latest completed booking for a room — used to validate academic year linearity.
+     * Returns the most recent CHECKED_IN or CHECKED_OUT booking for the room,
+     * so the service can verify the next booking's year is sequential.
+     */
+    @Query("""
+            SELECT b FROM Booking b
+            WHERE b.room.id  = :roomId
+              AND b.status   IN ('CHECKED_IN', 'CHECKED_OUT', 'APPROVED')
+            ORDER BY b.academicYear DESC, b.createdAt DESC
+            LIMIT 1
+            """)
+    Optional<Booking> findLatestOccupancyBooking(@Param("roomId") UUID roomId);
+
+    // -------------------------------------------------------------------------
+    // Auto-reject stale PENDING bookings
+    // -------------------------------------------------------------------------
+
+    /**
+     * Bulk-rejects all PENDING bookings for a room+period except the one just approved.
+     * Called when the last bed for a period is filled to clean up stale applications.
+     *
+     * @param roomId             the room that is now fully booked for the period
+     * @param academicYear       the target academic year
+     * @param semester           the target semester
+     * @param approvedBookingId  the booking that was just approved (exempt from rejection)
+     * @param reason             rejection message shown to the student
+     * @return number of bookings rejected
+     */
+    @Modifying
+    @Query("""
+            UPDATE Booking b
+            SET b.status         = 'REJECTED',
+                b.rejectedReason = :reason,
+                b.rejectedAt     = :now
+            WHERE b.room.id      = :roomId
+              AND b.academicYear = :academicYear
+              AND b.semester     = :semester
+              AND b.status       = 'PENDING'
+              AND b.id           != :approvedBookingId
+            """)
+    int rejectOtherPendingForRoom(
+            @Param("roomId")            UUID   roomId,
+            @Param("academicYear")      String academicYear,
+            @Param("semester")          String semester,
+            @Param("approvedBookingId") UUID   approvedBookingId,
+            @Param("reason")            String reason,
+            @Param("now")               LocalDateTime now
+    );
+
     // -------------------------------------------------------------------------
     // Manager reads
     // -------------------------------------------------------------------------
 
     /**
-     * PENDING bookings for hostels managed by a specific manager, oldest first.
-     * Drives the manager's approval queue — oldest requests surface first (FIFO).
+     * PENDING bookings for hostels managed by this manager, oldest first (FIFO).
+     * Waitlist-drafted bookings are sorted first so managers act on them promptly.
      */
     @Query("""
             SELECT b FROM Booking b
@@ -125,14 +228,10 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
             JOIN FETCH r.hostel h
             WHERE h.manager.id = :managerId
               AND b.status = 'PENDING'
-            ORDER BY b.requestedAt ASC
+            ORDER BY b.isWaitlistDraft DESC, b.requestedAt ASC
             """)
     Page<Booking> findPendingByManagerId(@Param("managerId") UUID managerId, Pageable pageable);
 
-    /**
-     * All bookings for a specific hostel with an optional status filter.
-     * Used on the manager's hostel booking dashboard.
-     */
     @Query("""
             SELECT b FROM Booking b
             JOIN FETCH b.student
@@ -143,45 +242,52 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
             ORDER BY b.requestedAt DESC
             """)
     Page<Booking> findByHostelId(
-            @Param("hostelId") UUID   hostelId,
+            @Param("hostelId") UUID hostelId,
             @Param("status")   String status,
             Pageable pageable
     );
 
     // -------------------------------------------------------------------------
-    // Expired booking sweeper
+    // Sweeper queries
     // -------------------------------------------------------------------------
 
     /**
-     * Finds all APPROVED bookings whose payment grace period has elapsed
-     * and whose payment reference has not been submitted.
-     *
-     * <p>Called by {@code BookingExpiredSweeper} on a schedule. The sweeper will
-     * auto-cancel these bookings, free the bed, and notify the waitlist.
-     *
-     * @param now the current timestamp — bookings with {@code paymentExpiresAt < now}
-     *            and no {@code paymentRef} are returned
+     * APPROVED bookings whose payment grace period has elapsed with no paymentRef.
+     * Processed by {@code BookingExpiredSweeper} → status moves to EXPIRED.
      */
     @Query("""
             SELECT b FROM Booking b
             JOIN FETCH b.room r
             JOIN FETCH r.hostel
             JOIN FETCH b.student
-            WHERE b.status = 'APPROVED'
+            WHERE b.status           = 'APPROVED'
               AND b.paymentExpiresAt IS NOT NULL
-              AND b.paymentExpiresAt < :now
+              AND b.paymentExpiresAt  < :now
               AND (b.paymentRef IS NULL OR b.paymentRef = '')
             """)
     List<Booking> findExpiredUnpaidBookings(@Param("now") LocalDateTime now);
 
+    /**
+     * Auto-drafted PENDING bookings whose manager action deadline has elapsed.
+     * Processed by {@code BookingExpiredSweeper} → status moves to REJECTED,
+     * and the next student on the waitlist is promoted.
+     */
+    @Query("""
+            SELECT b FROM Booking b
+            JOIN FETCH b.room r
+            JOIN FETCH r.hostel
+            JOIN FETCH b.student
+            WHERE b.status           = 'PENDING'
+              AND b.isWaitlistDraft  = TRUE
+              AND b.pendingExpiresAt IS NOT NULL
+              AND b.pendingExpiresAt  < :now
+            """)
+    List<Booking> findExpiredWaitlistDrafts(@Param("now") LocalDateTime now);
+
     // -------------------------------------------------------------------------
-    // Occupancy and analytics helpers
+    // Analytics and roommate matching
     // -------------------------------------------------------------------------
 
-    /**
-     * All active (APPROVED / CHECKED_IN) bookings for a room.
-     * Used for occupancy count verification and roommate matching.
-     */
     @Query("""
             SELECT b FROM Booking b
             WHERE b.room.id = :roomId
@@ -189,10 +295,6 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
             """)
     List<Booking> findActiveByRoomId(@Param("roomId") UUID roomId);
 
-    /**
-     * Active bookings for a set of compatible students in a given hostel.
-     * Used by the roommate matching algorithm in {@code PreferenceService}.
-     */
     @Query("""
             SELECT b FROM Booking b
             JOIN FETCH b.student
@@ -207,13 +309,8 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
             @Param("studentIds") List<UUID> studentIds
     );
 
-    /**
-     * Used by {@code BookingService.isCurrentResident} to gate complaint creation.
-     * A student can only raise a room-specific complaint if they are CHECKED_IN.
-     */
     boolean existsByStudentIdAndStatusAndRoom_Hostel_Id(
             UUID studentId, BookingStatus status, UUID hostelId);
-
 
     @Query("SELECT b FROM Booking b WHERE b.status = 'CHECKED_IN' AND b.student.id = :userId")
     List<Booking> findCurrentByUserId(@Param("userId") UUID userId);

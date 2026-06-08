@@ -1,13 +1,56 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>vite-app</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>HostelLife+ | Smart Hostel Booking & Management</title>
+
+        <!-- Meta Description & SEO -->
+        <meta
+            name="description"
+            content="Streamlined accommodation booking, room allocation, and interactive campus map for students and managers."
+        />
+        <meta name="theme-color" content="#116A73" />
+        <!-- Matches your main teal brand color -->
+
+        <!-- PWA Web App Manifest -->
+        <link rel="manifest" href="/manifest.json" />
+
+        <!-- Standard Favicons (Browser Tabs & Bookmarks) -->
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="any" />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/icons/favicon-32x32.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/icons/favicon-16x16.png"
+        />
+
+        <!-- Apple iOS Compatibility (Home Screen Web App) -->
+        <meta name="mobile-web-app-capable" content="yes" />
+
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="HostelLife+" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+
+        <!-- Performance Optimizations: Preconnecting to Third-Party APIs -->
+        <!-- Preconnecting to Mapbox/Leaflet if using external map styles -->
+        <link rel="preconnect" href="https://mapbox.com" crossorigin />
+        <!-- Preconnecting to Firebase Messaging if using external Google CDN scripts -->
+        <link rel="preconnect" href="https://googleapis.com" crossorigin />
+    </head>
+    <body
+        class="bg-background text-foreground antialiased selection:bg-teal-600/20"
+    >
+        <!-- Root Element for React -->
+        <div id="root"></div>
+
+        <!-- Main TypeScript Entry Point -->
+        <script type="module" src="/src/main.tsx"></script>
+    </body>
 </html>

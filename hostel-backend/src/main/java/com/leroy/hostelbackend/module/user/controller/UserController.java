@@ -1,13 +1,12 @@
 package com.leroy.hostelbackend.module.user.controller;
 
-import com.leroy.hostelbackend.module.user.dto.CreateStaffRequest;
-import com.leroy.hostelbackend.module.user.dto.CreateStudentRequest;
-import com.leroy.hostelbackend.module.user.dto.UserDto;
-import com.leroy.hostelbackend.module.user.dto.UserResponse;
+import com.leroy.hostelbackend.module.auth.dto.LoginResponse;
+import com.leroy.hostelbackend.module.user.dto.*;
 import com.leroy.hostelbackend.module.user.model.CustomUserDetails;
 import com.leroy.hostelbackend.module.user.service.UserService;
 import com.leroy.hostelbackend.shared.response.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -46,9 +45,15 @@ public class UserController {
      * @return {@code 201 Created} with the new {@link UserDto}
      */
     @PostMapping("/users")
-    public ResponseEntity<UserDto> registerStudent(@Valid @RequestBody CreateStudentRequest request) {
-        var created = userService.registerStudent(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<ApiResponse<LoginResponse>> registerStudent(@Valid @RequestBody CreateStudentRequest request, HttpServletResponse response) {
+        var created = userService.registerStudent(request, response);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(
+                        ApiResponse
+                        .success(
+                        "User registered successfully! Check your mailbox and verify your email to be able to login.",
+                        created));
     }
 
     /**
@@ -63,13 +68,30 @@ public class UserController {
      */
     @PostMapping("/admin/users")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserDto> createStaff(@Valid @RequestBody CreateStaffRequest request) {
+    public ResponseEntity<ApiResponse<UserDto>> createStaff(@Valid @RequestBody CreateStaffRequest request) {
         var created = userService.createStaff(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ApiResponse.success(request.getRole() + " created successfully.", created));
     }
 
+    /**
+     * Returns the profile of the currently authenticated user.
+     *
+     * <p>The principal in the security context is a {@link CustomUserDetails} instance
+     * (set by {@link com.leroy.hostelbackend.module.auth.security.JwtAuthenticationFilter}).<p>
+     * We retrieve the user ID from it and fetch the entity — this is the only place a
+     * database query is needed for {@code /me}.
+     * @return the current user's {@link UserDto}
+     */
     @GetMapping("/users/me")
     public ResponseEntity<ApiResponse<UserResponse>> getUserProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         return ResponseEntity.ok(ApiResponse.success("Profile fetched", userService.me(customUserDetails.getUserId())));
+    }
+
+    @PutMapping("/users/me")
+    public ResponseEntity<ApiResponse<Void>> updateUserProfile(@AuthenticationPrincipal CustomUserDetails user, @Valid @RequestBody UpdateProfileRequest request) {
+        userService.updateProfile(user.getUserId(), request);
+        return ResponseEntity.ok(ApiResponse.success("Profile update successfully"));
     }
 }

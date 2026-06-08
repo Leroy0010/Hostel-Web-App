@@ -16,5 +16,7 @@ public record BookingSummaryDto(
         String status,
         String academicYear,
         String semester,
-        LocalDateTime requestedAt
+        Boolean isWaitlistDraft,
+        LocalDateTime requestedAt,
+        LocalDateTime paymentExpiresAt
 ) {}

@@ -1,0 +1,27 @@
+{
+    "short_name": "HostelLife+",
+    "name": "HostelLife+ Booking Platform",
+    "description": "Streamlined accommodation booking, room allocation, and interactive campus map for students and managers.",
+    "id": "/?source=pwa",
+    "start_url": "/?source=pwa",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "categories": ["utilities", "productivity"],
+    "theme_color": "#116A73",
+    "background_color": "#ffffff",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "/icon-192x192.png",
+            "type": "image/png",
+            "sizes": "192x192",
+            "purpose": "any"
+        },
+        {
+            "src": "/icons/icon-512x512.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "any"
+        }
+    ]
+}

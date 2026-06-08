@@ -1,14 +1,13 @@
 package com.leroy.hostelbackend.module.auth.controller;
 
 import com.leroy.hostelbackend.config.JwtConfig;
-import com.leroy.hostelbackend.module.auth.dto.LoginRequest;
-import com.leroy.hostelbackend.module.auth.security.JwtResponse;
+import com.leroy.hostelbackend.module.auth.dto.*;
+import com.leroy.hostelbackend.module.auth.mapper.AuthMapper;
 import com.leroy.hostelbackend.module.auth.security.JwtService;
 import com.leroy.hostelbackend.module.auth.service.AuthService;
-import com.leroy.hostelbackend.module.user.dto.UserDto;
 import com.leroy.hostelbackend.module.user.mapper.UserMapper;
-import com.leroy.hostelbackend.module.user.model.CustomUserDetails;
 import com.leroy.hostelbackend.module.user.repository.UserRepository;
+import com.leroy.hostelbackend.shared.response.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,11 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 /**
  * Authentication endpoints: login, token refresh, and current-user profile.
@@ -39,9 +35,10 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final JwtConfig jwtConfig;
     private final AuthService authService;
+    private final AuthMapper authMapper;
+    private final UserMapper userMapper;
 
     /**
      * Authenticates the user and issues an access token + refresh token cookie.
@@ -56,7 +53,7 @@ public class AuthController {
      * @return access token in the body
      */
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(
+    public ResponseEntity<ApiResponse<LoginResponse>> login(
             @Valid @RequestBody LoginRequest request,
             HttpServletResponse response
     ) {
@@ -74,31 +71,11 @@ public class AuthController {
         var refreshToken = jwtService.generateRefreshToken(user);
 
         // HttpOnly + Secure cookie — never readable by JavaScript
-        var cookie = new Cookie("refreshToken", refreshToken.toString());
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/auth/refresh");   // scoped: only sent to the refresh endpoint
-        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
-        response.addCookie(cookie);
+        authService.setAuthCookie(response, refreshToken.toString());
 
-        return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
-    }
+        var userResponse = userMapper.toResponse(user, null);
 
-    /**
-     * Returns the profile of the currently authenticated user.
-     *
-     * <p>The principal in the security context is a {@link CustomUserDetails} instance
-     * (set by {@link com.leroy.hostelbackend.module.auth.security.JwtAuthenticationFilter}).
-     * We retrieve the user ID from it and fetch the entity — this is the only place a
-     * database query is needed for {@code /me}. All other endpoints that only need the ID
-     * or role should call {@link AuthService#getAuthenticatedUserDetails()} instead.
-     *
-     * @return the current user's {@link UserDto}
-     */
-    @GetMapping("/me")
-    public ResponseEntity<UserDto> me() {
-        var user = authService.getAuthenticatedUser();
-        return ResponseEntity.ok(userMapper.toDto(user));
+        return ResponseEntity.ok(ApiResponse.success("Login successful!", authMapper.toLoginResponse(userResponse, accessToken.toString())));
     }
 
     /**
@@ -108,34 +85,106 @@ public class AuthController {
      * @return a new access token, or {@code 401} if the refresh token is expired/invalid
      */
     @PostMapping("/refresh")
-    public ResponseEntity<JwtResponse> refreshToken(
-            @CookieValue(value = "refreshToken") String refreshToken
+    public ResponseEntity<ApiResponse<LoginResponse>> refreshToken(
+            @CookieValue(value = "refreshToken", required = false)
+            String refreshToken,
+            HttpServletResponse response
     ) {
+        if (refreshToken == null || refreshToken.isBlank()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error("Refresh token is missing."));
+        }
+
         var jwt = jwtService.parseToken(refreshToken);
+
         if (jwt == null || jwt.isExpired()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error("Refresh token is invalid or expired."));
         }
 
         var user = userRepository.findById(jwt.getUserId()).orElseThrow();
-        var accessToken = jwtService.generateAccessToken(user);
 
-        return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
+        if (Boolean.FALSE.equals(user.getIsActive())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        var accessToken = jwtService.generateAccessToken(user);
+        var newRefreshToken = jwtService.generateRefreshToken(user);
+
+        // HttpOnly + Secure cookie — never readable by JavaScript
+        authService.setAuthCookie(response, newRefreshToken.toString());
+        var userResponse = userMapper.toResponse(user, null);
+
+        return ResponseEntity.ok(ApiResponse.success("Token refresh successful", authMapper.toLoginResponse(userResponse, accessToken.toString())));
+
     }
 
     // -------------------------------------------------------------------------
-    // Local exception handlers (controller-scoped overrides)
+    // Registration Email Verification
     // -------------------------------------------------------------------------
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<ApiResponse<Void>> verifyEmail(@RequestParam String token) {
+        authService.verifyEmail(token);
+        return ResponseEntity.ok(ApiResponse.success("Email verification successful! Your account is now active."));
+    }
+
+    // -------------------------------------------------------------------------
+    // Authenticated Password Operations
+    // -------------------------------------------------------------------------
+
+    @PostMapping("/password-change")
+    public ResponseEntity<ApiResponse<Void>> changePassword(
+            @Valid @RequestBody PasswordChangeRequest request
+    ) {
+        authService.changePassword(request);
+        return ResponseEntity.ok(ApiResponse.success("Your password has been changed successfully."));
+    }
+
+    // -------------------------------------------------------------------------
+    // Anonymous Password Recovery Engine
+    // -------------------------------------------------------------------------
+
+    @PostMapping("/password-reset/request")
+    public ResponseEntity<ApiResponse<Void>> requestReset(
+            @Valid @RequestBody PasswordResetRequest request
+    ) {
+        authService.initiatePasswordReset(request);
+        // Always return a success message, even if the email doesn't exist
+        return ResponseEntity.ok(ApiResponse.success("If the email is registered, a password reset link has been dispatched."));
+    }
+
+    @PostMapping("/password-reset/confirm")
+    public ResponseEntity<ApiResponse<Void>> confirmReset(
+            @Valid @RequestBody PasswordResetConfirmRequest request
+    ) {
+        authService.completePasswordReset(request);
+        return ResponseEntity.ok(ApiResponse.success("Your password has been set successfully. You can now log in."));
+    }
 
     /**
-     * Handles wrong email / password combinations.
+     * Logs out the user by clearing the refresh token cookie.
      *
-     * <p>This is intentionally vague — we do not tell the caller whether the email
-     * or the password was wrong, to prevent user-enumeration attacks.
+     * @param response used to overwrite and clear the {@code refreshToken} cookie
+     * @return success message
      */
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Map<String, String>> handleBadCredentials() {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("error", "Invalid credentials."));
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<Void>> logout(HttpServletResponse response) {
+        // Create a cookie with the exact same name, path, and domain
+        var cookie = new Cookie("refreshToken", "");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false); // Match your login configuration
+        cookie.setPath("/api/auth/refresh"); // Must match the original path exactly
+        cookie.setDomain("localhost"); // Must match the original domain exactly
+
+        // Setting maxAge to 0 tells the browser to delete the cookie immediately
+        cookie.setMaxAge(0);
+        cookie.setAttribute("SameSite", "LAX");
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(ApiResponse.success("Logout successful!"));
     }
+
+
 }
