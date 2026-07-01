@@ -53,7 +53,7 @@ export class InfrastructureStack extends cdk.Stack {
             ), // Cost-friendly burstable tier
             allocatedStorage: 20,
             maxAllocatedStorage: 100,
-            databaseName: "hostel-booking-db",
+            databaseName: "hostelbookingdb",
             publiclyAccessible: false, // Security best practice: keep the DB isolated
             removalPolicy: cdk.RemovalPolicy.SNAPSHOT, // Don't lose data if stack is destroyed
         });
@@ -194,7 +194,7 @@ export class InfrastructureStack extends cdk.Stack {
                         environment: {
                             SPRING_PROFILES_ACTIVE: "prod",
                             SERVER_PORT: "8080",
-                            SPRING_DATASOURCE_URL: `jdbc:postgresql://${database.dbInstanceEndpointAddress}:${database.dbInstanceEndpointPort}/hostel-booking-db?stringtype=unspecified`,
+                            SPRING_DATASOURCE_URL: `jdbc:postgresql://${database.dbInstanceEndpointAddress}:${database.dbInstanceEndpointPort}/hostelbookingdb?stringtype=unspecified`,
                             SPRING_DATASOURCE_USERNAME: "postgres",
                             // Add plain text environments here:
 
