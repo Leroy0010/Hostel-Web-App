@@ -6,6 +6,8 @@ import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as ecsPatterns from "aws-cdk-lib/aws-ecs-patterns";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as path from "path";
+import * as acm from "aws-cdk-lib/aws-certificatemanager";
+import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 
 export class InfrastructureStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -162,6 +164,12 @@ export class InfrastructureStack extends cdk.Stack {
         // =========================================================================
         const cluster = new ecs.Cluster(this, "HostelCluster", { vpc });
 
+        const certificate = acm.Certificate.fromCertificateArn(
+            this,
+            "MaxCertificate",
+            "arn:aws:acm:eu-north-1:889947798102:certificate/3bc00bc3-eb3f-4fb0-804e-37a3d4da50e0", // Paste your ARN here
+        );
+
         const fargateService =
             new ecsPatterns.ApplicationLoadBalancedFargateService(
                 this,
@@ -177,6 +185,10 @@ export class InfrastructureStack extends cdk.Stack {
                         subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
                     },
                     healthCheckGracePeriod: cdk.Duration.seconds(180),
+
+                    protocol: elbv2.ApplicationProtocol.HTTPS, // Use HTTPS instead of HTTP
+                    certificate: certificate, // Attach your SSL certificate
+                    redirectHTTP: true,
                     taskImageOptions: {
                         // Points directly to your production multi-stage dockerfile
                         image: ecs.ContainerImage.fromAsset(
