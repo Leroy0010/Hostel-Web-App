@@ -168,14 +168,15 @@ export class InfrastructureStack extends cdk.Stack {
                 "HostelFargateService",
                 {
                     cluster,
-                    cpu: 512, // 0.5 vCPU
-                    memoryLimitMiB: 1024, // 1 GB RAM (perfect for Spring Boot with optimized JVM memory)
+                    cpu: 1024, // 0.5 vCPU
+                    memoryLimitMiB: 3072, // 1 GB RAM (perfect for Spring Boot with optimized JVM memory)
                     desiredCount: 1,
                     publicLoadBalancer: true, // Exposed to the public internet
                     circuitBreaker: { rollback: true },
                     taskSubnets: {
                         subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
                     },
+                    healthCheckGracePeriod: cdk.Duration.seconds(180),
                     taskImageOptions: {
                         // Points directly to your production multi-stage dockerfile
                         image: ecs.ContainerImage.fromAsset(
@@ -257,8 +258,8 @@ export class InfrastructureStack extends cdk.Stack {
             path: "/actuator/health", // Ensure spring-boot-starter-actuator is in your pom.xml
             port: "8080",
             healthyHttpCodes: "200",
-            interval: cdk.Duration.seconds(60),
-            timeout: cdk.Duration.seconds(10),
+            interval: cdk.Duration.seconds(45),
+            timeout: cdk.Duration.seconds(20),
             healthyThresholdCount: 2,
             unhealthyThresholdCount: 5,
         });

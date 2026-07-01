@@ -1,11 +1,46 @@
 import path from 'path';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
+import Sitemap from 'vite-plugin-sitemap';
 import { defineConfig, type UserConfig } from 'vite';
 
 // https://vite.dev/config/
 export default defineConfig({
-    plugins: [react(), tailwindcss()],
+    plugins: [
+        react(),
+        tailwindcss(),
+        Sitemap({
+            hostname: 'https://hostellifeplus.com', // Replace with your live URL
+            dynamicRoutes: ['/', '/hostels', '/map', '/unauthorized'], // List your application sub-routes here
+            changefreq: 'weekly',
+            priority: 0.8,
+            generateRobotsTxt: true,
+
+            // Write the specific crawling directives
+            robots: [
+                {
+                    userAgent: '*', // Applies to all search engine bots (Google, Bing, etc.)
+                    allow: [
+                        // Publicly allow crawling on these entry points
+                        '/',
+                        '/hostels',
+                        '/map',
+                    ],
+                    disallow: [
+                        // Strictly forbid bots from looking at these paths
+                        '/login',
+                        '/register',
+                        '/forgot-password',
+                        '/setup-password',
+                        '/verify-email',
+                        '/student/', // Blocks everything inside the student route tree
+                        '/manager/', // Blocks everything inside the manager route tree
+                        '/admin/', // Blocks everything inside the admin route tree
+                    ],
+                },
+            ],
+        }),
+    ],
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),
