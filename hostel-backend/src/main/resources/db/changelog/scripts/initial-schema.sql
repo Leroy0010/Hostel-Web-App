@@ -1,7 +1,7 @@
 -- 00-init-extensions.sql
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS postgis;
-CREATE EXTENSION IF NOT EXISTS postgis_topology;
+
 
 -- =============================================================================
 -- Hostel Booking System — Final Consolidated Schema

@@ -257,8 +257,10 @@ export class InfrastructureStack extends cdk.Stack {
             path: "/actuator/health", // Ensure spring-boot-starter-actuator is in your pom.xml
             port: "8080",
             healthyHttpCodes: "200",
-            interval: cdk.Duration.seconds(30),
-            timeout: cdk.Duration.seconds(5),
+            interval: cdk.Duration.seconds(60),
+            timeout: cdk.Duration.seconds(10),
+            healthyThresholdCount: 2,
+            unhealthyThresholdCount: 5,
         });
     }
 }
