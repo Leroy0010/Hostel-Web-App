@@ -111,6 +111,29 @@ export class InfrastructureStack extends cdk.Stack {
             "/hostel/HOSTEL_SWEEPER_RATE",
         );
 
+        const jwtExpiration = ssm.StringParameter.valueForStringParameter(
+            this,
+            "/hostel/JWT_EXPIRATION"
+        )
+
+        const jwtRefreshExpiration = ssm.StringParameter.valueForStringParameter(
+            this,
+            "/hostel/JWT_REFRESH_EXPIRATION"
+        )
+
+        const jwtCookeSecure = ssm.StringParameter.valueForStringParameter(
+            this,
+            "/hostel/JWT_COOKIE_SECURE"
+        )
+        const jwtCookedDomain = ssm.StringParameter.valueForStringParameter(
+            this,
+            "/hostel/JWT_COOKIE_DOMAIN"
+        )
+        const jwtCookeSameSite = ssm.StringParameter.valueForStringParameter(
+            this,
+            "/hostel/JWT_COOKIE_SAME_SITE"
+        )
+
         // =========================================================================
         // 4. Container Execution & Load Balancing (ECS Fargate)
         // =========================================================================
@@ -126,6 +149,7 @@ export class InfrastructureStack extends cdk.Stack {
                     memoryLimitMiB: 1024, // 1 GB RAM (perfect for Spring Boot with optimized JVM memory)
                     desiredCount: 1,
                     publicLoadBalancer: true, // Exposed to the public internet
+                    circuitBreaker: { rollback: true },
                     taskSubnets: {
                         subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
                     },
@@ -161,6 +185,11 @@ export class InfrastructureStack extends cdk.Stack {
                             MAIL_HOST: "smtp.gmail.com",
                             MAIL_PORT: "465",
                             MAIL_USERNAME: "your-production-email@gmail.com",
+                            JWT_REFRESH_EXPIRATION: jwtRefreshExpiration,
+                            JWT_EXPIRATION: jwtExpiration,
+                            JWT_COOKIE_SAME_SITE: jwtCookeSameSite,
+                            JWT_COOKIE_SECURE: jwtCookeSecure,
+                            JWT_COOKIE_DOMAIN: jwtCookedDomain
                         },
                         secrets: {
                             JWT_SECRET: ecs.Secret.fromSsmParameter(jwtSecret),
@@ -192,6 +221,7 @@ export class InfrastructureStack extends cdk.Stack {
             healthyHttpCodes: "200",
             interval: cdk.Duration.seconds(30),
             timeout: cdk.Duration.seconds(5),
+            
         });
     }
 }
