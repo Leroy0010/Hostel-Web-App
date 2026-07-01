@@ -63,42 +63,55 @@ export class InfrastructureStack extends cdk.Stack {
         // =========================================================================
 
         // SECRETS (Keep these as SecureString in AWS, update the code here)
-        const jwtSecret = ssm.StringParameter.fromSecureStringParameterAttributes(
-            this,
-            "JwtSecret",
-            { parameterName: "/hostel/JWT_SECRET", version: 1 }
-        );
+        const jwtSecret =
+            ssm.StringParameter.fromSecureStringParameterAttributes(
+                this,
+                "JwtSecret",
+                { parameterName: "/hostel/JWT_SECRET", version: 1 },
+            );
 
-        const vapidPrivateKey = ssm.StringParameter.fromSecureStringParameterAttributes(
-            this,
-            "VapidPrivKey",
-            { parameterName: "/hostel/VAPID_PRIVATE_KEY", version: 1 }
-        );
+        const vapidPrivateKey =
+            ssm.StringParameter.fromSecureStringParameterAttributes(
+                this,
+                "VapidPrivKey",
+                { parameterName: "/hostel/VAPID_PRIVATE_KEY", version: 1 },
+            );
 
-        const cloudinarySecret = ssm.StringParameter.fromSecureStringParameterAttributes(
-            this,
-            "CloudinarySecret",
-            { parameterName: "/hostel/CLOUDINARY_API_SECRET", version: 1 }
-        );
+        const cloudinarySecret =
+            ssm.StringParameter.fromSecureStringParameterAttributes(
+                this,
+                "CloudinarySecret",
+                { parameterName: "/hostel/CLOUDINARY_API_SECRET", version: 1 },
+            );
 
-        const mailPassword = ssm.StringParameter.fromSecureStringParameterAttributes(
-            this,
-            "MailPassword",
-            { parameterName: "/hostel/MAIL_PASSWORD", version: 1 }
-        );
+        const mailPassword =
+            ssm.StringParameter.fromSecureStringParameterAttributes(
+                this,
+                "MailPassword",
+                { parameterName: "/hostel/MAIL_PASSWORD", version: 1 },
+            );
 
         // PLAIN STRINGS (Change these to 'String' in the AWS Console, keep code mostly the same)
-        const mailUsername = ssm.StringParameter.fromStringParameterName(
-            this,
-            "MailUsername",
-            "/hostel/MAIL_USERNAME",
-        );
+        const mailUsername =
+            ssm.StringParameter.fromSecureStringParameterAttributes(
+                this,
+                "MailUsername",
+                { parameterName: "/hostel/MAIL_USERNAME", version: 1 },
+            );
 
-        const frontendUrl = ssm.StringParameter.fromStringParameterName(
-            this,
-            "FrontendUrl",
-            "/hostel/FRONTEND_BASE_URL",
-        );
+        const frontendUrl =
+            ssm.StringParameter.fromSecureStringParameterAttributes(
+                this,
+                "FrontendUrl",
+                { parameterName: "/hostel/FRONTEND_BASE_URL", version: 1 },
+            );
+
+        const vapidSubject =
+            ssm.StringParameter.fromSecureStringParameterAttributes(
+                this,
+                "VapidSubject",
+                { parameterName: "/hostel/VAPID_SUBJECT", version: 1 },
+            );
 
         // For non-sensitive configurations, you can fetch the raw string value directly to use in plain environment text
 
@@ -106,10 +119,7 @@ export class InfrastructureStack extends cdk.Stack {
             this,
             "/hostel/VAPID_PUBLIC_KEY",
         );
-        const vapidSubject = ssm.StringParameter.valueForStringParameter(
-            this,
-            "/hostel/VAPID_SUBJECT",
-        );
+
         const cloudinaryName = ssm.StringParameter.valueForStringParameter(
             this,
             "/hostel/CLOUDINARY_CLOUD_NAME",
@@ -191,7 +201,7 @@ export class InfrastructureStack extends cdk.Stack {
                             FRONTEND_PASSWORD_SETUP_URL: `/setup-password`,
                             FRONTEND_EMAIL_VERIFICATION_URL: `/verify-email`,
                             VAPID_PUBLIC_KEY: vapidPublicKey,
-                            VAPID_SUBJECT: vapidSubject,
+
                             CLOUDINARY_CLOUD_NAME: cloudinaryName,
                             CLOUDINARY_API_KEY: cloudinaryKey,
                             HOSTEL_SWEEPER_RATE: sweeperRate,
@@ -217,6 +227,9 @@ export class InfrastructureStack extends cdk.Stack {
                                 ecs.Secret.fromSsmParameter(mailUsername),
                             MAIL_PASSWORD:
                                 ecs.Secret.fromSsmParameter(mailPassword),
+
+                            VAPID_SUBJECT:
+                                ecs.Secret.fromSsmParameter(vapidSubject),
                             // Automatically injects the auto-generated RDS password
                             SPRING_DATASOURCE_PASSWORD:
                                 ecs.Secret.fromSecretsManager(database.secret!),
