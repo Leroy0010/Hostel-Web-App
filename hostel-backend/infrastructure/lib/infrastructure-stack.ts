@@ -61,29 +61,33 @@ export class InfrastructureStack extends cdk.Stack {
         // =========================================================================
         // 3. Secrets Injection from SSM Parameter Store
         // =========================================================================
-        // This fetches values you manually add to AWS SSM prior to running your pipeline
-        const jwtSecret = ssm.StringParameter.fromStringParameterName(
+
+        // SECRETS (Keep these as SecureString in AWS, update the code here)
+        const jwtSecret = ssm.StringParameter.fromSecureStringParameterAttributes(
             this,
             "JwtSecret",
-            "/hostel/JWT_SECRET",
+            { parameterName: "/hostel/JWT_SECRET", version: 1 }
         );
 
-        // 1. First, fetch them from SSM Parameter Store at the top of your stack
-        const vapidPrivateKey = ssm.StringParameter.fromStringParameterName(
+        const vapidPrivateKey = ssm.StringParameter.fromSecureStringParameterAttributes(
             this,
             "VapidPrivKey",
-            "/hostel/VAPID_PRIVATE_KEY",
+            { parameterName: "/hostel/VAPID_PRIVATE_KEY", version: 1 }
         );
-        const cloudinarySecret = ssm.StringParameter.fromStringParameterName(
+
+        const cloudinarySecret = ssm.StringParameter.fromSecureStringParameterAttributes(
             this,
             "CloudinarySecret",
-            "/hostel/CLOUDINARY_API_SECRET",
+            { parameterName: "/hostel/CLOUDINARY_API_SECRET", version: 1 }
         );
-        const mailPassword = ssm.StringParameter.fromStringParameterName(
+
+        const mailPassword = ssm.StringParameter.fromSecureStringParameterAttributes(
             this,
             "MailPassword",
-            "/hostel/MAIL_PASSWORD",
+            { parameterName: "/hostel/MAIL_PASSWORD", version: 1 }
         );
+
+        // PLAIN STRINGS (Change these to 'String' in the AWS Console, keep code mostly the same)
         const mailUsername = ssm.StringParameter.fromStringParameterName(
             this,
             "MailUsername",
