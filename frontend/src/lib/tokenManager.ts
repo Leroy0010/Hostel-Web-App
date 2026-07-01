@@ -97,7 +97,9 @@ class TokenManager {
 
             if (
                 !window.location.pathname.endsWith('/login') &&
-                !window.location.pathname.endsWith('/')
+                !window.location.pathname.endsWith('/') &&
+                !window.location.pathname.endsWith('/hostels') &&
+                !window.location.pathname.endsWith('/map')
             ) {
                 window.location.href = '/login';
             }
