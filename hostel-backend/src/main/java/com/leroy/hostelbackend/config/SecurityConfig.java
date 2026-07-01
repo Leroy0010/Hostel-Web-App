@@ -112,6 +112,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/landmarks/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reviews/").permitAll()
                         .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/wss/**").permitAll()
                         // Everything else requires a valid JWT
                         .anyRequest().authenticated()
                 )
