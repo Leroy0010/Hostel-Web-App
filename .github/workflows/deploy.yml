@@ -1,0 +1,64 @@
+name: Deploy Backend Infrastructure
+
+on:
+  push:
+    branches:
+      - main
+    # 1. Update these paths so GitHub knows to watch inside the backend folder!
+    paths:
+      - "hostel-backend/src/**"
+      - "hostel-backend/pom.xml"
+      - "hostel-backend/infrastructure/**"
+      - "hostel-backend/Dockerfile.prod"
+      - ".github/workflows/deploy.yml"
+
+permissions:
+  id-token: write 
+  contents: read 
+
+jobs:
+  deploy:
+    name: Build & Deploy to AWS Fargate
+    runs-on: ubuntu-latest
+
+    # 2. THIS IS CRITICAL: Tells the runner to execute all commands inside the backend folder
+    defaults:
+      run:
+        working-directory: ./hostel-backend
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: "25"
+          distribution: "temurin"
+          cache: "maven"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/Hostel-Github-Actions
+
+      - name: Install CDK and Infrastructure Dependencies
+        run: |
+          npm install -g aws-cdk
+          cd infrastructure
+          npm install
+
+      - name: Deploy Infrastructure
+        run: |
+          cd infrastructure
+          cdk deploy --require-approval never
+        env:
+          CDK_DEFAULT_REGION: ${{ vars.AWS_REGION }}
+          CDK_DEFAULT_ACCOUNT: ${{ secrets.AWS_ACCOUNT_ID }}
