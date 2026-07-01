@@ -84,12 +84,20 @@ export class InfrastructureStack extends cdk.Stack {
             "MailPassword",
             "/hostel/MAIL_PASSWORD",
         );
-
-        // For non-sensitive configurations, you can fetch the raw string value directly to use in plain environment text
-        const frontendUrl = ssm.StringParameter.valueForStringParameter(
+        const mailUsername = ssm.StringParameter.fromStringParameterName(
             this,
+            "MailUsername",
+            "/hostel/MAIL_USERNAME",
+        );
+
+        const frontendUrl = ssm.StringParameter.fromStringParameterName(
+            this,
+            "FrontendUrl",
             "/hostel/FRONTEND_BASE_URL",
         );
+
+        // For non-sensitive configurations, you can fetch the raw string value directly to use in plain environment text
+
         const vapidPublicKey = ssm.StringParameter.valueForStringParameter(
             this,
             "/hostel/VAPID_PUBLIC_KEY",
@@ -113,26 +121,27 @@ export class InfrastructureStack extends cdk.Stack {
 
         const jwtExpiration = ssm.StringParameter.valueForStringParameter(
             this,
-            "/hostel/JWT_EXPIRATION"
-        )
+            "/hostel/JWT_EXPIRATION",
+        );
 
-        const jwtRefreshExpiration = ssm.StringParameter.valueForStringParameter(
-            this,
-            "/hostel/JWT_REFRESH_EXPIRATION"
-        )
+        const jwtRefreshExpiration =
+            ssm.StringParameter.valueForStringParameter(
+                this,
+                "/hostel/JWT_REFRESH_EXPIRATION",
+            );
 
         const jwtCookeSecure = ssm.StringParameter.valueForStringParameter(
             this,
-            "/hostel/JWT_COOKIE_SECURE"
-        )
+            "/hostel/JWT_COOKIE_SECURE",
+        );
         const jwtCookedDomain = ssm.StringParameter.valueForStringParameter(
             this,
-            "/hostel/JWT_COOKIE_DOMAIN"
-        )
+            "/hostel/JWT_COOKIE_DOMAIN",
+        );
         const jwtCookeSameSite = ssm.StringParameter.valueForStringParameter(
             this,
-            "/hostel/JWT_COOKIE_SAME_SITE"
-        )
+            "/hostel/JWT_COOKIE_SAME_SITE",
+        );
 
         // =========================================================================
         // 4. Container Execution & Load Balancing (ECS Fargate)
@@ -174,7 +183,7 @@ export class InfrastructureStack extends cdk.Stack {
                             SPRING_DATASOURCE_URL: `jdbc:postgresql://${database.dbInstanceEndpointAddress}:${database.dbInstanceEndpointPort}/hostel-booking-db?stringtype=unspecified`,
                             SPRING_DATASOURCE_USERNAME: "postgres",
                             // Add plain text environments here:
-                            FRONTEND_BASE_URL: frontendUrl,
+
                             FRONTEND_PASSWORD_SETUP_URL: `/setup-password`,
                             FRONTEND_EMAIL_VERIFICATION_URL: `/verify-email`,
                             VAPID_PUBLIC_KEY: vapidPublicKey,
@@ -184,12 +193,12 @@ export class InfrastructureStack extends cdk.Stack {
                             HOSTEL_SWEEPER_RATE: sweeperRate,
                             MAIL_HOST: "smtp.gmail.com",
                             MAIL_PORT: "465",
-                            MAIL_USERNAME: "your-production-email@gmail.com",
+
                             JWT_REFRESH_EXPIRATION: jwtRefreshExpiration,
                             JWT_EXPIRATION: jwtExpiration,
                             JWT_COOKIE_SAME_SITE: jwtCookeSameSite,
                             JWT_COOKIE_SECURE: jwtCookeSecure,
-                            JWT_COOKIE_DOMAIN: jwtCookedDomain
+                            JWT_COOKIE_DOMAIN: jwtCookedDomain,
                         },
                         secrets: {
                             JWT_SECRET: ecs.Secret.fromSsmParameter(jwtSecret),
@@ -198,6 +207,10 @@ export class InfrastructureStack extends cdk.Stack {
                                 ecs.Secret.fromSsmParameter(vapidPrivateKey),
                             CLOUDINARY_API_SECRET:
                                 ecs.Secret.fromSsmParameter(cloudinarySecret),
+                            FRONTEND_BASE_URL:
+                                ecs.Secret.fromSsmParameter(frontendUrl),
+                            MAIL_USERNAME:
+                                ecs.Secret.fromSsmParameter(mailUsername),
                             MAIL_PASSWORD:
                                 ecs.Secret.fromSsmParameter(mailPassword),
                             // Automatically injects the auto-generated RDS password
@@ -221,7 +234,6 @@ export class InfrastructureStack extends cdk.Stack {
             healthyHttpCodes: "200",
             interval: cdk.Duration.seconds(30),
             timeout: cdk.Duration.seconds(5),
-            
         });
     }
 }
