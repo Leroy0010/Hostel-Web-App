@@ -40,7 +40,7 @@ export class InfrastructureStack extends cdk.Stack {
         // 2. Managed PostgreSQL Database (RDS)
         // =========================================================================
         const dbEngine = rds.DatabaseInstanceEngine.postgres({
-            version: rds.PostgresEngineVersion.VER_16, // Stable LTS with robust PostGIS support
+            version: rds.PostgresEngineVersion.VER_18, // Stable LTS with robust PostGIS support
         });
 
         const database = new rds.DatabaseInstance(this, "HostelDatabase", {
@@ -195,7 +195,7 @@ export class InfrastructureStack extends cdk.Stack {
                             SPRING_PROFILES_ACTIVE: "prod",
                             SERVER_PORT: "8080",
                             SPRING_DATASOURCE_URL: `jdbc:postgresql://${database.dbInstanceEndpointAddress}:${database.dbInstanceEndpointPort}/hostelbookingdb?stringtype=unspecified`,
-                            SPRING_DATASOURCE_USERNAME: "postgres",
+
                             // Add plain text environments here:
 
                             FRONTEND_PASSWORD_SETUP_URL: `/setup-password`,
@@ -232,7 +232,15 @@ export class InfrastructureStack extends cdk.Stack {
                                 ecs.Secret.fromSsmParameter(vapidSubject),
                             // Automatically injects the auto-generated RDS password
                             SPRING_DATASOURCE_PASSWORD:
-                                ecs.Secret.fromSecretsManager(database.secret!),
+                                ecs.Secret.fromSecretsManager(
+                                    database.secret!,
+                                    "password",
+                                ),
+                            SPRING_DATASOURCE_USERNAME:
+                                ecs.Secret.fromSecretsManager(
+                                    database.secret!,
+                                    "username",
+                                ),
                         },
                     },
                 },
