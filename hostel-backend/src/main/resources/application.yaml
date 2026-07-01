@@ -52,6 +52,7 @@ spring:
         queue-capacity: 100
       thread-name-prefix: MailSender-
 
+
 jwt:
   secret: ${JWT_SECRET}
   tokenExpiration: ${JWT_EXPIRATION:1800000} # 30 minutes in milliseconds
@@ -112,6 +113,12 @@ app:
     base-url: ${FRONTEND_BASE_URL}
     password-setup-url: ${FRONTEND_PASSWORD_SETUP_URL}
     verify-email-url: ${FRONTEND_EMAIL_VERIFICATION_URL}
+
+
+management:
+  health:
+    mail:
+      enabled: false
 
 
 logging:
