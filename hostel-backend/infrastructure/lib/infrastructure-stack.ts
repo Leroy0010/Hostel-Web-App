@@ -110,7 +110,6 @@ export class InfrastructureStack extends cdk.Stack {
             this,
             "/hostel/HOSTEL_SWEEPER_RATE",
         );
-        
 
         // =========================================================================
         // 4. Container Execution & Load Balancing (ECS Fargate)
@@ -136,6 +135,12 @@ export class InfrastructureStack extends cdk.Stack {
                             path.join(__dirname, "../../"),
                             {
                                 file: "Dockerfile.prod",
+                                exclude: [
+                                    "infrastructure", // Prevents the infinite recursive loop!
+                                    "node_modules", // Keeps the upload size small
+                                    "target", // Ignores old local builds
+                                    ".git",
+                                ],
                             },
                         ),
                         containerPort: 8080,
