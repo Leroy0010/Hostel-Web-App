@@ -1,5 +1,6 @@
 package com.leroy.hostelbackend.module.hostel.service;
 
+import com.leroy.hostelbackend.module.booking.repository.BookingRepository;
 import com.leroy.hostelbackend.module.hostel.dto.*;
 import com.leroy.hostelbackend.module.hostel.mapper.HostelMapper;
 import com.leroy.hostelbackend.module.hostel.model.Hostel;
@@ -22,6 +23,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -46,6 +48,7 @@ public class HostelService {
     private final HostelRepository hostelRepository;
     private final UserRepository   userRepository;
     private final HostelMapper     hostelMapper;
+    private final BookingRepository bookingRepository;
 
     // -------------------------------------------------------------------------
     // Public / Student reads
@@ -65,16 +68,13 @@ public class HostelService {
                 .map(hostelMapper::toSummaryDto);
     }
 
-    /**
-     * Full hostel detail for any active hostel. Open to all authenticated users.
-     *
-     * @param hostelId the hostel UUID
-     * @return full {@link HostelDto} with manager summary and coordinates
-     */
     @Transactional(readOnly = true)
-    public HostelDto getHostelById(UUID hostelId) {
-        var hostel = requireHostel(hostelId);
-        return buildHostelDto(hostel);
+    public List<HostelSummaryDto> getStudentActiveHostels(UUID userId){
+        return bookingRepository
+                .findStudentActiveHostels(userId)
+                .stream()
+                .map(hostelMapper::toSummaryDto)
+                .toList();
     }
 
     // -------------------------------------------------------------------------
@@ -85,8 +85,13 @@ public class HostelService {
      * Admin-only paginated list of ALL hostels (active + inactive).
      */
     @Transactional(readOnly = true)
-    public Page<HostelSummaryDto> listAllHostels(Pageable pageable) {
-        return hostelRepository.findAllWithManager(pageable)
+    public Page<HostelSummaryDto> listAllHostels(String search, String genderPolicy, Pageable pageable) {
+        String genderFilter = "ALL".equalsIgnoreCase(genderPolicy) ? null : genderPolicy;
+
+        // Pass search directly (if it is empty string, we can make it null for the query)
+        String searchFilter = (search != null && !search.trim().isEmpty()) ? search.trim() : null;
+
+        return hostelRepository.findAllWithManager(searchFilter, genderFilter, pageable)
                 .map(hostelMapper::toSummaryDto);
     }
 
@@ -98,6 +103,8 @@ public class HostelService {
         return hostelRepository.findByManagerId(managerId, pageable)
                 .map(hostelMapper::toSummaryDto);
     }
+
+
 
     // -------------------------------------------------------------------------
     // Admin writes

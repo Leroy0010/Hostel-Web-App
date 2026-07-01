@@ -1,5 +1,7 @@
 package com.leroy.hostelbackend.module.waitlist.controller;
 
+import com.leroy.hostelbackend.module.booking.dto.AvailablePeriodDto;
+import com.leroy.hostelbackend.module.room.model.RoomType;
 import com.leroy.hostelbackend.module.user.model.CustomUserDetails;
 import com.leroy.hostelbackend.module.waitlist.dto.JoinWaitlistRequest;
 import com.leroy.hostelbackend.module.waitlist.dto.WaitlistDto;
@@ -20,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -73,7 +76,7 @@ public class WaitlistController {
             @PathVariable UUID hostelId,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         var studentId = customUserDetails.getUserId();
-        waitlistService.leaveWaitlist(studentId, hostelId, request.academicYear(),  request.semester());
+        waitlistService.leaveWaitlist(studentId, hostelId,request.roomType(),  request.academicYear(),  request.semester());
         return ResponseEntity.ok(ApiResponse.success("You have been removed from the waitlist."));
     }
 
@@ -84,11 +87,12 @@ public class WaitlistController {
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ApiResponse<WaitlistStatusDto>> getStatus(
             @PathVariable UUID hostelId,
+            @RequestParam(required = false) RoomType roomType,
             @RequestParam(required = false) String semester,
             @RequestParam(required = false) String academicYear,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         var studentId = customUserDetails.getUserId();
-        var status = waitlistService.getWaitlistStatus(studentId, hostelId, academicYear, semester);
+        var status = waitlistService.getWaitlistStatus(studentId, hostelId,roomType,  academicYear, semester);
         return ResponseEntity.ok(ApiResponse.success("Waitlist status fetched.", status));
     }
 
@@ -118,12 +122,13 @@ public class WaitlistController {
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ApiResponse<Page<WaitlistEntryDto>>> hostelWaitlist(
             @PathVariable UUID hostelId,
+            @RequestParam(required = false) RoomType roomType,
             @RequestParam(required = false) String semester,
             @RequestParam(required = false) String academicYear,
             @PageableDefault(size = 20) Pageable pageable
     ) {
         return ResponseEntity.ok(ApiResponse.success("Waitlist fetched.",
-                waitlistService.hostelWaitlist(hostelId, academicYear, semester, pageable)));
+                waitlistService.hostelWaitlist(hostelId, roomType, academicYear, semester, pageable)));
     }
 
     /**
@@ -134,5 +139,14 @@ public class WaitlistController {
     public ResponseEntity<ApiResponse<Void>> managerRemove(@PathVariable UUID waitlistId) {
         waitlistService.managerRemoveEntry(waitlistId);
         return ResponseEntity.ok(ApiResponse.success("Waitlist entry removed."));
+    }
+
+    @GetMapping("hostels/{hostelId}/waitlist-periods")
+    public ResponseEntity<ApiResponse<List<AvailablePeriodDto>>> getWaitlistPeriods(
+            @PathVariable UUID hostelId,
+            @RequestParam(required = false) RoomType roomType) {
+
+        List<AvailablePeriodDto> periods = waitlistService.getWaitlistPeriodsDropdown(hostelId, roomType);
+        return ResponseEntity.ok(ApiResponse.success("Waitlist periods fetched.", periods));
     }
 }

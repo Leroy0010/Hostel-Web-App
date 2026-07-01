@@ -4,6 +4,7 @@ import com.leroy.hostelbackend.module.booking.model.Booking;
 import com.leroy.hostelbackend.module.user.dto.HostelDto;
 import com.leroy.hostelbackend.module.user.dto.UserDto;
 import com.leroy.hostelbackend.module.user.dto.UserResponse;
+import com.leroy.hostelbackend.module.user.dto.UserSummary;
 import com.leroy.hostelbackend.module.user.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,5 +21,8 @@ public interface UserMapper {
     @Mapping(target = "name", source = "room.hostel.name")
     @Mapping(target = "address", source = "room.hostel.address")
     HostelDto toUserHostelDto(Booking booking);
+
+    @Mapping(target = "name", expression = "java(user.getName())")
+    UserSummary toUserSummary(User user);
 }
 

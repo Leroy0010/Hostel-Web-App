@@ -2,6 +2,8 @@ package com.leroy.hostelbackend.module.booking.repository;
 
 import com.leroy.hostelbackend.module.booking.model.Booking;
 import com.leroy.hostelbackend.module.booking.model.BookingStatus;
+import com.leroy.hostelbackend.module.hostel.model.Hostel;
+import com.leroy.hostelbackend.module.room.model.Room;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -53,9 +55,10 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
             JOIN FETCH b.room r
             JOIN FETCH r.hostel
             WHERE b.student.id = :studentId
+                AND (CAST(:status AS string) IS NULL OR b.status = :status)
             ORDER BY b.createdAt DESC
             """)
-    Page<Booking> findByStudentId(@Param("studentId") UUID studentId, Pageable pageable);
+    Page<Booking> findByStudentId(@Param("studentId") UUID studentId, @Param("status") BookingStatus status, Pageable pageable);
 
     /**
      * Active bookings for reminder notification after check-in.
@@ -164,6 +167,41 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     );
 
     /**
+     * FULL semester conflict check — per student.
+     *
+     * <p>A FULL semester booking spans the entire academic year. Before allowing
+     * it, we check that <em>this specific student</em> does not already hold an
+     * active FIRST or SECOND booking for the same room in the same year. This
+     * prevents a student from double-booking their own bed.
+     *
+     * <p><strong>Why per-student?</strong> If Student A books FIRST and Student
+     * B tries to book FULL, Student B's FULL booking should simply be evaluated
+     * against the period-capacity check (countReservedBeds for 'FULL'), not
+     * blocked by Student A's existence. The only cross-semester conflict we
+     * enforce is that a single student cannot hold overlapping bookings for the
+     * same room.
+     *
+     * @param studentId    the student attempting the FULL booking
+     * @param roomId       the room
+     * @param academicYear the year
+     * @return {@code true} if the student already has an active FIRST/SECOND
+     *         booking for this room in this year
+     */
+    @Query("""
+            SELECT COUNT(b) > 0 FROM Booking b
+            WHERE b.student.id   = :studentId
+              AND b.room.id      = :roomId
+              AND b.academicYear = :academicYear
+              AND b.semester     IN ('FIRST', 'SECOND')
+              AND b.status       IN ('PENDING', 'APPROVED', 'CHECKED_IN')
+            """)
+    boolean studentHasSemesterBookingForYear(
+            @Param("studentId")    UUID   studentId,
+            @Param("roomId")       UUID   roomId,
+            @Param("academicYear") String academicYear
+    );
+
+    /**
      * Latest completed booking for a room — used to validate academic year linearity.
      * Returns the most recent CHECKED_IN or CHECKED_OUT booking for the room,
      * so the service can verify the next booking's year is sequential.
@@ -233,19 +271,20 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     Page<Booking> findPendingByManagerId(@Param("managerId") UUID managerId, Pageable pageable);
 
     @Query("""
-            SELECT b FROM Booking b
-            JOIN FETCH b.student
-            JOIN FETCH b.room r
-            JOIN FETCH r.hostel h
-            WHERE h.id = :hostelId
-              AND (:status IS NULL OR b.status = :status)
-            ORDER BY b.requestedAt DESC
-            """)
+        SELECT b FROM Booking b
+        JOIN FETCH b.student
+        JOIN FETCH b.room r
+        JOIN FETCH r.hostel h
+        WHERE h.id = :hostelId
+           AND (CAST(:status AS string) IS NULL OR b.status = :status)
+        ORDER BY b.requestedAt DESC
+        """)
     Page<Booking> findByHostelId(
             @Param("hostelId") UUID hostelId,
-            @Param("status")   String status,
+            @Param("status")   BookingStatus status,
             Pageable pageable
     );
+
 
     // -------------------------------------------------------------------------
     // Sweeper queries
@@ -314,4 +353,18 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
 
     @Query("SELECT b FROM Booking b WHERE b.status = 'CHECKED_IN' AND b.student.id = :userId")
     List<Booking> findCurrentByUserId(@Param("userId") UUID userId);
+
+    @Query("SELECT DISTINCT h FROM Booking b " +
+            "JOIN b.room r " +
+            "JOIN r.hostel h " +
+            "WHERE b.status = 'CHECKED_IN' AND b.student.id = :userId")
+    List<Hostel> findStudentActiveHostels(@Param("userId") UUID userId);
+
+
+    @Query("SELECT DISTINCT b.room FROM Booking b " +
+            "WHERE b.status = 'CHECKED_IN' " +
+            "AND b.student.id = :userId " +
+            "AND b.room.hostel.id = :hostelId")
+    List<Room> findStudentActiveRooms(@Param("userId") UUID userId, @Param("hostelId") UUID hostelId);
+
 }

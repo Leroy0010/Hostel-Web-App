@@ -1,10 +1,13 @@
 package com.leroy.hostelbackend.module.user.repository;
 
 import com.leroy.hostelbackend.module.user.model.User;
+import com.leroy.hostelbackend.module.user.model.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,7 +17,7 @@ import java.util.UUID;
  * <p>All query methods use {@code IgnoreCase} variants so that email lookups
  * are case-insensitive, consistent with how email addresses work in practice.
  */
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificationExecutor<User> {
 
     /**
      * Used by {@link com.leroy.hostelbackend.module.user.service.CustomUserDetailsService}
@@ -43,4 +46,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
               AND h.manager IS NOT NULL
             """)
     Optional<User> findManagerByHostelId(@Param("hostelId") UUID hostelId);
+
+    List<User> findAllByRoleAndIsActiveTrue(UserRole role);
 }

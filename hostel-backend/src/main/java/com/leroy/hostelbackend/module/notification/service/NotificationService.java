@@ -88,6 +88,7 @@ public class NotificationService {
      * @param navigateUrl frontend path e.g. "/bookings/abc123"
      */
 
+    @Transactional
     public void notify(User recipient, String title, String message,
                        NotificationType type, String entityType, UUID entityId, String navigateUrl) {
 
@@ -183,19 +184,19 @@ public class NotificationService {
         User student = userRepository.findById(studentId).orElseThrow();
         notify(student, "Pending Bookings Reminder",
                 "You have successfully checked in, but you still have " + activeCount + " other active(pending/approved) booking request(s). Please cancel them if they are no longer needed.",
-                NotificationType.GENERAL, null, null, "/bookings/my");
+                NotificationType.GENERAL, null, null, "/student/bookings/my");
     }
 
     public void notifyManagerNewBookingRequest(User manager, String studentName, String roomNumber, UUID bookingId) {
         notify(manager, "New Booking Request",
                 "Student " + studentName + " has requested room " + roomNumber + ". Review the request.",
-                NotificationType.GENERAL, "BOOKING", bookingId, "/manager/bookings/" + bookingId);
+                NotificationType.GENERAL, "BOOKING", bookingId, "/bookings/" + bookingId);
     }
 
     public void notifyManagerPaymentSubmitted(User manager, String studentName, String roomNumber, UUID bookingId) {
         notify(manager, "Payment Reference Received",
                 "Student " + studentName + " has submitted payment details for room " + roomNumber + ". Ready for verification.",
-                NotificationType.GENERAL, "BOOKING", bookingId, "/manager/bookings/" + bookingId);
+                NotificationType.GENERAL, "BOOKING", bookingId, "/bookings/" + bookingId);
     }
 
     // -------------------------------------------------------------------------
@@ -261,17 +262,20 @@ public class NotificationService {
     @Transactional
     public void markOneAsRead(UUID notificationId, UUID userId) {
         notificationRepository.markOneAsRead(notificationId, userId, LocalDateTime.now());
+        broadcastUnreadCount(userId);
     }
 
     @Transactional
     public void markAllAsRead(UUID userId) {
         notificationRepository.markAllAsRead(userId, LocalDateTime.now());
+        broadcastUnreadCount(userId);
     }
 
     @Transactional
     public void delete(UUID notificationId) {
         var notification = notificationRepository.findById(notificationId).orElseThrow(() -> new ResourceNotFoundException("Notification not found: " + notificationId));
         notificationRepository.delete(notification);
+        broadcastUnreadCount(notification.getRecipient().getId());
     }
 
     // -------------------------------------------------------------------------
@@ -328,6 +332,26 @@ public class NotificationService {
             } catch (Exception e) {
                 log.error("[PUSH] Exception delivering push to endpoint={}: {}", sub.getEndpoint(), e.getMessage());
             }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Real-Time Count Sync
+    // -------------------------------------------------------------------------
+
+    /**
+     * Broadcasts the exact unread count to the user's active WebSocket sessions.
+     */
+    private void broadcastUnreadCount(UUID userId) {
+        long count = notificationRepository.countByRecipientIdAndIsReadFalse(userId);
+        try {
+            messagingTemplate.convertAndSendToUser(
+                    userId.toString(),
+                    "/queue/unread-count",
+                    Map.of("count", count)
+            );
+        } catch (Exception e) {
+            log.warn("[WS] Failed to broadcast unread count to {}: {}", userId, e.getMessage());
         }
     }
 }

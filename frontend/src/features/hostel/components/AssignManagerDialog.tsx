@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, UserCheck } from 'lucide-react';
@@ -10,7 +10,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
@@ -21,6 +20,9 @@ import {
     type HostelDto,
 } from '../types/hostel.types';
 import type { ApiError } from '@/types/api';
+import { Combobox } from '@/components/ui/my-combobox';
+import { useGetManagers } from '@/features/user/hooks/user.hooks';
+import { useMemo } from 'react';
 
 // =============================================================================
 // Props
@@ -71,13 +73,25 @@ export function AssignManagerDialog({
         hostel.id
     );
 
+    const { data: managers = [], isLoading: isManagersLoading } =
+        useGetManagers();
+
+    const managerOptions = useMemo(
+        () =>
+            managers.map((manager) => ({
+                value: manager.id,
+                label: manager.name,
+            })),
+        [managers]
+    );
+
     const isPending = isAssigning || isUnassigning;
 
     const {
-        register,
         handleSubmit,
         setError,
         reset,
+        control,
         formState: { errors },
     } = useForm<AssignManagerFormValues>({
         resolver: zodResolver(assignManagerSchema),
@@ -132,7 +146,10 @@ export function AssignManagerDialog({
         <Dialog open={open} onOpenChange={handleClose}>
             <AnimatePresence>
                 {open && (
-                    <DialogContent forceMount>
+                    <DialogContent
+                        forceMount
+                        className="border-gray-200 bg-white sm:max-w-lg dark:border-gray-800 dark:bg-gray-950"
+                    >
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -178,28 +195,40 @@ export function AssignManagerDialog({
                                 className="space-y-4"
                                 noValidate
                             >
-                                <div className="space-y-1.5">
-                                    <Label
-                                        htmlFor="am-managerId"
-                                        className="text-sm font-medium text-gray-700 dark:text-gray-300"
-                                    >
-                                        {hostel.manager
-                                            ? 'New manager UUID'
-                                            : 'Manager UUID'}
-                                    </Label>
-                                    <Input
-                                        id="am-managerId"
-                                        placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-                                        className="border-gray-200 bg-white font-mono text-sm text-gray-900 placeholder:text-gray-400 focus-visible:ring-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-600 dark:focus-visible:ring-gray-600"
-                                        {...register('managerId')}
-                                    />
-                                    {errors.managerId && (
-                                        <p className="text-xs font-medium text-red-500 dark:text-red-400">
-                                            {errors.managerId.message}
-                                        </p>
-                                    )}
-                                </div>
-
+                                {' '}
+                                {!isManagersLoading && (
+                                    <div className="space-y-1.5">
+                                        <Label
+                                            htmlFor="am-managerId"
+                                            className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                                        >
+                                            {hostel.manager
+                                                ? 'New manager'
+                                                : 'Manager'}
+                                        </Label>
+                                        <Controller
+                                            control={control}
+                                            name="managerId"
+                                            render={({
+                                                field: { value, onChange },
+                                            }) => (
+                                                <Combobox
+                                                    options={managerOptions}
+                                                    placeholder="Select manager"
+                                                    onValueChange={onChange}
+                                                    value={value}
+                                                    disabled={isAssigning}
+                                                    width="w-full"
+                                                />
+                                            )}
+                                        />
+                                        {errors.managerId && (
+                                            <p className="text-xs font-medium text-red-500 dark:text-red-400">
+                                                {errors.managerId.message}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
                                 {/* Action buttons */}
                                 <div className="flex flex-col-reverse gap-2 pt-1 sm:flex-row sm:justify-between">
                                     {/* Unassign — only shown when a manager exists */}

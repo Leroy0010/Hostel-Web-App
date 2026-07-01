@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -63,27 +64,8 @@ public class UserService {
         return authMapper.toLoginResponse(userResponse, accessToken.toString());
     }
 
-    @Transactional
-    public UserDto createStaff(CreateStaffRequest request) {
-        if (request.getRole().equals(UserRole.STUDENT)) {
-            throw new IllegalArgumentException("Use the student registration endpoint to create student accounts.");
-        }
 
-        assertEmailAvailable(request.getEmail());
-
-        // Admin-created staff can also start as inactive until they set up via the emailed link
-        var user = User.create(request.getEmail(), request.getFirstName(), request.getLastName(), request.getPhone(), false);
-        user.setRole(request.getRole());
-        var saved = userRepository.save(user);
-
-        String rawToken = authService.generateAndSaveToken(user, AuthTokenType.PASSWORD_RESET, 24 * 60);
-
-        emailService.sendStaffActivationEmail(saved.getEmail(), user.getName(), rawToken);
-
-        log.info("Staff account created (Pending Activation): id={}, email={}, role={}", saved.getId(), saved.getEmail(), saved.getRole());
-        return userMapper.toDto(saved);
-    }
-
+    @Transactional(readOnly = true)
     public UserResponse me(UUID id) {
         var user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", id));
         var bookings = bookingRepository.findCurrentByUserId((id));
@@ -113,6 +95,23 @@ public class UserService {
         }
 
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateProfileUrl (String profileUrl, UUID userId) {
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        user.updateProfileUrl(profileUrl);
+
+    }
+
+    public List<UserSummary> getManagers(){
+        return userRepository
+                .findAllByRoleAndIsActiveTrue(UserRole.MANAGER)
+                .stream()
+                .map(userMapper::toUserSummary)
+                .toList();
     }
 
 

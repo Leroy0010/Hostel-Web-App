@@ -10,7 +10,7 @@ import {
     Bell,
     Circle,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type {
     NotificationResponse,
     NotificationType,
@@ -54,10 +54,24 @@ const getIconForType = (type: NotificationType) => {
 
 export function NotificationItem({ notification }: NotificationItemProps) {
     const { mutate: markAsRead } = useMarkAsRead();
+    const navigate = useNavigate();
 
-    const handleClick = () => {
-        if (!notification.isRead) {
-            markAsRead(notification.id);
+    const handleClick = (e: React.MouseEvent) => {
+        // If there is a link, handle navigation manually
+        if (notification.navigateUrl) {
+            e.preventDefault(); // Stop the Link from changing the page instantly
+
+            if (!notification.isRead) {
+                // Wait for the server to finish before moving pages
+                markAsRead(notification.id, {
+                    onSettled: () => {
+                        navigate(notification.navigateUrl!);
+                    },
+                });
+            } else {
+                // If already read, just move pages immediately
+                navigate(notification.navigateUrl);
+            }
         }
     };
 

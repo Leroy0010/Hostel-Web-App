@@ -10,7 +10,7 @@ interface CustomAxiosConfig extends InternalAxiosRequestConfig {
 
 export const apiClient = axios.create({
     baseURL:
-        import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1',
+        import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -135,7 +135,7 @@ apiClient.interceptors.response.use(
                 useAuthStore.getState().clearAuth();
 
                 // Prevent toast spamming if already at login screen
-                if (!window.location.pathname.endsWith('/login')) {
+                if (!window.location.pathname.endsWith('/login') && !window.location.pathname.endsWith("/")) {
                     toast.error('Session expired. Please log in again.');
                     window.location.href = '/login';
                 }

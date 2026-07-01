@@ -5,6 +5,7 @@ import com.leroy.hostelbackend.module.booking.dto.BookingDto;
 import com.leroy.hostelbackend.module.booking.dto.BookingSummaryDto;
 import com.leroy.hostelbackend.module.booking.dto.CreateBookingRequest;
 import com.leroy.hostelbackend.module.booking.dto.SubmitPaymentRequest;
+import com.leroy.hostelbackend.module.booking.model.BookingStatus;
 import com.leroy.hostelbackend.module.booking.service.BookingService;
 import com.leroy.hostelbackend.module.user.model.CustomUserDetails;
 import com.leroy.hostelbackend.module.user.model.UserRole;
@@ -107,12 +108,13 @@ public class BookingController {
     @GetMapping("/bookings/my")
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<ApiResponse<Page<BookingSummaryDto>>> myBookings(
+            @RequestParam (required = false) BookingStatus status,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
         var studentId = customUserDetails.getUserId();
         return ResponseEntity.ok(ApiResponse.success("Bookings fetched.",
-                bookingService.myBookings(studentId, pageable)));
+                bookingService.myBookings(studentId, status, pageable)));
     }
 
     /**
@@ -128,6 +130,8 @@ public class BookingController {
         return ResponseEntity.ok(ApiResponse.success("Booking fetched.",
                 bookingService.getBookingById(id, customUserDetails.getUserId(), privileged)));
     }
+
+
 
     // =========================================================================
     // Manager endpoints
@@ -198,11 +202,11 @@ public class BookingController {
     /**
      * All bookings for a hostel with optional status filter.
      */
-    @GetMapping("/admin/hostels/{hostelId}/bookings")
+    @GetMapping("/manager/hostels/{hostelId}/bookings")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ApiResponse<Page<BookingSummaryDto>>> hostelBookings(
             @PathVariable UUID hostelId,
-            @RequestParam(required = false) String status,
+            @RequestParam(required = false) BookingStatus status,
             @PageableDefault(size = 20, sort = "requestedAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return ResponseEntity.ok(ApiResponse.success("Bookings fetched.",

@@ -3,11 +3,3 @@ databaseChangeLog:
       file: db/changelog/db.changelog-001-initial-schema.yaml
   - include:
       file: db/changelog/db.changelog-002-index.yaml
-  - include:
-      file: db/changelog/db.changelog-003-alter-bookings-table.yaml
-  - include:
-      file: db/changelog/db.changelog-004-auth-tokens-schema.yaml
-  - include:
-      file: db/changelog/db.changelog-005-drop-unique-booking-constraint.yaml
-  - include:
-      file: db/changelog/db.changelog-006-booking-service-v2-migration.yaml

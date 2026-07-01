@@ -67,7 +67,7 @@ public class Notification {
     private String navigateUrl;
 
     @Column(name = "is_read", nullable = false)
-    private boolean isRead = false;
+    private Boolean isRead = false;
 
     @Column(name = "read_at")
     private LocalDateTime readAt;

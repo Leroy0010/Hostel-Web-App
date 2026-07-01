@@ -18,7 +18,7 @@ export const useUnreadCount = (enabled?: boolean) => {
     return useQuery({
         queryKey: notificationKeys.unreadCount(),
         queryFn: () => notificationApi.getUnreadCount(),
-        refetchInterval: 60000, // Optional fallback polling just in case WS drops
+        refetchInterval: 60_000, // Optional fallback polling just in case WS drops 
         enabled: enabled,
     });
 };

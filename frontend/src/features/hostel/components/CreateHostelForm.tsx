@@ -21,11 +21,12 @@ import { useCreateHostel } from '../hooks/hostel.hooks';
 import {
     createHostelSchema,
     type CreateHostelFormValues,
+    type CreateHostelInputValues,
     type CreateHostelPayload,
 } from '../types/hostel.types';
-import type { ApiError } from '@/types/api';
 import { FieldError } from '@/components/ui/FieldError';
 import { transition } from '@/features/auth/utils/transition';
+import { cn } from '@/lib/utils';
 
 // =============================================================================
 // Types
@@ -112,7 +113,7 @@ export function CreateHostelForm({
         setValue,
         setError,
         formState: { errors },
-    } = useForm<CreateHostelFormValues>({
+    } = useForm<CreateHostelInputValues>({
         resolver: zodResolver(createHostelSchema),
         defaultValues: {
             name: '',
@@ -141,7 +142,7 @@ export function CreateHostelForm({
                 toast.success(`Hostel "${hostel.name}" created.`);
                 onSuccess?.(hostel.id);
             },
-            onError: (err: ApiError) => {
+            onError: (err) => {
                 if (err.code === 'VALIDATION_FAILED' && err.details) {
                     Object.entries(err.details).forEach(([field, messages]) => {
                         setError(field as keyof CreateHostelFormValues, {
@@ -281,8 +282,8 @@ export function CreateHostelForm({
                             )
                         }
                     >
-                        <SelectTrigger id="h-gender" className={inputCls}>
-                            <SelectValue placeholder="Select policy…" />
+                        <SelectTrigger id="h-gender" className={cn(inputCls, 'w-56')}>
+                            <SelectValue placeholder="Select policy" />
                         </SelectTrigger>
                         <SelectContent className="border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
                             <SelectItem value="MALE_ONLY">Male Only</SelectItem>
@@ -318,7 +319,7 @@ export function CreateHostelForm({
                             step="any"
                             placeholder="e.g. 5.1264"
                             className={inputCls}
-                            {...register('latitude')}
+                            {...register('latitude', {valueAsNumber: true})}
                         />
                         {errors.latitude && (
                             <FieldError message={errors.latitude.message!} />
@@ -340,7 +341,7 @@ export function CreateHostelForm({
                             step="any"
                             placeholder="e.g. -1.2922"
                             className={inputCls}
-                            {...register('longitude')}
+                            {...register('longitude', {valueAsNumber: true})}
                         />
                         {errors.longitude && (
                             <FieldError message={errors.longitude.message!} />

@@ -1,5 +1,6 @@
 package com.leroy.hostelbackend.module.room.controller;
 
+import com.leroy.hostelbackend.module.booking.dto.AvailablePeriodDto;
 import com.leroy.hostelbackend.module.room.dto.*;
 import com.leroy.hostelbackend.module.room.model.RoomType;
 import com.leroy.hostelbackend.module.room.service.RoomService;
@@ -70,6 +71,14 @@ public class RoomController {
     @GetMapping("/rooms/{id}")
     public ResponseEntity<ApiResponse<RoomDto>> getRoom(@PathVariable UUID id) {
         return ResponseEntity.ok(ApiResponse.success("Room fetched.", roomService.getRoomById(id)));
+    }
+
+    @GetMapping("/student/hostels/{hostelId}/rooms")
+    public ResponseEntity<ApiResponse<List<RoomSummaryDto>>> getStudentActiveRoomsByHostelId(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable UUID hostelId) {
+        return ResponseEntity
+                .ok(ApiResponse.success("Rooms fetched", roomService.getStudentActiveRooms(customUserDetails.getUserId(), hostelId)));
     }
 
     // =========================================================================
@@ -174,5 +183,15 @@ public class RoomController {
 
         roomService.deleteAmenity(amenityId, customUserDetails.getUserId());
         return ResponseEntity.ok(ApiResponse.success("Amenity removed."));
+    }
+
+    @GetMapping("/rooms/{roomId}/available-periods")
+    public ResponseEntity<ApiResponse<List<AvailablePeriodDto>>> getAvailablePeriods(
+            @PathVariable UUID roomId
+    ){
+        return ResponseEntity
+                .ok(ApiResponse.success(
+                        "Available booking periods",
+                        roomService.getBookingPeriods(roomId)));
     }
 }

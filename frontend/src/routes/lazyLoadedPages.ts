@@ -15,7 +15,9 @@ export const NotFound = lazy(() => import('@/pages/NotFound'));
 //   const ManagerDashboard = lazy(() => import('@/features/manager/pages/Dashboard'));
 //   const StudentDashboard = lazy(() => import('@/features/student/pages/Dashboard'));
 // ---------------------------------------------------------------------------
-export const Dashboard = lazy(() => import('@/DashboardContent'));
+export const Dashboard = lazy(
+    () => import('@/features/dashboard/pages/DashboardPage')
+);
 
 export const ResetPassword = lazy(
     () => import('@/features/auth/pages/ResetPassword')
@@ -47,15 +49,69 @@ export const HostelsDetailsPage = lazy(
     () => import('@/features/hostel/pages/HostelDetailsPage')
 );
 
-export const Rooms = lazy(() => import('@/features/hostel/pages/Rooms'));
-export const RoomDetailsPage = lazy(() => import("@/features/room/pages/RoomDetailPage"))
+export const RoomDetailsPage = lazy(
+    () => import('@/features/room/pages/RoomDetailPage')
+);
 
-export const ManagerRoomsPage = lazy(() => import("@/features/room/pages/ManagerRoomsPage"))
+export const BookingDetailPage = lazy(
+    () => import('@/features/booking/pages/BookingDetailPage')
+);
+
+export const ManagerRoomsPage = lazy(
+    () => import('@/features/room/pages/ManagerRoomsPage')
+);
+export const ManagerHostelBookings = lazy(
+    () => import('@/features/booking/pages/ManagerHostelBookings')
+);
+export const ManagerPendingBookings = lazy(
+    () => import('@/features/booking/pages/ManagerPendingBookings')
+);
+
+export const StudentBookings = lazy(
+    () => import('@/features/booking/pages/StudentBookings')
+);
 
 export const Notifications = lazy(
     () => import('@/features/notification/pages/Notifications')
 );
 
-export const Home = lazy(() => import('@/features/dashboard/pages/Home'));
-
 export const Profile = lazy(() => import('@/features/user/pages/Profile'));
+
+export const MyReviews = lazy(
+    () => import('@/features/review/pages/MyReviewsPage')
+);
+
+export const MyComplaints = lazy(
+    () => import('@/features/complaint/pages/MyComplaintsPage')
+);
+
+export const ComplaintDetailPage = lazy(
+    () => import('@/features/complaint/pages/ComplaintDetailPage')
+);
+
+export const ManagerHostelComplaintsPage = lazy(
+    () => import('@/features/complaint/pages/ManagerHostelComplaintsPage')
+);
+
+export const AdminLandmarks = lazy(
+    () => import('@/features/map/pages/AdminLandmarksPage')
+);
+
+
+export const CampusMap = lazy(() => import('@/features/map/pages/CampusMap'));
+
+export const StudentWaitlist = lazy(
+    () => import('@/features/waitlist/pages/StudentWaitlistPage')
+);
+
+export const ManagerWaitlist = lazy(
+    () => import('@/features/waitlist/pages/ManagerWaitlistPage')
+);
+
+export const StudentPreferencePage = lazy(
+    () => import('@/features/preference/pages/StudentPreferencePage')
+);
+
+export const UserManamentPage = lazy(
+    () => import('@/features/user-management/pages/UserManagementPage')
+);

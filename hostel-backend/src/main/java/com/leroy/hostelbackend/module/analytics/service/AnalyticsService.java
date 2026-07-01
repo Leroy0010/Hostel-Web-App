@@ -230,22 +230,33 @@ public class AnalyticsService {
         long closed     = count("SELECT COUNT(*) FROM complaints WHERE status = 'CLOSED'");
 
         String categorySql = """
-                SELECT
-                    category,
-                    COUNT(*)                                           AS total,
-                    COUNT(*) FILTER (WHERE status = 'OPEN')           AS open_count
-                FROM complaints
-                GROUP BY category
-                ORDER BY total DESC
-                """;
+        SELECT
+            category,
+            COUNT(*)                                           AS total,
+            COUNT(*) FILTER (WHERE status = 'OPEN')           AS open_count
+        FROM complaints
+        GROUP BY category
+        ORDER BY total DESC
+        """;
 
         List<ComplaintSummaryDto.CategoryBreakdownDto> breakdown = jdbc.query(
                 categorySql,
-                (rs, _) -> new ComplaintSummaryDto.CategoryBreakdownDto(
-                        rs.getObject("category", ComplaintCategory.class),
-                        rs.getLong("total"),
-                        rs.getLong("open_count")
-                )
+                (rs, _) -> {
+                    // 1. Extract as String
+                    String categoryStr = rs.getString("category");
+
+                    // 2. Convert to Enum (handling potential nulls from the database)
+                    ComplaintCategory category = categoryStr != null
+                            ? ComplaintCategory.valueOf(categoryStr)
+                            : null;
+
+                    // 3. Return the DTO
+                    return new ComplaintSummaryDto.CategoryBreakdownDto(
+                            category,
+                            rs.getLong("total"),
+                            rs.getLong("open_count")
+                    );
+                }
         );
 
         return new ComplaintSummaryDto(open, inProgress, resolved, closed, breakdown);

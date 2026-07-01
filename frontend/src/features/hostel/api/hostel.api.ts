@@ -2,12 +2,15 @@ import { apiClient } from '@/lib/axios';
 import type {
     AssignManagerPayload,
     CreateHostelPayload,
+    HostelDetailsResponseDto,
     HostelDto,
     HostelPageParams,
+    HostelSectionDto,
+    HostelSectionParams,
     HostelSummaryDto,
     UpdateHostelPayload,
-} from '../types/hostel.types.ts';
-import type { PageResponse } from '@/types/pagination.ts';
+} from '../types/hostel.types';
+import type { PageResponse } from '@/types/pagination';
 
 /**
  * Raw API call functions for the hostel domain.
@@ -25,25 +28,74 @@ import type { PageResponse } from '@/types/pagination.ts';
 // =============================================================================
 
 /**
- * Fetches a paginated list of **active** hostels.
+ * Fetches a paginated list of **active** hostels (summary only, no rooms).
+ * Used by the admin hostel table and the campus map page (needs all hostels for pins).
  *
  * Maps to: {@code GET /api/hostels}
  */
 export function fetchActiveHostels(
     params: HostelPageParams
 ): Promise<PageResponse<HostelSummaryDto>> {
-    return apiClient.get('/hostels', {
-        params,
+    return apiClient.get('/hostels', { params });
+}
+
+/**
+ * Fetches the full detail of a single hostel by ID **including** a paginated
+ * room list — eliminating the need for a second API call on the detail page.
+ *
+ * Accepts room filter/pagination params forwarded to the backend so the
+ * returned {@code rooms} page reflects the current filter state.
+ *
+ * Maps to: {@code GET /api/hostels/{id}?roomType=&maxPrice=&page=&size=&sort=}
+ *
+ * @param id - Hostel UUID.
+ * @param params - Optional room filter + pagination params.
+ * @returns Combined hostel detail + paginated rooms in one response.
+ */
+export function fetchHostelById(
+    id: string,
+    params?: {
+        roomType?: string;
+        maxPrice?: number;
+        page?: number;
+        size?: number;
+        sort?: string;
+    }
+): Promise<HostelDetailsResponseDto> {
+    return apiClient.get(`/hostels/${id}`, { params });
+}
+
+/**
+ * Fetches paginated hostel sections — each section contains the hostel summary
+ * plus up to 6 room previews (populated server-side, no N+1 requests).
+ *
+ * Used by the student discovery page (Netflix-style horizontal strip layout).
+ *
+ * Maps to: {@code GET /api/hostels/with-room-sections}
+ *
+ * @param params - Search, gender policy, room type, max price, and pagination.
+ */
+export function fetchHostelSections(
+    params: HostelSectionParams
+): Promise<PageResponse<HostelSectionDto>> {
+    // Convert 'ALL' sentinel back to undefined so the backend receives no filter
+    const { genderPolicy, ...rest } = params;
+    return apiClient.get('/hostels/with-room-sections', {
+        params: {
+            ...rest,
+            genderPolicy: genderPolicy === 'ALL' ? undefined : genderPolicy,
+        },
     });
 }
 
 /**
- * Fetches the full detail of a single hostel by ID.
+ * Fetches all active hostels for a student (authenticated endpoint).
+ * Used for booking eligibility checks and student-specific hostel views.
  *
- * Maps to: {@code GET /api/hostels/{id}}
+ * Maps to: {@code GET /api/student/hostels}
  */
-export function fetchHostelById(id: string): Promise<HostelDto> {
-    return apiClient.get(`/hostels/${id}`);
+export function getStudentActiveHostels(): Promise<HostelSummaryDto[]> {
+    return apiClient.get('/student/hostels');
 }
 
 // =============================================================================
@@ -58,9 +110,7 @@ export function fetchHostelById(id: string): Promise<HostelDto> {
 export function fetchAllHostelsAdmin(
     params: HostelPageParams
 ): Promise<PageResponse<HostelSummaryDto>> {
-    return apiClient.get('/admin/hostels', {
-        params,
-    });
+    return apiClient.get('/admin/hostels', { params });
 }
 
 /**
@@ -72,9 +122,7 @@ export function fetchHostelsByManager(
     managerId: string,
     params: HostelPageParams
 ): Promise<PageResponse<HostelSummaryDto>> {
-    return apiClient.get(`/admin/managers/${managerId}/hostels`, {
-        params,
-    });
+    return apiClient.get(`/admin/managers/${managerId}/hostels`, { params });
 }
 
 /**
@@ -87,7 +135,7 @@ export function createHostel(payload: CreateHostelPayload): Promise<HostelDto> {
 }
 
 /**
- * Admin: updates hostel fields (patch semantics — null fields are ignored server-side).
+ * Admin: updates hostel fields (patch semantics — null fields ignored server-side).
  *
  * Maps to: {@code PUT /api/admin/hostels/{id}}
  */
@@ -149,10 +197,9 @@ export function activateHostel(hostelId: string): Promise<HostelDto> {
 export function fetchMyHostels(
     params: HostelPageParams
 ): Promise<PageResponse<HostelSummaryDto>> {
-    return apiClient.get('/manager/hostels', {
-        params,
-    });
+    return apiClient.get('/manager/hostels', { params });
 }
+
 
 /**
  * Manager: updates their own hostel.

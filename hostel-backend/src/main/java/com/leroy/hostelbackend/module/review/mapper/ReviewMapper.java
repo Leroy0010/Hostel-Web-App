@@ -30,5 +30,6 @@ public interface ReviewMapper {
     @Mapping(target = "authorId",   source = "author.id")
     @Mapping(target = "authorName",
             expression = "java(review.getAuthor().getFirstName() + ' ' + review.getAuthor().getLastName())")
+    @Mapping(target = "hostelId", source = "hostel.id")
     ReviewSummaryDto toSummaryDto(Review review);
 }

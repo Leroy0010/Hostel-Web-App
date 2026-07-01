@@ -246,7 +246,7 @@ public class ComplaintService {
 
     /** Manager dashboard — complaints for a hostel. */
     @Transactional(readOnly = true)
-    public Page<ComplaintSummaryDto> listByHostel(UUID hostelId, String status, Pageable pageable) {
+    public Page<ComplaintSummaryDto> listByHostel(UUID hostelId, ComplaintStatus status, Pageable pageable) {
         return complaintRepository.findByHostelId(hostelId, status, pageable)
                 .map(this::buildSummaryDto);
     }

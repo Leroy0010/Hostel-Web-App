@@ -1,5 +1,8 @@
 package com.leroy.hostelbackend.module.room.service;
 
+import com.leroy.hostelbackend.module.booking.dto.AvailablePeriodDto;
+import com.leroy.hostelbackend.module.booking.repository.BookingRepository;
+import com.leroy.hostelbackend.module.hostel.dto.HostelSummaryDto;
 import com.leroy.hostelbackend.module.hostel.repository.HostelRepository;
 import com.leroy.hostelbackend.module.hostel.service.HostelService;
 import com.leroy.hostelbackend.module.room.dto.*;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Year;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,6 +53,7 @@ public class RoomService {
     private final HostelRepository     hostelRepository;
     private final HostelService        hostelService;
     private final RoomMapper           roomMapper;
+    private final BookingRepository bookingRepository;
 
     // -------------------------------------------------------------------------
     // Student / Public reads
@@ -88,6 +93,15 @@ public class RoomService {
         var room      = requireRoom(roomId);
         var amenities = amenityRepository.findByRoomId(roomId);
         return roomMapper.toDtoWithComputed(room, roomMapper.toAmenityDtos(amenities));
+    }
+
+    @Transactional(readOnly = true)
+    public List<RoomSummaryDto> getStudentActiveRooms(UUID userId, UUID hostelId){
+        return bookingRepository
+                .findStudentActiveRooms(userId, hostelId)
+                .stream()
+                .map(roomMapper::toSummaryDto)
+                .toList();
     }
 
     // -------------------------------------------------------------------------
@@ -260,6 +274,17 @@ public class RoomService {
         hostelService.assertManagerOwns(amenity.getRoom().getHostel().getId(), actorId);
 
         amenityRepository.delete(amenity);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AvailablePeriodDto> getBookingPeriods(UUID roomId) {
+
+        int currentYear = Year.now().getValue();
+        String yearMinus1 = (currentYear - 1) + "/" + currentYear;
+        String yearCurrent = currentYear + "/" + (currentYear + 1);
+        String yearPlus1 = (currentYear + 1) + "/" + (currentYear + 2);
+
+        return hostelRepository.findBookingPeriods(roomId, yearMinus1, yearCurrent, yearPlus1).stream().map(proj -> new AvailablePeriodDto(proj.getAcademicYear(), proj.getSemester())).toList();
     }
 
     // -------------------------------------------------------------------------

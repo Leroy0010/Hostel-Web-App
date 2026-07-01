@@ -71,11 +71,14 @@ public class PreferenceService {
         var student = userRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + studentId));
 
-        // Convert enums to their string names, de-duplicated, ordered
-        var tagStrings = request.tags().stream()
+        // 1. Convert incoming request tags to unique, sorted PreferenceTag ENUM objects
+        List<PreferenceTag> enumTags = request.tags().stream()
                 .distinct()
                 .sorted()
                 .toList();
+
+        // 🚨 ADD VALIDATION HERE
+        validateNoConflicts(enumTags);
 
         var preference = preferenceRepository.findByStudentId(studentId)
                 .orElseGet(() -> {
@@ -84,12 +87,14 @@ public class PreferenceService {
                     return p;
                 });
 
-        preference.setTags(tagStrings);
+        // 2. Pass the ENUM list to your entity field
+        preference.setTags(enumTags);
         var saved = preferenceRepository.save(preference);
 
-        log.info("Preferences saved for student {}: tags={}", studentId, tagStrings);
+        log.info("Preferences saved for student {}: tags={}", studentId, enumTags);
         return preferenceMapper.toDto(saved);
     }
+
 
     // -------------------------------------------------------------------------
     // Read preferences
@@ -251,5 +256,24 @@ public class PreferenceService {
      */
     private String buildPgArrayLiteral(List<PreferenceTag> tags) {
         return "{" + String.join(",", tags.stream().map(PreferenceTag::name).toList()) + "}";
+    }
+
+    // Helper method to catch conflicting choices
+    private void validateNoConflicts(List<PreferenceTag> tags) {
+        if (tags.contains(PreferenceTag.NIGHT_OWL) && tags.contains(PreferenceTag.EARLY_BIRD)) {
+            throw new IllegalArgumentException("You cannot be both a Night Owl and an Early Bird!");
+        }
+        if (tags.contains(PreferenceTag.QUIET) && tags.contains(PreferenceTag.SOCIAL)) {
+            throw new IllegalArgumentException("You cannot select both Quiet and Social!");
+        }
+        if (tags.contains(PreferenceTag.NEAT) && tags.contains(PreferenceTag.MESSY)) {
+            throw new IllegalArgumentException("You cannot select both Neat and Messy!");
+        }
+        if (tags.contains(PreferenceTag.STUDIOUS) && tags.contains(PreferenceTag.RELAXED)) {
+            throw new IllegalArgumentException("You cannot select both Studious and Relaxed!");
+        }
+        if (tags.contains(PreferenceTag.NON_SMOKER) && tags.contains(PreferenceTag.SMOKER)) {
+            throw new IllegalArgumentException("You cannot select both Non-Smoker and Smoker!");
+        }
     }
 }

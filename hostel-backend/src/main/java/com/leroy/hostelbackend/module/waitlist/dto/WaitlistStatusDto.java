@@ -1,19 +1,20 @@
 package com.leroy.hostelbackend.module.waitlist.dto;
 
-
 /**
- * Status check response for a student querying their own waitlist position.
+ * Waitlist status response for a student checking their own position.
  *
- * @param onWaitlist   whether the student is on the list for this hostel+period
- * @param position     their position (null if not on waitlist)
- * @param totalInQueue total students ahead of position 1 — helps gauge wait time
- * @param academicYear the period this status applies to
- * @param semester     the semester this status applies to
+ * @param onWaitlist   whether the student is on this queue
+ * @param position     their 1-based rank (null if not on the list)
+ * @param totalInQueue total entries in this queue
+ * @param roomType     the room type they are queued for
+ * @param academicYear the period
+ * @param semester     the semester
  */
 public record WaitlistStatusDto(
         boolean onWaitlist,
         Integer position,
         long    totalInQueue,
+        String  roomType,
         String  academicYear,
         String  semester
 ) {}

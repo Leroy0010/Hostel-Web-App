@@ -18,13 +18,6 @@ import type { ApiResponse } from '@/types/api';
  * On any failure (network down, cookie expired, first visit) the store is
  * cleared and `isInitialized` is set to `true` so routing can proceed to /login.
  *
- * IMPORTANT — Axios envelope unwrapping:
- *   The response interceptor in src/lib/axios.ts already strips the
- *   `{ success, data, message, timestamp }` wrapper and returns `response.data.data`.
- *   Therefore:
- *     - The refresh response arrives as `{ token: string }` directly.
- *     - The /users/me response arrives as `MeResponse` directly.
- *   Accessing `.data.user` on the /users/me result would be WRONG here.
  */
 export function useAuthInit() {
     const { setAuth, clearAuth, setInitialized, setLoading } = useAuthStore();
@@ -51,18 +44,15 @@ export function useAuthInit() {
                     { withCredentials: true }
                 );
 
-                // Strip envelope wrapper if the backend sends one; handle both
-                // wrapped `{ success: true, data: { token } }` and bare `{ token }`.
-                const refreshPayload = refreshResponse.data.data;
+                const { token, user: profile } = refreshResponse.data.data;
 
-                const profile = refreshResponse.data.data.user;
-                const token: string = refreshPayload.token;
+                const { user, hostel } = profile;
 
                 // Persist token in memory and schedule silent pre-expiry refresh.
                 tokenManager.setToken(token);
 
                 // ── Step 3: Hydrate store ────────────────────────────────────
-                setAuth(token, profile.user, profile.hostel);
+                setAuth(token, user, hostel);
             } catch {
                 // Any failure (expired cookie, network error, etc.) is safe:
                 // clear any stale state and let routing handle the redirect.

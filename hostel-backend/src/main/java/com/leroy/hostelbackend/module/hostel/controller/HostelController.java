@@ -1,7 +1,10 @@
 package com.leroy.hostelbackend.module.hostel.controller;
 
 import com.leroy.hostelbackend.module.hostel.dto.*;
+import com.leroy.hostelbackend.module.hostel.model.GenderPolicy;
+import com.leroy.hostelbackend.module.hostel.service.HostelDisplayService;
 import com.leroy.hostelbackend.module.hostel.service.HostelService;
+import com.leroy.hostelbackend.module.room.model.RoomType;
 import com.leroy.hostelbackend.module.user.model.CustomUserDetails;
 import com.leroy.hostelbackend.shared.response.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,6 +20,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -44,6 +49,7 @@ import java.util.UUID;
 public class HostelController {
 
     private final HostelService hostelService;
+    private final HostelDisplayService hostelDisplayService;
 
     // =========================================================================
     // Public / Student endpoints
@@ -64,8 +70,24 @@ public class HostelController {
 
     /** Full hostel detail — any authenticated user. */
     @GetMapping("/hostels/{id}")
-    public ResponseEntity<ApiResponse<HostelDto>> getHostel(@PathVariable UUID id) {
-        return ResponseEntity.ok(ApiResponse.success("Hostel fetched.", hostelService.getHostelById(id)));
+    public ResponseEntity<ApiResponse<HostelDetailsResponseDto>> getHostel(
+            @PathVariable UUID id,
+            @RequestParam(required = false) RoomType roomType,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @PageableDefault(size = 12, sort = "pricePerSemester", direction = Sort.Direction.ASC) Pageable pageable
+    ) {
+        return ResponseEntity.ok(ApiResponse
+                .success(
+                        "Hostel fetched.",
+                        hostelDisplayService.getHostelDetailsPage(id, roomType != null ? roomType.name() : null, maxPrice, pageable)));
+    }
+
+    @GetMapping("/student/hostels")
+    public ResponseEntity<ApiResponse<List<HostelSummaryDto>>> getStudentActiveHostels(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+            ) {
+        return ResponseEntity
+                .ok(ApiResponse.success("Rooms fetched", hostelService.getStudentActiveHostels(customUserDetails.getUserId())));
     }
 
     // =========================================================================
@@ -76,9 +98,11 @@ public class HostelController {
     @GetMapping("/admin/hostels")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Page<HostelSummaryDto>>> adminListAll(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String genderPolicy,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return ResponseEntity.ok(ApiResponse.success("All hostels fetched.", hostelService.listAllHostels(pageable)));
+        return ResponseEntity.ok(ApiResponse.success("All hostels fetched.", hostelService.listAllHostels(search, genderPolicy, pageable)));
     }
 
     /** Admin: create a new hostel. */
@@ -170,4 +194,24 @@ public class HostelController {
         return ResponseEntity.ok(ApiResponse.success("Hostel updated.",
                 hostelService.managerUpdateHostel(id, request, managerId)));
     }
+
+    @GetMapping("/hostels/with-room-sections")
+    public ResponseEntity<ApiResponse<Page<HostelSectionDto>>> getHostelSections(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) BigDecimal maxPricePerSemester,
+            @RequestParam(required = false) RoomType roomType,
+            @RequestParam(required = false) GenderPolicy genderPolicy,
+            @PageableDefault(size = 20, sort = "name") Pageable pageable){
+        return ResponseEntity
+                .ok(ApiResponse.success(
+                        "Hostel with room sections fetched successfully",
+                        hostelDisplayService
+                                .getHostelHorizontalSections(
+                                        search,
+                                        genderPolicy != null ? genderPolicy.name() : null,
+                                        roomType != null ? roomType.name() : null,
+                                        maxPricePerSemester,
+                                        pageable)));
+    }
+
 }

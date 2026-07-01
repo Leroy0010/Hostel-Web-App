@@ -7,9 +7,8 @@ import { Pagination } from '@/components/ui/CustomPagination';
 import { HostelFilters } from '../components/HostelFilters';
 import { HostelWithRoomsSection } from '../components/HostelWithRoomsSection';
 import { useHostelFilters } from '../hooks/useHostelFilters';
-import { useActiveHostels } from '../hooks/hostel.hooks';
-import { useRoomPreviews } from '@/features/room/hooks/room.hooks';
 import { transition } from '@/features/auth/utils/transition';
+import { useHostelSections } from '../hooks/hostel.hooks';
 
 // =============================================================================
 // Page-level animation variants
@@ -57,15 +56,10 @@ export default function HostelsPage() {
         isError,
         refetch,
         isFetching,
-    } = useActiveHostels(apiParams);
+    } = useHostelSections(apiParams);
 
     const hostels = hostelPage?.content ?? [];
-    const hostelIds = hostels.map((h) => h.id);
-
-    // Parallel room preview fetch — one query per visible hostel, batched via useQueries.
-    // Returns a map of hostelId → RoomSummaryDto[] so each section can look up its rooms.
-    const { previewsByHostelId, isLoading: isLoadingRooms } =
-        useRoomPreviews(hostelIds);
+   
 
     return (
         <>
@@ -142,8 +136,8 @@ export default function HostelsPage() {
                             <HostelWithRoomsSection
                                 key={hostel.id}
                                 hostel={hostel}
-                                rooms={previewsByHostelId[hostel.id] ?? []}
-                                isLoadingRooms={isLoadingRooms}
+                               
+                                isLoading={isLoading}
                             />
                         ))}
                     </div>

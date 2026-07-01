@@ -59,6 +59,13 @@ public class User {
     private String lastName;
 
     /**
+     * URL of the user's profile picture (e.g. uploaded to object storage and
+     * served via CDN). Nullable — not every user sets one.
+     */
+    @Column(name = "profile_url")
+    private String profileUrl;
+
+    /**
      * Phone number. Optional for STUDENT accounts; required when an ADMIN creates
      * a MANAGER or another ADMIN account (enforced at the DTO/service level).
      */
@@ -105,5 +112,9 @@ public class User {
         user.setPhone(phone);
         user.setIsActive(isActive);
         return user;
+    }
+
+    public void updateProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
     }
 }

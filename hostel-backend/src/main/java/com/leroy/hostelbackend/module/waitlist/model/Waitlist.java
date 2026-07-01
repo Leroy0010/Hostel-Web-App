@@ -1,6 +1,7 @@
 package com.leroy.hostelbackend.module.waitlist.model;
 
 import com.leroy.hostelbackend.module.hostel.model.Hostel;
+import com.leroy.hostelbackend.module.room.model.RoomType;
 import com.leroy.hostelbackend.module.user.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import java.util.UUID;
 /**
  * A student's queued position for a specific hostel and academic period.
  *
- * <p><strong>Period-scoped:</strong> The waitlist is now per {@code (hostelId, academicYear, semester)}.
+ * <p><strong>Period-scoped:</strong> The waitlist is now per {@code (hostelId, roomType, academicYear, semester)}.
  * A student can be on the waitlist for Hostel A for FIRST semester AND for SECOND semester
  * simultaneously. This matches the period-scoped booking model so a freed bed for a specific
  * period notifies only students waiting for that same period.
@@ -25,7 +26,7 @@ import java.util.UUID;
  * ({@code isWaitlistDraft = true}) PENDING booking on their dashboard and simply approves or rejects.
  *
  * <p><strong>Position integrity:</strong> Positions are 1-based and kept contiguous.
- * Every removal calls {@link WaitlistRepository#decrementPositionsAfter} in the same transaction.
+ * Every removal calls {@link com.leroy.hostelbackend.module.waitlist.repository.WaitlistRepository#decrementPositionsAfter} in the same transaction.
  */
 @Getter
 @Setter
@@ -45,6 +46,9 @@ public class Waitlist {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hostel_id", nullable = false)
     private Hostel hostel;
+
+    @Enumerated(EnumType.STRING)
+    private RoomType roomType;
 
     /** 1-based rank within this hostel+period queue. Managed by {@code WaitlistService} only. */
     @Column(name = "position", nullable = false)

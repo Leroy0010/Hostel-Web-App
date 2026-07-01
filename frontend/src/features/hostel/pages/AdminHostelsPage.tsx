@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Building2, Plus, Pencil, PowerOff, Power, Search } from 'lucide-react';
+import {
+    Building2,
+    Plus,
+    Pencil,
+    PowerOff,
+    Power,
+    Search,
+    Users,
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -37,15 +45,13 @@ import {
 import { useHostelFilters } from '../hooks/useHostelFilters';
 import { hostelImageFallback } from '../utils/hostel.utils';
 import type { HostelDto, HostelSummaryDto } from '../types/hostel.types';
+import { ContentSkeleton } from '../components/AdminHostelsSkeleton';
+import { handleUploadImage } from '@/services/cloudinary.service';
 
 // =============================================================================
 // Types
 // =============================================================================
 
-/**
- * Tracks which hostel and action are currently targeted by a dialog.
- * Null means no dialog is open.
- */
 type ActiveDialog =
     | { kind: 'create' }
     | { kind: 'edit'; hostel: HostelDto }
@@ -57,23 +63,6 @@ type ActiveDialog =
 // Page component
 // =============================================================================
 
-/**
- * Admin hostel management page.
- *
- * Features:
- * - Paginated table of all hostels including inactive ones.
- * - Inline search (name) synced to URL params.
- * - Create hostel dialog.
- * - Edit hostel dialog (pre-populated).
- * - Assign / unassign manager dialog.
- * - Activate / deactivate with confirmation dialog.
- * - Full light/dark theme support.
- *
- * Route: {@code /admin/hostels} — protected, ADMIN only.
- *
- * State pattern: A single {@link ActiveDialog} discriminated union drives all
- * dialog visibility, preventing multiple dialogs from fighting for focus.
- */
 export default function AdminHostelsPage() {
     const navigate = useNavigate();
 
@@ -100,17 +89,19 @@ export default function AdminHostelsPage() {
 
     const hostels = hostelPage?.content ?? [];
 
-    /**
-     * Placeholder upload handler.
-     * Replace with a real S3 pre-signed URL upload in production.
-     *
-     * @param file - The image file selected by the user.
-     * @returns A promise resolving to the uploaded image URL.
-     */
-    const handleUploadImage = async (file: File): Promise<string> => {
-        // TODO: replace with real upload logic (e.g. POST to /api/upload/image)
-        // For now, create an object URL for local preview in development.
-        return URL.createObjectURL(file);
+    // Helper to fetch full hostel for edit/manage actions
+    const handleActionWithFullHostel = async (
+        hostelId: string,
+        actionKind: 'edit' | 'assign'
+    ) => {
+        const { data } = await import('../api/hostel.api').then((m) => ({
+            data: m.fetchHostelById(hostelId),
+        }));
+        const full = await data;
+        setActiveDialog({
+            kind: actionKind,
+            hostel: full.hostel,
+        });
     };
 
     return (
@@ -149,7 +140,8 @@ export default function AdminHostelsPage() {
                         onChange={(e) =>
                             setFilters({ ...filters, search: e.target.value })
                         }
-                        className="border-gray-200 bg-white pl-9 text-gray-900 placeholder:text-gray-400 focus-visible:ring-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-600 dark:focus-visible:ring-gray-600"
+                        // Adjusted placeholder text colors for better contrast
+                        className="border-gray-200 bg-white pl-9 text-gray-900 placeholder:text-gray-500 focus-visible:ring-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400 dark:focus-visible:ring-gray-600"
                     />
                 </div>
 
@@ -170,7 +162,7 @@ export default function AdminHostelsPage() {
                         }
                     />
                 ) : isLoading ? (
-                    <TableSkeleton />
+                    <ContentSkeleton />
                 ) : hostels.length === 0 ? (
                     <EmptyState
                         icon={<Building2 className="h-8 w-8 text-gray-400" />}
@@ -196,168 +188,263 @@ export default function AdminHostelsPage() {
                         }
                     />
                 ) : (
-                    /* Hostel table */
                     <div
-                        className={`overflow-hidden rounded-xl border border-gray-200 bg-white transition-opacity duration-200 dark:border-gray-800 dark:bg-gray-950 ${isFetching ? 'opacity-60' : 'opacity-100'}`}
+                        className={`transition-opacity duration-200 ${isFetching ? 'opacity-60' : 'opacity-100'}`}
                     >
-                        <Table>
-                            <TableHeader>
-                                <TableRow className="bg-gray-50 hover:bg-gray-50 dark:bg-gray-900/50 dark:hover:bg-gray-900/50">
-                                    <Th>Hostel</Th>
-                                    <Th>Gender</Th>
-                                    <Th>Status</Th>
-                                    <Th>Manager</Th>
-                                    <Th className="text-right">Actions</Th>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
-                                <AnimatePresence mode="popLayout">
-                                    {hostels.map((hostel) => (
-                                        <motion.tr
-                                            key={hostel.id}
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                            transition={{ duration: 0.2 }}
-                                            className="group border-b transition-colors hover:bg-gray-50 dark:hover:bg-gray-900/50"
-                                        >
-                                            {/* Hostel name + address */}
-                                            <TableCell className="px-4 py-3">
-                                                <div className="flex items-center gap-3">
-                                                    <img
-                                                        src={
-                                                            hostel.imageUrl ||
-                                                            hostelImageFallback()
-                                                        }
-                                                        alt=""
-                                                        className="h-10 w-14 shrink-0 rounded-md object-cover"
-                                                        onError={(e) => {
-                                                            (
-                                                                e.currentTarget as HTMLImageElement
-                                                            ).src =
-                                                                hostelImageFallback();
-                                                        }}
-                                                        aria-hidden="true"
-                                                    />
-                                                    <div className="min-w-0">
-                                                        <button
-                                                            onClick={() =>
-                                                                navigate(
-                                                                    `/hostels/${hostel.id}`
-                                                                )
-                                                            }
-                                                            className="truncate text-sm font-semibold text-gray-900 hover:underline dark:text-gray-100"
-                                                        >
-                                                            {hostel.name}
-                                                        </button>
-                                                        <p className="mt-0.5 truncate text-xs text-gray-500 dark:text-gray-400">
-                                                            {hostel.address}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </TableCell>
-
-                                            {/* Gender policy */}
-                                            <TableCell className="px-4 py-3">
-                                                <GenderPolicyBadge
-                                                    policy={hostel.genderPolicy}
-                                                />
-                                            </TableCell>
-
-                                            {/* Status */}
-                                            <TableCell className="px-4 py-3">
-                                                <HostelStatusBadge
-                                                    isActive={hostel.isActive}
-                                                />
-                                            </TableCell>
-
-                                            {/* Manager */}
-                                            <TableCell className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
-                                                {/* HostelSummaryDto does not carry manager info — show CTA */}
+                        {/* ── Mobile View: Card Layout ───────────────────────── */}
+                        <div className="grid grid-cols-1 gap-4 md:hidden">
+                            <AnimatePresence mode="popLayout">
+                                {hostels.map((hostel) => (
+                                    <motion.div
+                                        key={hostel.id}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, scale: 0.95 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950"
+                                    >
+                                        <div className="flex gap-4 p-4">
+                                            <img
+                                                src={
+                                                    hostel.imageUrl ||
+                                                    hostelImageFallback()
+                                                }
+                                                alt=""
+                                                className="h-16 w-16 shrink-0 rounded-lg object-cover"
+                                                onError={(e) => {
+                                                    (
+                                                        e.currentTarget as HTMLImageElement
+                                                    ).src =
+                                                        hostelImageFallback();
+                                                }}
+                                                aria-hidden="true"
+                                            />
+                                            <div className="flex min-w-0 flex-1 flex-col">
                                                 <button
-                                                    className="text-xs text-gray-400 hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-300"
-                                                    onClick={async () => {
-                                                        // Fetch full hostel to get manager info before opening dialog
-                                                        const { data } =
-                                                            await import('../api/hostel.api').then(
-                                                                (m) => ({
-                                                                    data: m.fetchHostelById(
-                                                                        hostel.id
-                                                                    ),
-                                                                })
-                                                            );
-                                                        const full = await data;
-                                                        setActiveDialog({
-                                                            kind: 'assign',
-                                                            hostel: full,
-                                                        });
-                                                    }}
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/hostels/${hostel.id}`
+                                                        )
+                                                    }
+                                                    className="truncate text-left text-base font-semibold text-gray-900 hover:underline dark:text-gray-100"
                                                 >
-                                                    Manage
+                                                    {hostel.name}
                                                 </button>
-                                            </TableCell>
-
-                                            {/* Row actions */}
-                                            <TableCell className="px-4 py-3">
-                                                <div className="flex items-center justify-end gap-1">
-                                                    {/* Edit */}
-                                                    <ActionIconButton
-                                                        label={`Edit ${hostel.name}`}
-                                                        onClick={async () => {
-                                                            const full =
-                                                                await import('../api/hostel.api').then(
-                                                                    (m) =>
-                                                                        m.fetchHostelById(
-                                                                            hostel.id
-                                                                        )
-                                                                );
-                                                            setActiveDialog({
-                                                                kind: 'edit',
-                                                                hostel: full,
-                                                            });
-                                                        }}
-                                                    >
-                                                        <Pencil className="h-4 w-4" />
-                                                    </ActionIconButton>
-
-                                                    {/* Activate / Deactivate */}
-                                                    {hostel.isActive ? (
-                                                        <ActionIconButton
-                                                            label={`Deactivate ${hostel.name}`}
-                                                            destructive
-                                                            onClick={() =>
-                                                                setActiveDialog(
-                                                                    {
-                                                                        kind: 'deactivate',
-                                                                        hostel,
-                                                                    }
-                                                                )
-                                                            }
-                                                        >
-                                                            <PowerOff className="h-4 w-4" />
-                                                        </ActionIconButton>
-                                                    ) : (
-                                                        <ActionIconButton
-                                                            label={`Activate ${hostel.name}`}
-                                                            onClick={() =>
-                                                                setActiveDialog(
-                                                                    {
-                                                                        kind: 'activate',
-                                                                        hostel,
-                                                                    }
-                                                                )
-                                                            }
-                                                        >
-                                                            <Power className="h-4 w-4" />
-                                                        </ActionIconButton>
-                                                    )}
+                                                <p className="mt-0.5 truncate text-sm text-gray-500 dark:text-gray-400">
+                                                    {hostel.address}
+                                                </p>
+                                                <div className="mt-3 flex flex-wrap gap-2">
+                                                    <GenderPolicyBadge
+                                                        policy={
+                                                            hostel.genderPolicy
+                                                        }
+                                                    />
+                                                    <HostelStatusBadge
+                                                        isActive={
+                                                            hostel.isActive
+                                                        }
+                                                    />
                                                 </div>
-                                            </TableCell>
-                                        </motion.tr>
-                                    ))}
-                                </AnimatePresence>
-                            </TableBody>
-                        </Table>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center justify-between border-t border-gray-100 bg-gray-50 p-3 px-4 dark:border-gray-800 dark:bg-gray-900/50">
+                                            <button
+                                                className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+                                                onClick={() =>
+                                                    handleActionWithFullHostel(
+                                                        hostel.id,
+                                                        'assign'
+                                                    )
+                                                }
+                                            >
+                                                <Users className="h-4 w-4" />
+                                                Manager
+                                            </button>
+                                            <div className="flex items-center gap-2">
+                                                <ActionIconButton
+                                                    label={`Edit ${hostel.name}`}
+                                                    onClick={() =>
+                                                        handleActionWithFullHostel(
+                                                            hostel.id,
+                                                            'edit'
+                                                        )
+                                                    }
+                                                >
+                                                    <Pencil className="h-4 w-4" />
+                                                </ActionIconButton>
+                                                {hostel.isActive ? (
+                                                    <ActionIconButton
+                                                        label={`Deactivate ${hostel.name}`}
+                                                        destructive
+                                                        onClick={() =>
+                                                            setActiveDialog({
+                                                                kind: 'deactivate',
+                                                                hostel,
+                                                            })
+                                                        }
+                                                    >
+                                                        <PowerOff className="h-4 w-4" />
+                                                    </ActionIconButton>
+                                                ) : (
+                                                    <ActionIconButton
+                                                        label={`Activate ${hostel.name}`}
+                                                        onClick={() =>
+                                                            setActiveDialog({
+                                                                kind: 'activate',
+                                                                hostel,
+                                                            })
+                                                        }
+                                                    >
+                                                        <Power className="h-4 w-4" />
+                                                    </ActionIconButton>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
+                        </div>
+
+                        {/* ── Desktop View: Table Layout ─────────────────────── */}
+                        <div className="hidden overflow-hidden rounded-xl border border-gray-200 bg-white md:block dark:border-gray-800 dark:bg-gray-950">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow className="bg-gray-50 hover:bg-gray-50 dark:bg-gray-900/50 dark:hover:bg-gray-900/50">
+                                        <Th>Hostel</Th>
+                                        <Th>Gender</Th>
+                                        <Th>Status</Th>
+                                        <Th>Manager</Th>
+                                        <Th className="text-right">Actions</Th>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
+                                    <AnimatePresence mode="popLayout">
+                                        {hostels.map((hostel) => (
+                                            <motion.tr
+                                                key={hostel.id}
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                transition={{ duration: 0.2 }}
+                                                className="group border-b transition-colors hover:bg-gray-50 dark:hover:bg-gray-900/50"
+                                            >
+                                                <TableCell className="px-4 py-3">
+                                                    <div className="flex items-center gap-3">
+                                                        <img
+                                                            src={
+                                                                hostel.imageUrl ||
+                                                                hostelImageFallback()
+                                                            }
+                                                            alt=""
+                                                            className="h-10 w-14 shrink-0 rounded-md object-cover"
+                                                            onError={(e) => {
+                                                                (
+                                                                    e.currentTarget as HTMLImageElement
+                                                                ).src =
+                                                                    hostelImageFallback();
+                                                            }}
+                                                            aria-hidden="true"
+                                                        />
+                                                        <div className="min-w-0">
+                                                            <button
+                                                                onClick={() =>
+                                                                    navigate(
+                                                                        `/hostels/${hostel.id}`
+                                                                    )
+                                                                }
+                                                                className="truncate text-sm font-semibold text-gray-900 hover:underline dark:text-gray-100"
+                                                            >
+                                                                {hostel.name}
+                                                            </button>
+                                                            <p className="mt-0.5 truncate text-xs text-gray-500 dark:text-gray-400">
+                                                                {hostel.address}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </TableCell>
+
+                                                <TableCell className="px-4 py-3">
+                                                    <GenderPolicyBadge
+                                                        policy={
+                                                            hostel.genderPolicy
+                                                        }
+                                                    />
+                                                </TableCell>
+
+                                                <TableCell className="px-4 py-3">
+                                                    <HostelStatusBadge
+                                                        isActive={
+                                                            hostel.isActive
+                                                        }
+                                                    />
+                                                </TableCell>
+
+                                                <TableCell className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                                                    <button
+                                                        className="text-xs text-gray-400 hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-300"
+                                                        onClick={() =>
+                                                            handleActionWithFullHostel(
+                                                                hostel.id,
+                                                                'assign'
+                                                            )
+                                                        }
+                                                    >
+                                                        Manage
+                                                    </button>
+                                                </TableCell>
+
+                                                <TableCell className="px-4 py-3">
+                                                    <div className="flex items-center justify-end gap-1">
+                                                        <ActionIconButton
+                                                            label={`Edit ${hostel.name}`}
+                                                            onClick={() =>
+                                                                handleActionWithFullHostel(
+                                                                    hostel.id,
+                                                                    'edit'
+                                                                )
+                                                            }
+                                                        >
+                                                            <Pencil className="h-4 w-4" />
+                                                        </ActionIconButton>
+
+                                                        {hostel.isActive ? (
+                                                            <ActionIconButton
+                                                                label={`Deactivate ${hostel.name}`}
+                                                                destructive
+                                                                onClick={() =>
+                                                                    setActiveDialog(
+                                                                        {
+                                                                            kind: 'deactivate',
+                                                                            hostel,
+                                                                        }
+                                                                    )
+                                                                }
+                                                            >
+                                                                <PowerOff className="h-4 w-4" />
+                                                            </ActionIconButton>
+                                                        ) : (
+                                                            <ActionIconButton
+                                                                label={`Activate ${hostel.name}`}
+                                                                onClick={() =>
+                                                                    setActiveDialog(
+                                                                        {
+                                                                            kind: 'activate',
+                                                                            hostel,
+                                                                        }
+                                                                    )
+                                                                }
+                                                            >
+                                                                <Power className="h-4 w-4" />
+                                                            </ActionIconButton>
+                                                        )}
+                                                    </div>
+                                                </TableCell>
+                                            </motion.tr>
+                                        ))}
+                                    </AnimatePresence>
+                                </TableBody>
+                            </Table>
+                        </div>
                     </div>
                 )}
 
@@ -375,15 +462,12 @@ export default function AdminHostelsPage() {
 
             {/* ================================================================
                 Dialogs — driven by the `activeDialog` discriminated union.
-                Only one dialog is ever open at a time.
             ================================================================ */}
-
-            {/* Create hostel */}
             <Dialog
                 open={activeDialog?.kind === 'create'}
                 onOpenChange={(open) => !open && closeDialog()}
             >
-                <DialogContent className="max-h-[90vh] w-screen max-w-2xl scrollbar-none overflow-y-auto border-gray-200 bg-white sm:max-w-2xl dark:border-gray-800 dark:bg-gray-950">
+                <DialogContent className="max-h-[90vh] w-screen max-w-2xl scrollbar-none overflow-y-auto border-gray-200 bg-white sm:max-w-lg dark:border-gray-800 dark:bg-gray-950">
                     <DialogHeader>
                         <DialogTitle className="text-gray-900 dark:text-gray-100">
                             Create Hostel
@@ -395,15 +479,16 @@ export default function AdminHostelsPage() {
                             navigate(`/hostels/${id}`);
                         }}
                         onCancel={closeDialog}
-                        onUploadImage={handleUploadImage}
+                        onUploadImage={(file) =>
+                            handleUploadImage(file, 'hostels')
+                        }
                     />
                 </DialogContent>
             </Dialog>
 
-            {/* Edit hostel */}
             {activeDialog?.kind === 'edit' && (
                 <Dialog open onOpenChange={(open) => !open && closeDialog()}>
-                    <DialogContent className="max-h-[90vh] w-screen max-w-2xl scrollbar-none overflow-y-auto border-gray-200 bg-white sm:max-w-2xl dark:border-gray-800 dark:bg-gray-950">
+                    <DialogContent className="max-h-[90vh] w-screen max-w-2xl scrollbar-none overflow-y-auto border-gray-200 bg-white sm:max-w-lg dark:border-gray-800 dark:bg-gray-950">
                         <DialogHeader>
                             <DialogTitle className="text-gray-900 dark:text-gray-100">
                                 Edit Hostel
@@ -413,13 +498,14 @@ export default function AdminHostelsPage() {
                             hostel={activeDialog.hostel}
                             onSuccess={closeDialog}
                             onCancel={closeDialog}
-                            onUploadImage={handleUploadImage}
+                            onUploadImage={(file) =>
+                                handleUploadImage(file, 'hostels')
+                            }
                         />
                     </DialogContent>
                 </Dialog>
             )}
 
-            {/* Assign manager */}
             {activeDialog?.kind === 'assign' && (
                 <AssignManagerDialog
                     open
@@ -429,7 +515,6 @@ export default function AdminHostelsPage() {
                 />
             )}
 
-            {/* Deactivate confirmation */}
             {activeDialog?.kind === 'deactivate' && (
                 <ConfirmDialog
                     open
@@ -439,15 +524,14 @@ export default function AdminHostelsPage() {
                     confirmLabel="Deactivate"
                     variant="destructive"
                     isPending={isDeactivating}
-                    onConfirm={() => {
+                    onConfirm={() =>
                         deactivate(activeDialog.hostel.id, {
                             onSuccess: closeDialog,
-                        });
-                    }}
+                        })
+                    }
                 />
             )}
 
-            {/* Activate confirmation */}
             {activeDialog?.kind === 'activate' && (
                 <ConfirmDialog
                     open
@@ -456,11 +540,11 @@ export default function AdminHostelsPage() {
                     description="The hostel will become visible to students and available for booking."
                     confirmLabel="Activate"
                     isPending={isActivating}
-                    onConfirm={() => {
+                    onConfirm={() =>
                         activate(activeDialog.hostel.id, {
                             onSuccess: closeDialog,
-                        });
-                    }}
+                        })
+                    }
                 />
             )}
         </>
@@ -471,7 +555,6 @@ export default function AdminHostelsPage() {
 // Internal sub-components
 // =============================================================================
 
-/** Reusable table header cell built over shadcn's TableHead. */
 function Th({
     children,
     className = '',
@@ -488,11 +571,6 @@ function Th({
     );
 }
 
-/**
- * Small icon-only action button used in table row action cells.
- *
- * @param destructive - When true, uses red hover colours for destructive actions.
- */
 function ActionIconButton({
     children,
     label,
@@ -517,36 +595,5 @@ function ActionIconButton({
         >
             {children}
         </button>
-    );
-}
-
-/** Animated table loading skeleton structured with shadcn table components. */
-function TableSkeleton() {
-    return (
-        <div
-            className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950"
-            aria-label="Loading hostels"
-            aria-hidden="true"
-        >
-            <Table>
-                <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                        <TableRow key={i} className="hover:bg-transparent">
-                            <TableCell colSpan={5} className="px-4 py-3">
-                                <div className="flex items-center gap-4">
-                                    <div className="h-10 w-14 animate-pulse rounded-md bg-gray-100 dark:bg-gray-800" />
-                                    <div className="flex-1 space-y-1.5">
-                                        <div className="h-3.5 w-40 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
-                                        <div className="h-3 w-56 animate-pulse rounded bg-gray-100 dark:bg-gray-800" />
-                                    </div>
-                                    <div className="h-5 w-20 animate-pulse rounded-full bg-gray-100 dark:bg-gray-800" />
-                                    <div className="h-5 w-16 animate-pulse rounded-full bg-gray-100 dark:bg-gray-800" />
-                                </div>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </div>
     );
 }

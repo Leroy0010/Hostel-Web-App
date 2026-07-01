@@ -1,10 +1,10 @@
 package com.leroy.hostelbackend.module.auth.controller;
 
-import com.leroy.hostelbackend.config.JwtConfig;
 import com.leroy.hostelbackend.module.auth.dto.*;
 import com.leroy.hostelbackend.module.auth.mapper.AuthMapper;
 import com.leroy.hostelbackend.module.auth.security.JwtService;
 import com.leroy.hostelbackend.module.auth.service.AuthService;
+import com.leroy.hostelbackend.module.auth.service.RefreshTokenService;
 import com.leroy.hostelbackend.module.user.mapper.UserMapper;
 import com.leroy.hostelbackend.module.user.repository.UserRepository;
 import com.leroy.hostelbackend.shared.response.ApiResponse;
@@ -13,6 +13,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,18 +31,19 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 @Tag(name = "Auth")
+@Slf4j
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserRepository userRepository;
-    private final JwtConfig jwtConfig;
     private final AuthService authService;
     private final AuthMapper authMapper;
     private final UserMapper userMapper;
+    private final RefreshTokenService refreshTokenService;
 
     /**
-     * Authenticates the user and issues an access token + refresh token cookie.
+     *  Authenticates the user and issues an access token + database-backed refresh token.
      *
      * <p>{@code @Valid} ensures that mistyped field names (e.g. {@code "emal"} instead
      * of {@code "email"}) are caught by Bean Validation <em>before</em> the
@@ -57,37 +59,32 @@ public class AuthController {
             @Valid @RequestBody LoginRequest request,
             HttpServletResponse response
     ) {
-        // Delegates to CustomUserDetailsService → BCrypt compare.
-        // Throws BadCredentialsException if credentials are wrong (handled below).
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
-        // Safe to call orElseThrow here — we just authenticated successfully above,
-        // so the user definitely exists.
         var user = userRepository.findByEmailIgnoreCase(request.getEmail()).orElseThrow();
 
         var accessToken  = jwtService.generateAccessToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
+        // Persist and generate secure opaque DB token
+        var refreshToken = refreshTokenService.createRefreshToken(user);
 
-        // HttpOnly + Secure cookie — never readable by JavaScript
-        authService.setAuthCookie(response, refreshToken.toString());
+        // Attach token string directly to cookie
+        authService.setAuthCookie(response, refreshToken.getToken());
 
         var userResponse = userMapper.toResponse(user, null);
-
         return ResponseEntity.ok(ApiResponse.success("Login successful!", authMapper.toLoginResponse(userResponse, accessToken.toString())));
     }
 
     /**
-     * Issues a new access token using the refresh token stored in the cookie.
+     * Rotates both the access token and the database refresh token entry via RTR policies.
      *
      * @param refreshToken extracted automatically from the {@code refreshToken} cookie
      * @return a new access token, or {@code 401} if the refresh token is expired/invalid
      */
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<LoginResponse>> refreshToken(
-            @CookieValue(value = "refreshToken", required = false)
-            String refreshToken,
+            @CookieValue(value = "refreshToken", required = false) String refreshToken,
             HttpServletResponse response
     ) {
         if (refreshToken == null || refreshToken.isBlank()) {
@@ -95,30 +92,44 @@ public class AuthController {
                     .body(ApiResponse.error("Refresh token is missing."));
         }
 
-        var jwt = jwtService.parseToken(refreshToken);
+        try {
+            // 1. Rotate token state inside the service layer transaction context
+            var rotatedTokenEntity = refreshTokenService.rotateRefreshToken(refreshToken);
 
-        if (jwt == null || jwt.isExpired()) {
+            // 2. SAFE FETCH: Avoid LazyInitializationException by pulling a clean,
+            // fully-hydrated User entity using the proxy's ID.
+            var user = userRepository.findById(rotatedTokenEntity.getUser().getId())
+                    .orElseThrow(() -> new org.springframework.security.core.userdetails.UsernameNotFoundException(
+                            "User associated with this token no longer exists."));
+
+            // 3. Evaluate state on the freshly queried entity
+            if (Boolean.FALSE.equals(user.getIsActive())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            var newAccessToken = jwtService.generateAccessToken(user);
+
+            // 4. Safely commit cookie updates to the client
+            authService.setAuthCookie(response, rotatedTokenEntity.getToken());
+
+            var userResponse = userMapper.toResponse(user, null);
+            return ResponseEntity.ok(ApiResponse.success("Token refresh successful", authMapper.toLoginResponse(userResponse, newAccessToken.toString())));
+
+        } catch (RuntimeException e) {
+            log.error("Token verification failure: {}", e.getMessage());
+
+            // Wipe bad/compromised cookie traces from client storage
+            Cookie cookie = new Cookie("refreshToken", "");
+            cookie.setHttpOnly(true);
+            cookie.setPath("/api/auth/refresh");
+            cookie.setMaxAge(0);
+            cookie.setDomain("localhost");
+            response.addCookie(cookie);
+
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.error("Refresh token is invalid or expired."));
+                    .body(ApiResponse.error(e.getMessage()));
         }
-
-        var user = userRepository.findById(jwt.getUserId()).orElseThrow();
-
-        if (Boolean.FALSE.equals(user.getIsActive())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        var accessToken = jwtService.generateAccessToken(user);
-        var newRefreshToken = jwtService.generateRefreshToken(user);
-
-        // HttpOnly + Secure cookie — never readable by JavaScript
-        authService.setAuthCookie(response, newRefreshToken.toString());
-        var userResponse = userMapper.toResponse(user, null);
-
-        return ResponseEntity.ok(ApiResponse.success("Token refresh successful", authMapper.toLoginResponse(userResponse, accessToken.toString())));
-
     }
-
     // -------------------------------------------------------------------------
     // Registration Email Verification
     // -------------------------------------------------------------------------
@@ -163,28 +174,30 @@ public class AuthController {
     }
 
     /**
-     * Logs out the user by clearing the refresh token cookie.
+     * Explicitly destroys session context upon logout requests.
      *
      * @param response used to overwrite and clear the {@code refreshToken} cookie
      * @return success message
      */
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> logout(HttpServletResponse response) {
-        // Create a cookie with the exact same name, path, and domain
+    public ResponseEntity<ApiResponse<Void>> logout(
+            @CookieValue(value = "refreshToken", required = false) String refreshToken,
+            HttpServletResponse response
+    ) {
+        if (refreshToken != null && !refreshToken.isBlank()) {
+            refreshTokenService.revokeToken(refreshToken);
+        }
+
         var cookie = new Cookie("refreshToken", "");
         cookie.setHttpOnly(true);
-        cookie.setSecure(false); // Match your login configuration
-        cookie.setPath("/api/auth/refresh"); // Must match the original path exactly
-        cookie.setDomain("localhost"); // Must match the original domain exactly
-
-        // Setting maxAge to 0 tells the browser to delete the cookie immediately
+        cookie.setSecure(false);
+        cookie.setPath("/api/auth/refresh");
+        cookie.setDomain("localhost");
         cookie.setMaxAge(0);
         cookie.setAttribute("SameSite", "LAX");
-
         response.addCookie(cookie);
 
         return ResponseEntity.ok(ApiResponse.success("Logout successful!"));
     }
-
 
 }

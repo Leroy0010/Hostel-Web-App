@@ -99,6 +99,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(c -> c
                         // Student self-registration — open to everyone
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         // Auth endpoints — open to everyone
                         // Inside your SecurityConfig.java securityFilterChain definition:
                         .requestMatchers("/api/auth/login", "/api/auth/refresh").permitAll()
@@ -108,8 +109,9 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/hostels").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/hostels/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/api/landmarks/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/landmarks/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reviews/").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
                         // Everything else requires a valid JWT
                         .anyRequest().authenticated()
                 )

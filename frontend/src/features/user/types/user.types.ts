@@ -1,5 +1,3 @@
-import type { HostelDto } from "@/features/hostel/types/hostel.types";
-
 /** The three defined RBAC roles in the system. */
 export type UserRole = 'ADMIN' | 'MANAGER' | 'STUDENT';
 
@@ -18,8 +16,6 @@ export interface ProfileUser {
     isActive: boolean;
 }
 
-
-
 /**
  * Response shape from GET /users/me.
  * The Axios interceptor unwraps the API envelope so this arrives directly.
@@ -27,5 +23,19 @@ export interface ProfileUser {
 export interface MeResponse {
     user: ProfileUser;
     /** Null for students without an active booking, or for ADMIN accounts. */
-    hostel: HostelDto;
+    hostel: UserHostelDto;
+}
+
+export interface UserHostelDto {
+    name: string;
+    address: string;
+    roomNumber: string;
+}
+
+
+export interface UserSummary {
+    id: string;
+    email: string;
+    name: string;
+    role: UserRole;
 }

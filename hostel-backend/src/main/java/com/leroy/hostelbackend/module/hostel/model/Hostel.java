@@ -72,6 +72,7 @@ public class Hostel {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+
     // -------------------------------------------------------------------------
     // Factory method
     // -------------------------------------------------------------------------
@@ -95,5 +96,13 @@ public class Hostel {
         hostel.setImageUrl(request.imageUrl());
         hostel.setIsActive(true);
         return hostel;
+    }
+
+    public double getLongitude(){
+        return location.getX();
+    }
+
+    public double getLatitude(){
+        return location.getY();
     }
 }

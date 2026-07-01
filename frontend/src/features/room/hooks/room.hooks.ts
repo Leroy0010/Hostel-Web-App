@@ -1,4 +1,5 @@
 import {
+    keepPreviousData,
     useMutation,
     useQueries,
     useQuery,
@@ -15,6 +16,8 @@ import {
     fetchAvailableRooms,
     fetchRoomById,
     fetchRoomPreview,
+    getRoomAvailbalePeriods,
+    getStudentActiveRoomsByHostelId,
     replaceAmenities,
     updateRoom,
     updateRoomStatus,
@@ -325,5 +328,26 @@ export function useDeleteAmenity(roomId: string, hostelId: string) {
             });
             toast.success('Amenity removed.');
         },
+    });
+}
+
+export function useGetStudentActiveRoomsByHostelId(hostelId: string) {
+    return useQuery({
+        queryKey: roomKeys.active(hostelId),
+        queryFn: () => getStudentActiveRoomsByHostelId(hostelId),
+        enabled: Boolean(hostelId),
+        staleTime: 60 * 1000 * 5,
+        placeholderData: keepPreviousData,
+    });
+}
+
+
+export function useGetRoomAvailablePeriods(roomId: string) {
+    return useQuery({
+        queryKey: roomKeys.availablePeriods(roomId),
+        queryFn: () => getRoomAvailbalePeriods( roomId),
+        staleTime: 60 * 1000 * 10,
+        placeholderData: keepPreviousData,
+        enabled: Boolean(roomId)
     });
 }

@@ -53,12 +53,11 @@ public class LandmarkController {
      */
     @GetMapping("/landmarks")
     public ResponseEntity<ApiResponse<List<LandmarkDto>>> getLandmarks(
-            @RequestParam(required = false) LandmarkCategory category
+            @RequestParam(required = false) LandmarkCategory category,
+            @RequestParam( required = false) String search
     ) {
-        var result = (category != null)
-                ? landmarkService.getLandmarksByCategory(category)
-                : landmarkService.getAllLandmarks();
-        return ResponseEntity.ok(ApiResponse.success("Landmarks fetched.", result));
+
+        return ResponseEntity.ok(ApiResponse.success("Landmarks fetched.", landmarkService.getAllLandmarks(category, search)));
     }
 
     /**

@@ -95,7 +95,12 @@ class TokenManager {
 
             this.clearToken();
 
-            window.location.href = '/login';
+            if (
+                !window.location.pathname.endsWith('/login') &&
+                !window.location.pathname.endsWith('/')
+            ) {
+                window.location.href = '/login';
+            }
         }
     }
 }

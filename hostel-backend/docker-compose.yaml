@@ -17,6 +17,7 @@ services:
     volumes:
       # CHANGE THIS LINE FOR POSTGRES 18+:
       - pg_data:/var/lib/postgresql/data
+      - ./db-init/00-init-extensions.sql:/docker-entrypoint-initdb.d/00-init-extensions.sql
     networks:
       - hostel-booking-network
     healthcheck:
@@ -50,10 +51,6 @@ services:
       SPRING_PROFILES_ACTIVE: dev
       SERVER_PORT: 8080
 
-      # OAuth2 Configuration (Development)
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-your_dev_client_id}
-      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-your_dev_client_secret}
-      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI}
 
       # JWT Configuration
       JWT_SECRET: ${JWT_SECRET:-dev_jwt_secret_key_very_long_and_secure}
@@ -71,13 +68,6 @@ services:
       # Frontend Configuration
       FRONTEND_BASE_URL: ${FRONTEND_BASE_URL:-http://localhost:5173}
 
-      # Cookie Configuration
-      COOKIE_DOMAIN: ${COOKIE_DOMAIN:-localhost}
-      COOKIE_SECURE: ${COOKIE_SECURE:-false}
-      COOKIE_SAME_SITE: ${COOKIE_SAME_SITE:-LAX}
-      COOKIE_HTTP_ONLY: ${COOKIE_HTTP_ONLY}
-      COOKIE_MAX_AGE: ${COOKIE_MAX_AGE}
-      COOKIE_PATH: ${COOKIE_PATH}
 
       # Mail Configuration (Optional for dev)
       MAIL_USERNAME: ${MAIL_USERNAME:-}
@@ -129,6 +119,7 @@ services:
 
 volumes:
   pg_data:
+
 
 
 networks:

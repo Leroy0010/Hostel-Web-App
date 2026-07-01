@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray, useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, Plus, Save, Trash2, Wand2 } from 'lucide-react';
 import { z } from 'zod';
 
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { ImageUpload } from '@/components/ui/ImageUpload';
 
 import { useReplaceAmenities, useDeleteAmenity } from '../hooks/room.hooks';
 import type { AmenityDto, AmenityPayload } from '../types/room.types';
@@ -42,6 +44,11 @@ interface AmenityManagerProps {
     hostelId: string;
     /** Current amenities already attached to this room. */
     currentAmenities: AmenityDto[];
+    /**
+     * Handles the image file upload and returns the stored URL.
+     * Required for uploading new amenity icons.
+     */
+    onUploadImage: (file: File) => Promise<string>;
 }
 
 // =============================================================================
@@ -53,14 +60,14 @@ interface AmenityManagerProps {
  *
  * Two interaction modes:
  *
- *  1. **Inline delete** — each existing amenity has a delete button that fires
- *     {@code DELETE /api/manager/amenities/{amenityId}} immediately (no confirm).
- *     Feedback is instant via React Query cache invalidation.
+ * 1. **Inline delete** — each existing amenity has a delete button that fires
+ * {@code DELETE /api/manager/amenities/{amenityId}} immediately (no confirm).
+ * Feedback is instant via React Query cache invalidation.
  *
- *  2. **Batch replace** — an editable list below the existing chips lets the
- *     manager compose a complete new amenity set and submit it in one call
- *     ({@code PUT /api/manager/rooms/{id}/amenities}).
- *     This replaces ALL amenities atomically, avoiding partial-update races.
+ * 2. **Batch replace** — an editable list below the existing chips lets the
+ * manager compose a complete new amenity set and submit it in one call
+ * ({@code PUT /api/manager/rooms/{id}/amenities}).
+ * This replaces ALL amenities atomically, avoiding partial-update races.
  *
  * The two modes are deliberately separated: individual delete for quick
  * removals, batch replace for wholesale updates, matching the backend API
@@ -69,9 +76,10 @@ interface AmenityManagerProps {
  * @example
  * ```tsx
  * <AmenityManager
- *   roomId={room.id}
- *   hostelId={room.hostelId}
- *   currentAmenities={room.amenities}
+ * roomId={room.id}
+ * hostelId={room.hostelId}
+ * currentAmenities={room.amenities}
+ * onUploadImage={uploadImageToS3}
  * />
  * ```
  */
@@ -79,6 +87,7 @@ export function AmenityManager({
     roomId,
     hostelId,
     currentAmenities,
+    onUploadImage,
 }: AmenityManagerProps) {
     const [showReplaceForm, setShowReplaceForm] = useState(false);
 
@@ -215,7 +224,7 @@ export function AmenityManager({
                     >
                         <form
                             onSubmit={handleSubmit(onSubmitReplace)}
-                            className="space-y-3 rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-900/60"
+                            className="space-y-4 rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-900/60"
                             noValidate
                         >
                             <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -224,13 +233,19 @@ export function AmenityManager({
                             </p>
 
                             {/* Amenity rows */}
-                            <div className="space-y-2">
+                            <div className="space-y-4 sm:space-y-3">
                                 {fields.map((field, index) => (
                                     <div
                                         key={field.id}
-                                        className="flex items-center gap-2"
+                                        className="flex flex-col gap-3 rounded-md border border-gray-200 bg-white p-3 sm:flex-row sm:items-start sm:border-none sm:bg-transparent sm:p-0 dark:border-gray-800 dark:bg-gray-950 dark:sm:bg-transparent"
                                     >
-                                        <div className="flex-1">
+                                        <div className="flex-1 space-y-1.5">
+                                            <Label className="text-xs text-gray-500 sm:hidden">
+                                                Amenity Name{' '}
+                                                <span className="text-red-500">
+                                                    *
+                                                </span>
+                                            </Label>
                                             <Input
                                                 placeholder="Label, e.g. Air Conditioning"
                                                 className={INPUT_CLS}
@@ -248,12 +263,27 @@ export function AmenityManager({
                                                 </p>
                                             )}
                                         </div>
-                                        <div className="flex-1">
-                                            <Input
-                                                placeholder="Icon URL (optional)"
-                                                className={INPUT_CLS}
-                                                {...register(
-                                                    `amenities.${index}.imageUrl`
+                                        <div className="flex-1 space-y-1.5">
+                                            <Label className="text-xs text-gray-500 sm:hidden">
+                                                Icon (optional)
+                                            </Label>
+                                            <Controller
+                                                control={control}
+                                                name={`amenities.${index}.imageUrl`}
+                                                render={({
+                                                    field: uploadField,
+                                                }) => (
+                                                    <ImageUpload
+                                                        value={
+                                                            uploadField.value ||
+                                                            undefined
+                                                        }
+                                                        onChange={
+                                                            uploadField.onChange
+                                                        }
+                                                        onUpload={onUploadImage}
+                                                        hint="PNG, SVG, WEBP"
+                                                    />
                                                 )}
                                             />
                                         </div>
@@ -261,7 +291,7 @@ export function AmenityManager({
                                             type="button"
                                             onClick={() => remove(index)}
                                             aria-label={`Remove row ${index + 1}`}
-                                            className="shrink-0 rounded-md p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500 dark:text-gray-600 dark:hover:bg-red-950/30 dark:hover:text-red-400"
+                                            className="mt-1 shrink-0 self-end rounded-md p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500 sm:self-auto dark:text-gray-600 dark:hover:bg-red-950/30 dark:hover:text-red-400"
                                         >
                                             <Trash2
                                                 className="h-4 w-4"
@@ -287,7 +317,7 @@ export function AmenityManager({
                             </Button>
 
                             {/* Submit */}
-                            <div className="flex justify-end">
+                            <div className="flex justify-end pt-2">
                                 <Button
                                     type="submit"
                                     size="sm"

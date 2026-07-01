@@ -7,5 +7,4 @@ public class HostelDto {
     private String name;
     private String roomNumber;
     private String address;
-
 }

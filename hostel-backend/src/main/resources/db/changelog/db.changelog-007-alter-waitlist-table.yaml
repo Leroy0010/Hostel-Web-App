@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      author: Leroy
+      id: alter-waitlist-table
+      changes:
+        - sqlFile:
+            path: scripts/alter-waitlist-table.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+            stripComments: true

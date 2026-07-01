@@ -1,23 +1,15 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Building2, Pencil, ArrowRight } from 'lucide-react';
+import { Building2, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Pagination } from '@/components/ui/CustomPagination';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
 import { GenderPolicyBadge } from '../components/GenderPolicyBadge';
-import { UpdateHostelForm } from '../components/UpdateHostelForm';
 import { useMyHostels } from '../hooks/hostel.hooks';
-import { fetchHostelById } from '../api/hostel.api';
 import { hostelImageFallback } from '../utils/hostel.utils';
-import type { HostelDto } from '../types/hostel.types';
+import type { HostelSummaryDto } from '../types/hostel.types';
 
 // =============================================================================
 // Page component
@@ -42,9 +34,14 @@ import type { HostelDto } from '../types/hostel.types';
 export default function ManagerHostelsPage() {
     const navigate = useNavigate();
 
+    const handleGoToDetails = (hostel: HostelSummaryDto) => {
+        // Pass `scrollToControls: true` in the state object
+        navigate(`/hostels/${hostel.id}`, {
+            state: { scrollToControls: true },
+        });
+    };
+
     const [page, setPage] = useState(0);
-    const [editHostel, setEditHostel] = useState<HostelDto | null>(null);
-    const [isFetchingFull, setIsFetchingFull] = useState(false);
 
     // ── Queries ───────────────────────────────────────────────────────────────
     const {
@@ -56,33 +53,6 @@ export default function ManagerHostelsPage() {
     } = useMyHostels({ page, size: 12 });
 
     const hostels = hostelPage?.content ?? [];
-
-    /**
-     * Fetches the full {@link HostelDto} for a hostel summary before opening the
-     * edit dialog. The list endpoint returns {@link HostelSummaryDto} which omits
-     * description, coordinates, and manager info needed by the form.
-     */
-    const handleOpenEdit = async (hostelId: string) => {
-        setIsFetchingFull(true);
-        try {
-            const full = await fetchHostelById(hostelId);
-            setEditHostel(full);
-        } finally {
-            setIsFetchingFull(false);
-        }
-    };
-
-    /**
-     * Placeholder upload handler.
-     * Replace with a real S3 upload in production.
-     *
-     * @param file - The validated image file.
-     * @returns A promise resolving to the stored public URL.
-     */
-    const handleUploadImage = async (file: File): Promise<string> => {
-        // TODO: replace with actual upload endpoint
-        return URL.createObjectURL(file);
-    };
 
     return (
         <>
@@ -178,37 +148,17 @@ export default function ManagerHostelsPage() {
 
                                     {/* Action row */}
                                     <div className="mt-4 flex items-center gap-2">
-                                        {/* Edit */}
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() =>
-                                                handleOpenEdit(hostel.id)
-                                            }
-                                            disabled={isFetchingFull}
-                                            className="gap-1.5 border-gray-200 text-gray-700 hover:bg-gray-100 dark:border-gray-800 dark:text-gray-300 dark:hover:bg-gray-800"
-                                            aria-label={`Edit ${hostel.name}`}
-                                        >
-                                            <Pencil
-                                                className="h-3.5 w-3.5"
-                                                aria-hidden="true"
-                                            />
-                                            Edit
-                                        </Button>
-
-                                        {/* View rooms */}
+                                        {/* View hostel detail */}
                                         <Button
                                             size="sm"
                                             onClick={() =>
-                                                navigate(
-                                                    `/manager/hostels/${hostel.id}/rooms`
-                                                )
+                                                handleGoToDetails(hostel)
                                             }
                                             className="ml-auto gap-1.5 bg-gray-900 text-white hover:bg-gray-700 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200"
                                             aria-label={`Manage rooms for ${hostel.name}`}
                                         >
-                                            Rooms
-                                            <ArrowRight
+                                            Manage Hostel
+                                            <Settings
                                                 className="h-3.5 w-3.5"
                                                 aria-hidden="true"
                                             />
@@ -231,29 +181,6 @@ export default function ManagerHostelsPage() {
                     />
                 )}
             </motion.div>
-
-            {/* ── Edit hostel dialog ───────────────────────────────────── */}
-            {editHostel && (
-                <Dialog
-                    open
-                    onOpenChange={(open) => !open && setEditHostel(null)}
-                >
-                    <DialogContent className="max-h-[90vh] max-w-2xl sm:max-w-2xl scrollbar-none overflow-y-auto border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
-                        <DialogHeader>
-                            <DialogTitle className="text-gray-900 dark:text-gray-100">
-                                Edit Hostel
-                            </DialogTitle>
-                        </DialogHeader>
-                        <UpdateHostelForm
-                            hostel={editHostel}
-                            isManager
-                            onSuccess={() => setEditHostel(null)}
-                            onCancel={() => setEditHostel(null)}
-                            onUploadImage={handleUploadImage}
-                        />
-                    </DialogContent>
-                </Dialog>
-            )}
         </>
     );
 }

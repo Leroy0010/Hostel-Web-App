@@ -5,7 +5,6 @@ import {
     useQueryClient,
 } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { hostelKeys } from '../types/hostel.keys';
 import {
     activateHostel,
     assignManager,
@@ -14,159 +13,194 @@ import {
     fetchActiveHostels,
     fetchAllHostelsAdmin,
     fetchHostelById,
+    fetchHostelSections,
     fetchHostelsByManager,
     fetchMyHostels,
+    getStudentActiveHostels,
     managerUpdateHostel,
     unassignManager,
     updateHostel,
 } from '../api/hostel.api';
+import { hostelKeys } from '../types/hostel.keys';
 import type {
     AssignManagerPayload,
     CreateHostelPayload,
+    HostelDetailParams,
     HostelDto,
     HostelPageParams,
+    HostelSectionParams,
     UpdateHostelPayload,
 } from '../types/hostel.types';
 import type { ApiError } from '@/types/api';
 
 // =============================================================================
-// Query hooks — read operations
+// Public / Student queries
 // =============================================================================
 
 /**
- * Paginated list of active hostels (public/student view).
+ * Paginated list of active hostels (summary only).
+ * Used by the admin table and campus map page.
  *
- * @param params - Page, size, sort parameters.
+ * @param params - Pagination params forwarded to {@code GET /api/hostels}.
  */
 export function useActiveHostels(params: HostelPageParams = {}) {
     return useQuery({
         queryKey: hostelKeys.publicList(params),
         queryFn: () => fetchActiveHostels(params),
-        staleTime: 2 * 60 * 1000, // 2 minutes — hostel list changes infrequently
-        placeholderData: keepPreviousData, // Keep previous page visible while next loads
-    });
-}
-
-/**
- * Single hostel detail by ID.
- *
- * @param id - Hostel UUID. Pass `null` or `undefined` to disable the query.
- */
-export function useHostelDetail(id: string | null | undefined) {
-    return useQuery({
-        queryKey: hostelKeys.detail(id ?? ''),
-        queryFn: () => fetchHostelById(id!),
-        enabled: Boolean(id),
-        staleTime: 2 * 60 * 1000,
-    });
-}
-
-/**
- * Admin: all hostels including inactive ones.
- *
- * @param params - Page, size, sort parameters.
- */
-export function useAdminHostels(params: HostelPageParams = {}) {
-    return useQuery({
-        queryKey: hostelKeys.adminList(params),
-        queryFn: () => fetchAllHostelsAdmin(params),
-        staleTime: 60 * 1000, // 1 minute
         placeholderData: keepPreviousData,
     });
 }
 
 /**
- * Admin: hostels belonging to a specific manager.
+ * Paginated hostel sections — each section includes the hostel summary and
+ * up to 6 room previews embedded by the backend.
  *
- * @param managerId - Manager UUID. Query is disabled if null/undefined.
- * @param params    - Pagination parameters.
+ * Replaces the old pattern of fetching active hostels + N room-preview calls.
+ * Use this hook on the student discovery page (Netflix-style layout).
+ *
+ * Maps to: {@code GET /api/hostels/with-room-sections}
+ *
+ * @param params - Search, gender policy, room type, max price, pagination.
+ */
+export function useHostelSections(params: HostelSectionParams) {
+    return useQuery({
+        queryKey: hostelKeys.sections(params),
+        queryFn: () => fetchHostelSections(params),
+    });
+}
+
+/**
+ * Full hostel detail for the detail page — hostel info + paginated rooms in
+ * a **single** API call (no second rooms fetch needed).
+ *
+ * The {@code params} object feeds into both the query key (so filter/page
+ * changes cause a fresh fetch) and the API call itself.
+ *
+ * Maps to: {@code GET /api/hostels/{id}?roomType=&maxPrice=&page=&size=}
+ *
+ * @param id - Hostel UUID from the route params. Pass {@code undefined} while
+ *             the param is not yet available — the query will be disabled.
+ * @param params - Optional room filter + pagination state from {@link useRoomFilters}.
+ */
+export function useHostelDetail(
+    id: string | undefined,
+    params?: HostelDetailParams
+) {
+    return useQuery({
+        queryKey: hostelKeys.detail(id ?? '', params),
+        queryFn: () => fetchHostelById(id!, params),
+        // Only run once we have a real id
+        enabled: Boolean(id),
+        placeholderData: keepPreviousData,
+    });
+}
+
+// =============================================================================
+// Admin queries
+// =============================================================================
+
+/**
+ * Admin: paginated list of all hostels including inactive ones.
+ *
+ * Maps to: {@code GET /api/admin/hostels}
+ */
+export function useAdminHostels(params: HostelPageParams = {}) {
+    return useQuery({
+        queryKey: hostelKeys.adminList(params),
+        queryFn: () => fetchAllHostelsAdmin(params),
+        placeholderData: keepPreviousData,
+    });
+}
+
+/**
+ * Admin: paginated list of hostels assigned to a specific manager.
+ *
+ * Maps to: {@code GET /api/admin/managers/{managerId}/hostels}
  */
 export function useHostelsByManager(
-    managerId: string | null | undefined,
+    managerId: string | undefined,
     params: HostelPageParams = {}
 ) {
     return useQuery({
         queryKey: hostelKeys.byManager(managerId ?? '', params),
         queryFn: () => fetchHostelsByManager(managerId!, params),
         enabled: Boolean(managerId),
-        staleTime: 60 * 1000,
         placeholderData: keepPreviousData,
     });
 }
 
+// =============================================================================
+// Manager queries
+// =============================================================================
+
 /**
- * Manager: the currently authenticated manager's own hostels.
+ * Manager: the hostels assigned to the currently authenticated manager.
  *
- * @param params - Pagination parameters.
+ * Maps to: {@code GET /api/manager/hostels}
  */
 export function useMyHostels(params: HostelPageParams = {}) {
     return useQuery({
         queryKey: hostelKeys.managerList('me', params),
         queryFn: () => fetchMyHostels(params),
-        staleTime: 60 * 1000,
         placeholderData: keepPreviousData,
     });
 }
 
 // =============================================================================
-// Mutation hooks — write operations
+// Admin mutations
 // =============================================================================
 
 /**
- * Admin: creates a new hostel.
+ * Creates a new hostel.
  *
  * On success:
- *  - Invalidates all hostel list caches so lists refresh automatically.
- *  - Caller can optionally pass `onSuccess` for navigation or dialog close.
+ *  - Invalidates all hostel list queries so the new hostel appears immediately.
+ *  - Shows a success toast.
+ *
+ * Maps to: {@code POST /api/admin/hostels}
  */
 export function useCreateHostel() {
     const queryClient = useQueryClient();
 
     return useMutation<HostelDto, ApiError, CreateHostelPayload>({
-        mutationFn: createHostel,
+        mutationFn: (payload) => createHostel(payload),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: hostelKeys.lists() });
             toast.success('Hostel created successfully.');
         },
-        onError: (err) => {
-            // Validation errors are handled field-by-field in the form;
-            // other errors show a toast from the Axios interceptor. We only
-            // add a fallback here for non-validation failures that slip through.
-            if (err.code !== 'VALIDATION_FAILED') {
-                toast.error(err.message ?? 'Failed to create hostel.');
-            }
+        onError: () => {
+            toast.error('Failed to create hostel. Please try again.');
         },
     });
 }
 
 /**
- * Admin/Manager: updates a hostel.
+ * Updates hostel fields (admin scope).
+ * Invalidates the affected detail key and list keys on success.
  *
- * On success invalidates both the specific detail cache and all list caches.
- *
- * @param hostelId - The hostel being updated (used for targeted invalidation).
- * @param isManager - When true, calls the manager-scoped update endpoint.
+ * Maps to: {@code PUT /api/admin/hostels/{id}}
  */
-export function useUpdateHostel(hostelId: string, isManager = false) {
+export function useUpdateHostel(id: string) {
     const queryClient = useQueryClient();
 
     return useMutation<HostelDto, ApiError, UpdateHostelPayload>({
-        mutationFn: (payload) =>
-            isManager
-                ? managerUpdateHostel(hostelId, payload)
-                : updateHostel(hostelId, payload),
+        mutationFn: (payload) => updateHostel(id, payload),
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: hostelKeys.detail(hostelId),
-            });
+            // Invalidate the detail for this hostel (all param variants)
+            queryClient.invalidateQueries({ queryKey: hostelKeys.details() });
             queryClient.invalidateQueries({ queryKey: hostelKeys.lists() });
             toast.success('Hostel updated successfully.');
+        },
+        onError: () => {
+            toast.error('Failed to update hostel. Please try again.');
         },
     });
 }
 
 /**
- * Admin: assigns a manager to a hostel.
+ * Assigns a manager to a hostel.
+ *
+ * Maps to: {@code POST /api/admin/hostels/{hostelId}/manager}
  */
 export function useAssignManager(hostelId: string) {
     const queryClient = useQueryClient();
@@ -174,17 +208,22 @@ export function useAssignManager(hostelId: string) {
     return useMutation<HostelDto, ApiError, AssignManagerPayload>({
         mutationFn: (payload) => assignManager(hostelId, payload),
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: hostelKeys.detail(hostelId),
-            });
+            queryClient.invalidateQueries({ queryKey: hostelKeys.details() });
             queryClient.invalidateQueries({ queryKey: hostelKeys.lists() });
             toast.success('Manager assigned successfully.');
+        },
+        onError: (err) => {
+            toast.error(
+                err.message || 'Failed to assign manager. Please try again.'
+            );
         },
     });
 }
 
 /**
- * Admin: removes the manager from a hostel.
+ * Removes the manager from a hostel.
+ *
+ * Maps to: {@code DELETE /api/admin/hostels/{hostelId}/manager}
  */
 export function useUnassignManager(hostelId: string) {
     const queryClient = useQueryClient();
@@ -192,47 +231,91 @@ export function useUnassignManager(hostelId: string) {
     return useMutation<HostelDto, ApiError, void>({
         mutationFn: () => unassignManager(hostelId),
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: hostelKeys.detail(hostelId),
-            });
+            queryClient.invalidateQueries({ queryKey: hostelKeys.details() });
             queryClient.invalidateQueries({ queryKey: hostelKeys.lists() });
-            toast.success('Manager removed from hostel.');
+            toast.success('Manager unassigned.');
+        },
+        onError: (err) => {
+            toast.error(
+                err.message || 'Failed to unassign manager. Please try again.'
+            );
         },
     });
 }
 
 /**
- * Admin: deactivates (soft-deletes) a hostel.
+ * Soft-deletes (deactivates) a hostel.
+ *
+ * Maps to: {@code PATCH /api/admin/hostels/{id}/deactivate}
  */
 export function useDeactivateHostel() {
     const queryClient = useQueryClient();
 
     return useMutation<void, ApiError, string>({
-        mutationFn: deactivateHostel,
-        onSuccess: (_, hostelId) => {
-            queryClient.invalidateQueries({
-                queryKey: hostelKeys.detail(hostelId),
-            });
+        mutationFn: (hostelId) => deactivateHostel(hostelId),
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: hostelKeys.lists() });
             toast.success('Hostel deactivated.');
+        },
+        onError: (err) => {
+            toast.error(
+                err.message || 'Failed to deactivate hostel. Please try again.'
+            );
         },
     });
 }
 
 /**
- * Admin: re-activates a deactivated hostel.
+ * Re-activates a previously deactivated hostel.
+ *
+ * Maps to: {@code PATCH /api/admin/hostels/{id}/activate}
  */
 export function useActivateHostel() {
     const queryClient = useQueryClient();
 
-    return useMutation<HostelDto, ApiError, string>({
-        mutationFn: activateHostel,
-        onSuccess: (_, hostelId) => {
-            queryClient.invalidateQueries({
-                queryKey: hostelKeys.detail(hostelId),
-            });
+    return useMutation({
+        mutationFn: (hostelId: string) => activateHostel(hostelId),
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: hostelKeys.lists() });
             toast.success('Hostel activated.');
         },
+        onError: () => {
+            toast.error('Failed to activate hostel. Please try again.');
+        },
+    });
+}
+
+// =============================================================================
+// Manager mutations
+// =============================================================================
+
+/**
+ * Manager: updates their own hostel.
+ *
+ * Maps to: {@code PUT /api/manager/hostels/{id}}
+ */
+export function useManagerUpdateHostel(id: string) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (payload: UpdateHostelPayload) =>
+            managerUpdateHostel(id, payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: hostelKeys.details() });
+            queryClient.invalidateQueries({ queryKey: hostelKeys.lists() });
+            toast.success('Hostel updated successfully.');
+        },
+        onError: () => {
+            toast.error('Failed to update hostel. Please try again.');
+        },
+    });
+}
+
+export function useGetStudentActiveHostels() {
+    return useQuery({
+        queryKey: hostelKeys.active(),
+        queryFn: getStudentActiveHostels,
+        staleTime: 60 * 1000 * 10,
+        placeholderData: keepPreviousData,
     });
 }

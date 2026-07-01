@@ -28,6 +28,12 @@ export const roomKeys = {
     available: (hostelId: string, params: AvailableRoomsParams) =>
         [...roomKeys.lists(), 'available', hostelId, params] as const,
 
+    availablePeriods: (roomId: string) =>
+        [...roomKeys.all, 'available-periods', roomId] as const,
+
+    active: (hostelId: string) =>
+        [...roomKeys.lists(), 'active', hostelId] as const,
+
     /**
      * A lightweight preview fetch (first N rooms, no pagination UI).
      * Used by the horizontal room preview strip on the hostels page.

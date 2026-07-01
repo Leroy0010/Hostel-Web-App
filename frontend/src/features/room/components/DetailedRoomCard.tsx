@@ -1,149 +1,155 @@
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { RoomStatusBadge } from './RoomStatusBadge';
-import { RoomTypeBadge } from './RoomTypeBadge';
-import { AmenityChip } from './AmenityChip';
-import { bedsLabel, formatPrice, roomImageFallback } from '../utils/room.utils';
-import type { RoomDto } from '../types/room.types';
-import { Layers } from 'lucide-react';
+import { Users, Layers, ChevronRight } from 'lucide-react';
+import { AvailablePeriodsBadge } from './AvailablePeriodsBadge';
+import { roomImageFallback, formatPrice, roomTypeLabel } from '../utils/room.utils';
+import type { RoomDisplayDto } from '@/features/hostel/types/hostel.types';
 
 interface DetailedRoomCardProps {
-    room: RoomDto;
+    /** Room data from the detail endpoint (includes availablePeriods). */
+    room: RoomDisplayDto;
+    /** UUID of the parent hostel — used to build the room detail navigation link. */
     hostelId: string;
 }
 
 /**
- * Full-detail room card for the hostel rooms list page ({@code /hostels/:id/rooms}).
+ * Full-width room card used in the vertical room list on the hostel detail page.
  *
  * Layout:
- * - Cover image on the left (responsive: full-width on mobile, fixed 192px on sm+).
- * - Details column on the right: name, price, floor, type, status.
- * - Horizontal amenity scroll track with a right-side fade gradient to signal overflow.
- * - "View Details" CTA navigates to the room detail page.
+ * ┌────────────────────────────────────────────────────┐
+ * │ [Thumbnail] │ Room #  Type          Price         │ ›
+ * │             │ Floor · Capacity                    │
+ * │             │ [Available periods badges]           │
+ * └────────────────────────────────────────────────────┘
  *
- * Framer Motion:
- * - Entrance fade-up animation with a small y offset.
- * - Respects {@code useReducedMotion}.
+ * The card links to the room detail page on click. The chevron icon gives
+ * a clear affordance that the card is tappable.
+ *
+ * Uses {@link RoomDisplayDto} — the unified shape returned by both the hostel
+ * detail endpoint and the sections endpoint — so this component works across
+ * both contexts without type adapters.
+ *
+ * @example
+ * ```tsx
+ * {rooms.map(room => (
+ *   <DetailedRoomCard key={room.id} room={room} hostelId={hostelId} />
+ * ))}
+ * ```
  */
 export function DetailedRoomCard({ room, hostelId }: DetailedRoomCardProps) {
     const navigate = useNavigate();
-    const shouldReduceMotion = useReducedMotion();
 
     return (
         <motion.div
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow duration-200 hover:shadow-md sm:flex-row dark:border-gray-800 dark:bg-gray-950"
+            whileHover={{ y: -1 }}
+            whileTap={{ scale: 0.99 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
         >
-            {/* ── Cover image ────────────────────────────────────────────── */}
-            <div className="relative h-44 w-full shrink-0 overflow-hidden bg-gray-100 sm:h-auto sm:w-48 dark:bg-gray-800">
-                <img
-                    src={room.imageUrl || roomImageFallback()}
-                    alt={`Room ${room.roomNumber}`}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                    onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src =
-                            roomImageFallback();
-                    }}
-                />
-            </div>
+            <button
+                type="button"
+                onClick={() =>
+                    navigate(`/hostels/${hostelId}/rooms/${room.id}`)
+                }
+                className="group flex w-full items-start gap-4 overflow-hidden rounded-xl border border-gray-200 bg-white p-3 text-left transition-shadow duration-200 hover:shadow-md focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:outline-none dark:border-gray-800 dark:bg-gray-950"
+                aria-label={`View details for room ${room.roomNumber}`}
+            >
+                {/* Thumbnail */}
+                <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+                    <img
+                        src={room.imageUrl || roomImageFallback()}
+                        alt={`Room ${room.roomNumber}`}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src =
+                                roomImageFallback();
+                        }}
+                    />
+                    {/* Floor badge overlaid on the image */}
+                    <div className="absolute bottom-1 right-1 flex items-center gap-0.5 rounded bg-black/50 px-1 py-0.5 backdrop-blur-sm">
+                        <Layers
+                            className="h-2.5 w-2.5 text-white/80"
+                            aria-hidden="true"
+                        />
+                        <span className="text-[9px] font-medium text-white">
+                            Fl. {room.floorNumber}
+                        </span>
+                    </div>
+                </div>
 
-            {/* ── Details column ─────────────────────────────────────────── */}
-            <div className="flex min-w-0 flex-1 flex-col justify-between gap-3 p-4">
-                {/* Header row */}
-                <div>
+                {/* Content */}
+                <div className="min-w-0 flex-1 space-y-1.5">
+                    {/* Header row: room number + price */}
                     <div className="flex flex-wrap items-start justify-between gap-2">
                         <div className="min-w-0">
-                            <h4 className="truncate text-base font-bold text-gray-900 dark:text-gray-100">
+                            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                                 Room {room.roomNumber}
-                            </h4>
-                            {room.floorNumber !== null && (
-                                <p className="mt-0.5 flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                                    <Layers
-                                        className="h-3 w-3"
-                                        aria-hidden="true"
-                                    />
-                                    Floor {room.floorNumber}
-                                </p>
-                            )}
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                {roomTypeLabel(room.roomType)}
+                            </p>
                         </div>
-                        <span className="text-base font-bold text-gray-900 dark:text-white">
+                        <p className="shrink-0 text-sm font-bold text-gray-900 dark:text-gray-100">
                             {formatPrice(room.pricePerSemester)}
                             <span className="ml-0.5 text-xs font-normal text-gray-400 dark:text-gray-500">
                                 /sem
                             </span>
-                        </span>
+                        </p>
                     </div>
 
-                    {/* Type + status badges */}
-                    <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                        <RoomTypeBadge type={room.roomType} />
-                        <RoomStatusBadge status={room.status} />
+                    {/* Capacity row */}
+                    <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                        <Users
+                            className="h-3.5 w-3.5 shrink-0"
+                            aria-hidden="true"
+                        />
+                        <span>Capacity: {room.capacity}</span>
                     </div>
 
-                    {/* Horizontal amenities track with fade-right signal */}
-                    {room.amenities && room.amenities.length > 0 && (
-                        <div className="relative mt-3">
-                            {/* Fading right edge — signals to user there's more content */}
-                            <div
-                                className="pointer-events-none absolute top-0 right-0 h-full w-10 bg-linear-to-l from-white dark:from-gray-950"
-                                aria-hidden="true"
-                            />
-                            <div className="flex scrollbar-none gap-1.5 overflow-x-auto pr-8 pb-1">
-                                {room.amenities.map((a) => (
-                                    <AmenityChip key={a.id} amenity={a} />
-                                ))}
-                            </div>
-                        </div>
-                    )}
+                    {/* Available periods — compact badge display */}
+                    <AvailablePeriodsBadge periods={room.availablePeriods} compact />
                 </div>
 
-                {/* Footer row — occupancy + CTA */}
-                <div className="flex items-center justify-between border-t border-gray-100 pt-3 dark:border-gray-800">
-                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
-                        {bedsLabel(room.bedsAvailable)}
-                    </span>
-                    <Button
-                        size="sm"
-                        onClick={() =>
-                            navigate(`/hostels/${hostelId}/rooms/${room.id}`)
-                        }
-                        className="bg-gray-900 text-white hover:bg-gray-700 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200"
-                    >
-                        View Details
-                    </Button>
-                </div>
-            </div>
+                {/* Chevron affordance */}
+                <ChevronRight
+                    className="mt-1 h-4 w-4 shrink-0 text-gray-300 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-gray-500 dark:text-gray-600 dark:group-hover:text-gray-400"
+                    aria-hidden="true"
+                />
+            </button>
         </motion.div>
     );
 }
 
-// ---------------------------------------------------------------------------
-// Skeleton variant
-// ---------------------------------------------------------------------------
+// =============================================================================
+// Skeleton
+// =============================================================================
 
 /**
- * Skeleton placeholder matching the {@link DetailedRoomCard} layout.
+ * Animated skeleton matching the {@link DetailedRoomCard} layout.
+ * Shown while the hostel detail endpoint is loading.
  */
 export function DetailedRoomCardSkeleton() {
     return (
-        <div className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm sm:flex-row dark:border-gray-800 dark:bg-gray-950">
-            <div className="h-44 w-full animate-pulse bg-gray-100 sm:h-auto sm:w-48 dark:bg-gray-800" />
-            <div className="flex flex-1 flex-col gap-3 p-4">
-                <div className="space-y-2">
-                    <div className="h-4 w-28 animate-pulse rounded-md bg-gray-100 dark:bg-gray-800" />
-                    <div className="h-3 w-16 animate-pulse rounded-md bg-gray-100 dark:bg-gray-800" />
-                    <div className="flex gap-2">
-                        <div className="h-5 w-16 animate-pulse rounded-md bg-gray-100 dark:bg-gray-800" />
-                        <div className="h-5 w-20 animate-pulse rounded-md bg-gray-100 dark:bg-gray-800" />
+        <div
+            className="flex items-start gap-4 overflow-hidden rounded-xl border border-gray-200 bg-white p-3 dark:border-gray-800 dark:bg-gray-950"
+            aria-hidden="true"
+        >
+            {/* Thumbnail skeleton */}
+            <div className="h-24 w-32 shrink-0 animate-pulse rounded-lg bg-gray-100 dark:bg-gray-800" />
+
+            {/* Content skeleton */}
+            <div className="flex-1 space-y-2 pt-1">
+                <div className="flex justify-between">
+                    <div className="space-y-1">
+                        <div className="h-4 w-24 animate-pulse rounded-md bg-gray-200 dark:bg-gray-700" />
+                        <div className="h-3 w-16 animate-pulse rounded-md bg-gray-100 dark:bg-gray-800" />
                     </div>
+                    <div className="h-4 w-20 animate-pulse rounded-md bg-gray-200 dark:bg-gray-700" />
                 </div>
-                <div className="mt-auto flex items-center justify-between border-t border-gray-100 pt-3 dark:border-gray-800">
-                    <div className="h-3 w-20 animate-pulse rounded-md bg-gray-100 dark:bg-gray-800" />
-                    <div className="h-8 w-24 animate-pulse rounded-md bg-gray-100 dark:bg-gray-800" />
+                <div className="h-3 w-20 animate-pulse rounded-md bg-gray-100 dark:bg-gray-800" />
+                <div className="flex gap-1.5">
+                    <div className="h-5 w-28 animate-pulse rounded-full bg-gray-100 dark:bg-gray-800" />
+                    <div className="h-5 w-24 animate-pulse rounded-full bg-gray-100 dark:bg-gray-800" />
                 </div>
             </div>
         </div>

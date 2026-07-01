@@ -12,6 +12,8 @@ public record HostelSummaryDto(
         String address,
         String genderPolicy,
         String imageUrl,
-        Boolean isActive
+        Boolean isActive,
+        double longitude,
+        double latitude
 ) {}
 

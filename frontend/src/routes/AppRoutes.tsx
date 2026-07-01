@@ -1,17 +1,16 @@
 import { Suspense } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from '@/components/routing/ProtectedRoute';
 import { PublicRoute } from '@/components/routing/PublicRoute';
 import { AppLoader } from '@/components/ui/AppLoader';
-import { useAuthStore } from '@/features/auth/store/useAuthStore';
 import {
     AdminHostels,
     Dashboard,
     ForgotPassword,
-    Home,
     Hostels,
     HostelsDetailsPage,
     Login,
+    ManagerHostelBookings,
     ManagerHostels,
     ManagerRoomsPage,
     NotFound,
@@ -20,8 +19,21 @@ import {
     Register,
     ResetPassword,
     RoomDetailsPage,
+    StudentBookings,
     Unauthorized,
     VerifyEmail,
+    ManagerPendingBookings,
+    BookingDetailPage,
+    MyReviews,
+    MyComplaints,
+    ManagerHostelComplaintsPage,
+    CampusMap,
+    AdminLandmarks,
+    ComplaintDetailPage,
+    ManagerWaitlist,
+    StudentWaitlist,
+    StudentPreferencePage,
+    UserManamentPage,
 } from './lazyLoadedPages';
 import { AppLayout } from '@/components/layout/AppLayout';
 
@@ -59,6 +71,8 @@ export function AppRoutes() {
                 <Route element={<AppLayout />}>
                     {/* Open Content Pages */}
 
+                    <Route path="/" element={<Dashboard />} />
+
                     <Route path="/hostels" element={<Hostels />} />
                     <Route
                         path="/hostels/:hostelId"
@@ -70,6 +84,8 @@ export function AppRoutes() {
                         element={<RoomDetailsPage />}
                     />
 
+                    <Route path="/map" element={<CampusMap />} />
+
                     {/* ── Protected spaces (all authenticated roles) ───────────── */}
                     <Route
                         element={
@@ -78,15 +94,22 @@ export function AppRoutes() {
                             />
                         }
                     >
-                        {/* 🔴 Move root back inside the guard container */}
-                        <Route path="/" element={<RootIndexRedirect />} />
-
                         {/* Shared protected routes */}
-                        <Route path="/dashboard" element={<Dashboard />} />
+
                         <Route path="/profile" element={<Profile />} />
                         <Route
                             path="/notifications"
                             element={<Notifications />}
+                        />
+
+                        <Route
+                            path="/bookings/:id"
+                            element={<BookingDetailPage />}
+                        />
+
+                        <Route
+                            path="/complaints/:complaintId"
+                            element={<ComplaintDetailPage />}
                         />
 
                         {/* Admin routes */}
@@ -97,6 +120,19 @@ export function AppRoutes() {
                             path="/admin"
                         >
                             <Route path="hostels" element={<AdminHostels />} />
+                            <Route
+                                path="hostels/:hostelId/complaints"
+                                element={<ManagerHostelComplaintsPage />}
+                            />
+                            <Route
+                                path="landmarks"
+                                element={<AdminLandmarks />}
+                            />
+
+                            <Route
+                                path="users"
+                                element={<UserManamentPage />}
+                            />
                         </Route>
 
                         {/* Manager routes */}
@@ -114,6 +150,25 @@ export function AppRoutes() {
                                 path="hostels/:hostelId/rooms"
                                 element={<ManagerRoomsPage />}
                             />
+                            <Route
+                                path="bookings/pending"
+                                element={<ManagerPendingBookings />}
+                            />
+
+                            <Route
+                                path="hostels/:hostelId/bookings"
+                                element={<ManagerHostelBookings />}
+                            />
+
+                            <Route
+                                path="hostels/:hostelId/waitlist"
+                                element={<ManagerWaitlist />}
+                            />
+
+                            <Route
+                                path="hostels/:hostelId/complaints"
+                                element={<ManagerHostelComplaintsPage />}
+                            />
                         </Route>
 
                         {/* Student routes */}
@@ -121,12 +176,27 @@ export function AppRoutes() {
                             element={
                                 <ProtectedRoute allowedRoles={['STUDENT']} />
                             }
-                        ></Route>
+                            path="/student"
+                        >
+                            <Route
+                                path="bookings"
+                                element={<StudentBookings />}
+                            />
+                            <Route
+                                path="waitlist"
+                                element={<StudentWaitlist />}
+                            />
+                            <Route
+                                path="preferences"
+                                element={<StudentPreferencePage />}
+                            />
+                            <Route
+                                path="complaints"
+                                element={<MyComplaints />}
+                            />
+                            <Route path="reviews" element={<MyReviews />} />
+                        </Route>
                     </Route>
-                </Route>
-
-                <Route element={<AppLayout isHomePage />}>
-                    <Route path="/" element={<Home />} />
                 </Route>
 
                 {/* ── Catch-all fallback ────────────────────────────────────── */}
@@ -134,27 +204,4 @@ export function AppRoutes() {
             </Routes>
         </Suspense>
     );
-}
-
-// ---------------------------------------------------------------------------
-// Role-aware root redirect
-// ---------------------------------------------------------------------------
-
-/**
- * Steers authenticated users from "/" to their role-specific workspace home.
- *
- * NOTE: This component only ever renders inside a <ProtectedRoute />, so by
- * the time it mounts, `isInitialized` is guaranteed true and `user` is non-null.
- * As role-specific dashboards are built out, replace the Navigate targets.
- */
-function RootIndexRedirect() {
-    const user = useAuthStore((state) => state.user);
-
-    // If no user or unexpected role, return
-    if (!user || !['ADMIN', 'MANAGER', 'STUDENT'].includes(user.role)) {
-        return;
-    }
-
-    // Everyone else goes to dashboard
-    return <Navigate to="/dashboard" replace />;
 }

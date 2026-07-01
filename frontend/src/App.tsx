@@ -8,8 +8,10 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './lib/react-query';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { AppErrorFallback } from './components/ui/AppErrorFallback';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useServiceWorker } from './hooks/useServiceWorker';
+import { useAuthStore } from './features/auth/store/useAuthStore';
+import { requestPushPermission } from './features/notification/hooks/useWebPush';
 
 // ---------------------------------------------------------------------------
 // RootAppEngine
@@ -27,7 +29,36 @@ import { useServiceWorker } from './hooks/useServiceWorker';
  */
 function RootAppEngine() {
     useServiceWorker();
+
+    // Fires off the bootstrap refresh
     useAuthInit();
+
+    // 1. Use atomic selectors to prevent unnecessary re-renders
+    const user = useAuthStore((state) => state.user);
+    const isInitialized = useAuthStore((state) => state.isInitialized);
+
+    useEffect(() => {
+        if (!user) return;
+
+        // INDUSTRY STANDARD: Only auto-run if we ALREADY have permission.
+        // Fails silently in the background, keeping the user subscribed.
+        if ('Notification' in window && Notification.permission === 'granted') {
+            const t = setTimeout(() => requestPushPermission(false), 5_000);
+            return () => clearTimeout(t);
+        }
+
+        // Note: If Notification.permission === 'default', we do nothing here.
+        // You should prompt them via a custom UI banner or a "Settings" page
+        // to call requestPushPermission(true) interactively.
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user?.email]);
+
+    // 2. 🔥 The Core Fix: Block rendering until auth resolves
+    if (!isInitialized) {
+        // This guarantees NO routes or layouts evaluate prematurely
+        return <AppLoader />;
+    }
 
     return (
         <ErrorBoundary

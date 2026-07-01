@@ -18,5 +18,6 @@ public record LandmarkDto(
         String category,
         Double latitude,
         Double longitude,
-        String description
+        String description,
+        UUID hostelId
 ) {}

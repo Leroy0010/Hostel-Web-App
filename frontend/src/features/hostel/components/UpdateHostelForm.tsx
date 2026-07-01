@@ -22,10 +22,11 @@ import {
     updateHostelSchema,
     type HostelDto,
     type UpdateHostelFormValues,
+    type UpdateHostelInputValues,
     type UpdateHostelPayload,
 } from '../types/hostel.types';
-import type { ApiError } from '@/types/api';
 import { transition } from '../../auth/utils/transition';
+import { cn } from '@/lib/utils';
 
 // =============================================================================
 // Shared internal constants
@@ -66,13 +67,6 @@ interface UpdateHostelFormProps {
      * Used to pre-populate all form fields with existing values.
      */
     hostel: HostelDto;
-    /**
-     * When {@code true}, uses the manager-scoped update endpoint
-     * ({@code PUT /api/manager/hostels/{id}}).
-     * When {@code false} (default), uses the admin endpoint
-     * ({@code PUT /api/admin/hostels/{id}}).
-     */
-    isManager?: boolean;
     /** Called with the updated {@link HostelDto} after a successful save. */
     onSuccess?: (hostel: HostelDto) => void;
     /** Called when the user clicks Cancel. */
@@ -107,12 +101,11 @@ interface UpdateHostelFormProps {
  */
 export function UpdateHostelForm({
     hostel,
-    isManager = false,
     onSuccess,
     onCancel,
     onUploadImage,
 }: UpdateHostelFormProps) {
-    const { mutate, isPending } = useUpdateHostel(hostel.id, isManager);
+    const { mutate, isPending } = useUpdateHostel(hostel.id);
     const shouldReduceMotion = useReducedMotion();
 
     const {
@@ -123,7 +116,7 @@ export function UpdateHostelForm({
         setError,
         reset,
         formState: { errors },
-    } = useForm<UpdateHostelFormValues>({
+    } = useForm<UpdateHostelInputValues>({
         resolver: zodResolver(updateHostelSchema),
         defaultValues: {
             name: hostel.name,
@@ -173,7 +166,7 @@ export function UpdateHostelForm({
             onSuccess: (updated) => {
                 onSuccess?.(updated);
             },
-            onError: (err: ApiError) => {
+            onError: (err) => {
                 if (err.code === 'VALIDATION_FAILED' && err.details) {
                     Object.entries(err.details).forEach(([field, messages]) => {
                         setError(field as keyof UpdateHostelFormValues, {
@@ -317,7 +310,7 @@ export function UpdateHostelForm({
                             >
                                 <SelectTrigger
                                     id="uh-gender"
-                                    className={INPUT_CLS}
+                                    className={cn(INPUT_CLS, 'w-56')}
                                 >
                                     <SelectValue />
                                 </SelectTrigger>
@@ -359,7 +352,7 @@ export function UpdateHostelForm({
                             step="any"
                             placeholder="e.g. 5.1264"
                             className={INPUT_CLS}
-                            {...register('latitude')}
+                            {...register('latitude', { valueAsNumber: true })}
                         />
                         {errors.latitude && (
                             <FieldError message={errors.latitude.message!} />
@@ -381,7 +374,7 @@ export function UpdateHostelForm({
                             step="any"
                             placeholder="e.g. -1.2922"
                             className={INPUT_CLS}
-                            {...register('longitude')}
+                            {...register('longitude', { valueAsNumber: true })}
                         />
                         {errors.longitude && (
                             <FieldError message={errors.longitude.message!} />

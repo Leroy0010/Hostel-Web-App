@@ -20,7 +20,7 @@ public record NotificationResponse(
         String entityType,
         UUID entityId,
         String navigateUrl,
-        boolean isRead,
+        Boolean isRead,
         LocalDateTime readAt,
         LocalDateTime createdAt
 ) {}

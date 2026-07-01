@@ -1,6 +1,6 @@
 import { LogOut, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '@/features/auth/api/auth';
 import { useAuthStore } from '@/features/auth/store/useAuthStore';
 import type { UserRole } from '@/features/user/types/user.types';
@@ -34,11 +34,12 @@ export function NavContent({
     isCollapsed = false,
 }: NavContentProps) {
     const user = useAuthStore((state) => state.user);
+    const isAthtenticated = useAuthStore(state => state.isAuthenticated)
     const navigate = useNavigate();
     const { mutate: logout, isPending: isLoggingOut } = useLogoutMutation();
 
-    const visibleItems = navigation.filter((item) =>
-        user ? item.roles?.includes(user.role) : !item.roles
+    const visibleItems = navigation(isAthtenticated).filter((item) =>
+        (user && item.roles?.includes(user.role)) || !item.roles
     );
 
     const handleLogout = () => {
@@ -99,9 +100,9 @@ export function NavContent({
                     <div
                         className={`flex items-center rounded-md ${isCollapsed ? 'justify-center' : 'px-3 py-2'}`}
                     >
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-200 font-bold text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                        <Link to={'/profile'} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-200 font-bold text-gray-600 dark:bg-gray-700 dark:text-gray-300">
                             {user.name.charAt(0)}
-                        </div>
+                        </Link>
                         <AnimatePresence initial={false}>
                             {!isCollapsed && (
                                 <motion.div
@@ -112,11 +113,9 @@ export function NavContent({
                                     className="ml-3 flex flex-col whitespace-nowrap"
                                 >
                                     <p className="text-xs font-semibold text-gray-800 dark:text-gray-200">
-                                        {user.name}
+                                        {user.name.split(' ')[0]}
                                     </p>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                                        {user.email}
-                                    </p>
+                                    
                                 </motion.div>
                             )}
                         </AnimatePresence>

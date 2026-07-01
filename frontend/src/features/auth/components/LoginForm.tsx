@@ -64,7 +64,7 @@ export function LoginForm() {
 
     const from =
         (location.state as { from?: { pathname: string } })?.from?.pathname ??
-        '/';
+        '/dashboard';
 
     const {
         register,

@@ -13,7 +13,7 @@ import org.mapstruct.*;
 public interface BookingMapper {
 
     @Mapping(target = "student",    source = "student")
-    @Mapping(target = "room",       source = "room")
+    @Mapping(target = "room",       source = "booking")
     @Mapping(target = "approvedBy", source = "approvedBy")
     @Mapping(target = "status",     expression = "java(booking.getStatus().name())")
     BookingDto toDto(Booking booking);
@@ -27,8 +27,8 @@ public interface BookingMapper {
     @Mapping(target = "id",         source = "booking.room.id")
     @Mapping(target = "roomNumber", source = "booking.room.roomNumber")
     @Mapping(target = "roomType",   expression = "java(booking.getRoom().getRoomType().name())")
-    @Mapping(target = "hostelId",   source = "booking.room.hostel.id")
-    @Mapping(target = "hostelName", source = "booking.room.hostel.name")
+    @Mapping(target = "hostelId",   source = "room.hostel.id")
+    @Mapping(target = "hostelName", source = "room.hostel.name")
     BookingDto.RoomSummary toRoomSummary(Booking booking);
 
     @Mapping(target = "id",        source = "id")

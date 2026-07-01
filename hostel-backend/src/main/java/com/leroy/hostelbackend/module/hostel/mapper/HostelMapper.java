@@ -35,5 +35,7 @@ public interface HostelMapper {
     ManagerSummary toManagerSummary(User manager);
 
     /** Lightweight summary used in paginated lists. */
+    @Mapping(target = "longitude", expression = "java(hostel.getLongitude())")
+    @Mapping(target = "latitude", expression = "java(hostel.getLatitude())")
     HostelSummaryDto toSummaryDto(Hostel hostel);
 }

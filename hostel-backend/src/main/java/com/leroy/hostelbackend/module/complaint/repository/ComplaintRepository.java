@@ -1,6 +1,7 @@
 package com.leroy.hostelbackend.module.complaint.repository;
 
 import com.leroy.hostelbackend.module.complaint.model.Complaint;
+import com.leroy.hostelbackend.module.complaint.model.ComplaintStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,12 +28,12 @@ public interface ComplaintRepository extends JpaRepository<Complaint, UUID> {
             JOIN FETCH c.author
             LEFT JOIN FETCH c.room
             WHERE c.hostel.id = :hostelId
-              AND (:status IS NULL OR c.status = :status)
+              AND (CAST(:status AS string) IS NULL OR c.status = :status)
             ORDER BY c.createdAt DESC
             """)
     Page<Complaint> findByHostelId(
             @Param("hostelId") UUID hostelId,
-            @Param("status")   String status,
+            @Param("status") ComplaintStatus status,
             Pageable pageable
     );
 

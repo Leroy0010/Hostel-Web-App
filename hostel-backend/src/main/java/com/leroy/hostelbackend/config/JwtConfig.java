@@ -14,6 +14,9 @@ public class JwtConfig {
     private int tokenExpiration;
     private int refreshTokenExpiration;
     private String secret;
+    private boolean cookieSecure;
+    private String cookieDomain;
+    private String cookieSameSite;
 
     public SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());

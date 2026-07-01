@@ -65,7 +65,7 @@ export interface ImageUploadProps {
      * Use Tailwind aspect-ratio classes like `aspect-video` or `aspect-square`.
      * Defaults to `aspect-video` (16:9).
      */
-    aspectRatio?: string;
+    aspectRatio?: 'aspect-video' | 'aspect-auto' | 'aspect-square';
 
     /** Hint text shown inside the dropzone. */
     hint?: string;

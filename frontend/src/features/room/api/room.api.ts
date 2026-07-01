@@ -10,6 +10,7 @@ import type {
     UpdateRoomPayload,
 } from '../types/room.types';
 import type { PageResponse } from '@/types/pagination';
+import type { AvailablePeriodDto } from '@/features/hostel/types/hostel.types';
 
 /**
  * Raw API call functions for the room domain.
@@ -204,4 +205,17 @@ export function addAmenity(
  */
 export function deleteAmenity(amenityId: string): Promise<void> {
     return apiClient.delete(`/manager/amenities/${amenityId}`);
+}
+
+
+export function getStudentActiveRoomsByHostelId(hostelId: string): Promise<RoomSummaryDto[]> {
+    return apiClient.get(`/student/hostels/${hostelId}/rooms`)
+}
+
+export function getRoomAvailbalePeriods(
+    roomId: string
+): Promise<AvailablePeriodDto[]> {
+    return apiClient.get(
+        `/rooms/${roomId}/available-periods`
+    );
 }

@@ -1,6 +1,7 @@
 package com.leroy.hostelbackend.module.complaint.controller;
 
 import com.leroy.hostelbackend.module.complaint.dto.*;
+import com.leroy.hostelbackend.module.complaint.model.ComplaintStatus;
 import com.leroy.hostelbackend.module.complaint.service.ComplaintService;
 import com.leroy.hostelbackend.module.user.model.CustomUserDetails;
 import com.leroy.hostelbackend.module.user.model.UserRole;
@@ -87,7 +88,7 @@ public class ComplaintController {
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<ComplaintSummaryDto>>> hostelComplaints(
             @PathVariable UUID hostelId,
-            @RequestParam(required = false) String status,
+            @RequestParam(required = false) ComplaintStatus status,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return ResponseEntity.ok(ApiResponse.success("Complaints fetched.",

@@ -1,95 +1,71 @@
-import { useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import type { RoomType } from '../types/room.types';
+import { useCallback, useState } from 'react';
+import type { HostelDetailParams } from '@/features/hostel/types/hostel.types';
+import { useDebounce } from '@/hooks/useDebounce';
 
-// =============================================================================
-// Types
-// =============================================================================
+/** Room type option — 'ALL' is a UI sentinel (maps to no filter on the backend). */
+export type RoomTypeFilter = 'ALL' | 'SINGLE' | 'DOUBLE' | 'TRIPLE' | 'QUAD';
 
+/**
+ * Current filter values for the room list on the hostel detail page.
+ * These drive the {@link RoomFilterBar} controlled component.
+ */
 export interface RoomFilterValues {
-    roomType: RoomType | 'ALL';
+    roomType: RoomTypeFilter;
+    /** Max price per semester as a string (from the number input). Empty string = no filter. */
     maxPrice: string;
 }
 
-interface UseRoomFiltersReturn {
-    filters: RoomFilterValues;
-    page: number;
-    setFilters: (values: RoomFilterValues) => void;
-    setPage: (page: number) => void;
-    /** Ready-to-pass params object for {@code useAvailableRooms}. */
-    apiParams: {
-        roomType?: RoomType;
-        maxPrice?: string;
-        page: number;
-        size: number;
-    };
-}
-
-// =============================================================================
-// Hook
-// =============================================================================
-
 /**
- * Manages room list filter state synchronized with URL search params.
+ * Manages room filter + pagination state for the hostel detail page.
  *
- * Used on {@link HostelDetailPage} — the student-facing room list under
- * a single hostel. Filters are passed straight through to the API hook
- * without any client-side filtering logic.
+ * Kept in local React state (not URL params) because room filters are
+ * secondary to the hostel URL — the hostel ID is already the URL segment.
  *
- * @param pageSize - Items per page (default: 12, matching backend default).
+ * Produces a {@link HostelDetailParams} object ready to pass to
+ * {@link useHostelDetail} — which fetches hostel + rooms in one call.
+ *
+ * @param pageSize - Number of rooms per page (default 12).
+ * @returns Filter values, page index, setters, and the ready-to-use API params.
+ *
+ * @example
+ * ```tsx
+ * const { filters, page, setFilters, setPage, apiParams } = useRoomFilters(12);
+ * const { data } = useHostelDetail(hostelId, apiParams);
+ * // data.hostel  → HostelDto
+ * // data.rooms   → Page<RoomDisplayDto>
+ * ```
  */
-export function useRoomFilters(pageSize = 12): UseRoomFiltersReturn {
-    const [searchParams, setSearchParams] = useSearchParams();
+export function useRoomFilters(pageSize = 12) {
+    const [page, setPageState] = useState(0);
+    const [filters, setFiltersState] = useState<RoomFilterValues>({
+        roomType: 'ALL',
+        maxPrice: '',
+    });
 
-    const roomType = (searchParams.get('roomType') ?? 'ALL') as
-        | RoomType
-        | 'ALL';
-    const maxPrice = searchParams.get('maxPrice') ?? '';
-    const page = Math.max(0, Number(searchParams.get('page') ?? '0'));
+    /** Update filter values and reset pagination to page 0. */
+    const setFilters = useCallback((next: RoomFilterValues) => {
+        setFiltersState(next);
+        setPageState(0);
+    }, []);
 
-    const filters: RoomFilterValues = { roomType, maxPrice };
+    /** Change the page index without resetting filters. */
+    const setPage = useCallback((nextPage: number) => {
+        setPageState(nextPage);
+    }, []);
 
-    const setFilters = useCallback(
-        (values: RoomFilterValues) => {
-            setSearchParams((prev) => {
-                const next = new URLSearchParams(prev);
-                if (values.roomType !== 'ALL') {
-                    next.set('roomType', values.roomType);
-                } else {
-                    next.delete('roomType');
-                }
-                if (values.maxPrice) {
-                    next.set('maxPrice', values.maxPrice);
-                } else {
-                    next.delete('maxPrice');
-                }
-                next.delete('page');
-                return next;
-            });
-        },
-        [setSearchParams]
-    );
+    const debouncedMaxPrice = useDebounce(filters.maxPrice, 400);
 
-    const setPage = useCallback(
-        (newPage: number) => {
-            setSearchParams((prev) => {
-                const next = new URLSearchParams(prev);
-                if (newPage === 0) {
-                    next.delete('page');
-                } else {
-                    next.set('page', String(newPage));
-                }
-                return next;
-            });
-        },
-        [setSearchParams]
-    );
-
-    const apiParams = {
-        ...(roomType !== 'ALL' && { roomType: roomType as RoomType }),
-        ...(maxPrice && { maxPrice }),
+    /**
+     * Params passed directly to {@code GET /api/hostels/{id}}.
+     * Sentinel values ('ALL', empty string) are stripped to undefined
+     * so the backend receives clean optional params.
+     */
+    const apiParams: HostelDetailParams = {
+        roomType: filters.roomType !== 'ALL' ? filters.roomType : undefined,
+        maxPrice: debouncedMaxPrice ? Number(debouncedMaxPrice) : undefined,
         page,
         size: pageSize,
+        sort: 'pricePerSemester,asc',
     };
 
     return { filters, page, setFilters, setPage, apiParams };

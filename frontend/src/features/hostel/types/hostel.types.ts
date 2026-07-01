@@ -1,4 +1,5 @@
-import type { PaginationParams } from '@/types/pagination';
+import type { RoomType } from '@/features/room/types/room.types';
+import type { PageResponse, PaginationParams } from '@/types/pagination';
 import { z } from 'zod';
 
 // =============================================================================
@@ -7,9 +8,45 @@ import { z } from 'zod';
 
 /**
  * Gender occupancy policy of a hostel.
- * Mirrors the Java {@code GenderPolicy} enum exactly — including the _ONLY suffix.
+ * Mirrors the Java {@code GenderPolicy} enum exactly.
  */
 export type GenderPolicy = 'MALE_ONLY' | 'FEMALE_ONLY' | 'MIXED';
+
+// =============================================================================
+// Embedded / shared DTOs
+// (These mirror Java records used inside hostel responses.)
+// =============================================================================
+
+/**
+ * A single period during which a room is available for booking.
+ * Mirrors {@code AvailablePeriodDto} on the backend.
+ *
+ * @example { academicYear: "2024/2025", semester: "FIRST" }
+ */
+export interface AvailablePeriodDto {
+    academicYear: string;
+    semester: string;
+}
+
+/**
+ * Room data embedded inside hostel detail and section responses.
+ * Mirrors {@code RoomDisplayDto} on the backend.
+ *
+ * Replaces the old {@code RoomSummaryDto} usage in hostel-facing components.
+ * Carries {@code availablePeriods} so the UI can show booking availability
+ * inline without an additional API call.
+ */
+export interface RoomDisplayDto {
+    id: string;
+    roomNumber: string;
+    roomType: RoomType;
+    capacity: number;
+    pricePerSemester: number;
+    floorNumber: number;
+    imageUrl: string;
+    /** Periods during which this room currently accepts bookings. */
+    availablePeriods: AvailablePeriodDto[];
+}
 
 // =============================================================================
 // Response shapes
@@ -30,7 +67,7 @@ export interface HostelManager {
 }
 
 /**
- * Full hostel detail.
+ * Full hostel detail (coordinates, description, manager).
  * Mirrors {@code HostelDto} on the backend.
  */
 export interface HostelDto {
@@ -41,7 +78,9 @@ export interface HostelDto {
     genderPolicy: GenderPolicy;
     imageUrl: string;
     isActive: boolean;
+    /** WGS 84 latitude — null when coordinates have not been set. */
     latitude: number | null;
+    /** WGS 84 longitude — null when coordinates have not been set. */
     longitude: number | null;
     manager: HostelManager | null;
     createdAt: string;
@@ -51,6 +90,9 @@ export interface HostelDto {
 /**
  * Lightweight hostel summary used in paginated lists.
  * Mirrors {@code HostelSummaryDto} on the backend.
+ *
+ * Note: does NOT carry coordinates or rooms — use {@link HostelDetailsResponseDto}
+ * for full data on the detail page.
  */
 export interface HostelSummaryDto {
     id: string;
@@ -59,6 +101,48 @@ export interface HostelSummaryDto {
     genderPolicy: GenderPolicy;
     imageUrl: string;
     isActive: boolean;
+    longitude: number;
+    latitude: number
+}
+
+/**
+ * Combined hostel detail + paginated rooms response.
+ * Mirrors {@code HostelDetailsResponseDto} on the backend.
+ *
+ * Returned by {@code GET /api/hostels/{id}} so the detail page can render
+ * both the hostel info panel and the room list from a **single** API call.
+ *
+ * @example
+ * const { hostel, rooms } = useHostelDetail(hostelId);
+ */
+export interface HostelDetailsResponseDto {
+    /** Full hostel detail including coordinates, description, manager. */
+    hostel: HostelDto;
+    /**
+     * Paginated room list for this hostel.
+     * Spring {@code Page<RoomDisplayDto>} unwrapped by the Axios interceptor
+     * as a plain object (not the Java Page class).
+     */
+    rooms: PageResponse<RoomDisplayDto>
+}
+
+/**
+ * Hostel with embedded room previews — used by the horizontal section layout
+ * on the student discovery page.
+ * Mirrors {@code HostelSectionDto} on the backend.
+ *
+ * Returned by {@code GET /api/hostels/with-room-sections} — replaces the old
+ * dual-call pattern (active hostels list + N separate room-preview calls).
+ */
+export interface HostelSectionDto {
+    id: string;
+    name: string;
+    address: string;
+    genderPolicy: GenderPolicy;
+    imageUrl: string;
+    isActive: boolean;
+    /** Up to 6 room previews included server-side — no separate fetch needed. */
+    rooms: RoomDisplayDto[];
 }
 
 // =============================================================================
@@ -66,8 +150,8 @@ export interface HostelSummaryDto {
 // =============================================================================
 
 /**
- * WGS 84 coordinate validator, reused for both latitude and longitude fields.
- * Accepts a string (from an HTML input) and coerces to a number.
+ * WGS 84 latitude validator — accepts a number and validates the range.
+ * Optional: when the field is empty the value is undefined.
  */
 const latitudeSchema = z
     .union([z.number()])
@@ -84,6 +168,7 @@ const latitudeSchema = z
     )
     .optional();
 
+/** WGS 84 longitude validator. */
 const longitudeSchema = z
     .union([z.number()])
     .transform((val) => {
@@ -104,8 +189,7 @@ const longitudeSchema = z
  * Maps to {@code POST /api/admin/hostels} → {@code CreateHostelRequest}.
  *
  * Notes:
- * - {@code imageUrl} is populated programmatically after the image upload
- *   completes — it is not a user-typed field.
+ * - {@code imageUrl} is populated after upload — not a user-typed field.
  * - Coordinates are optional at creation time.
  * - {@code managerId} is optional — can be assigned after creation.
  */
@@ -136,7 +220,7 @@ export const createHostelSchema = z.object({
 
 /**
  * Zod schema for hostel updates.
- * Maps to {@code PUT /api/admin/hostels/{id}} — all fields optional (patch semantics).
+ * Maps to {@code PUT /api/admin/hostels/{id}} — patch semantics (null fields ignored).
  */
 export const updateHostelSchema = z.object({
     name: z
@@ -168,15 +252,11 @@ export const assignManagerSchema = z.object({
 // Inferred form types
 // =============================================================================
 
-// =============================================================================
-// Inferred form types
-// =============================================================================
-
-/** Form values for the react-hook-form inputs. */
+/** Form input values (before Zod transforms). */
 export type CreateHostelInputValues = z.input<typeof createHostelSchema>;
 export type UpdateHostelInputValues = z.input<typeof updateHostelSchema>;
 
-/** Cleaned values sent to your backend API. */
+/** Cleaned output values sent to the backend API. */
 export type CreateHostelFormValues = z.output<typeof createHostelSchema>;
 export type UpdateHostelFormValues = z.output<typeof updateHostelSchema>;
 
@@ -190,7 +270,6 @@ export type AssignManagerFormValues = z.infer<typeof assignManagerSchema>;
 
 /**
  * Request body for {@code POST /api/admin/hostels}.
- * Strips empty optional fields before sending.
  */
 export interface CreateHostelPayload {
     name: string;
@@ -205,7 +284,7 @@ export interface CreateHostelPayload {
 
 /**
  * Request body for {@code PUT /api/admin/hostels/{id}}.
- * All fields are optional — only non-null values are applied server-side.
+ * All fields optional — patch semantics applied server-side.
  */
 export interface UpdateHostelPayload {
     name?: string;
@@ -226,5 +305,31 @@ export interface AssignManagerPayload {
 // Query parameter types
 // =============================================================================
 
-/** Pagination query parameters forwarded to paginated hostel endpoints. */
-export type HostelPageParams = PaginationParams;
+/** Pagination + filter params for paginated hostel list endpoints. */
+export interface HostelPageParams extends PaginationParams {
+    search?: string;
+    genderPolicy?: GenderPolicy | 'ALL'
+}
+
+/**
+ * Query params for the hostel sections endpoint.
+ * Maps to {@code GET /api/hostels/with-room-sections}.
+ */
+export interface HostelSectionParams extends PaginationParams {
+    search?: string;
+    genderPolicy?: GenderPolicy | 'ALL';
+    roomType?: string;
+    maxPricePerSemester?: number;
+}
+
+/**
+ * Query params for {@code GET /api/hostels/{id}} detail endpoint.
+ * Allows room filtering and pagination alongside the hostel detail.
+ */
+export interface HostelDetailParams {
+    roomType?: string;
+    maxPrice?: number;
+    page?: number;
+    size?: number;
+    sort?: string;
+}

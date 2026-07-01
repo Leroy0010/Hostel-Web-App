@@ -1,5 +1,6 @@
 package com.leroy.hostelbackend.module.map.model;
 
+import com.leroy.hostelbackend.module.hostel.model.Hostel;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -73,4 +74,10 @@ public class Landmark {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hostel_id")
+    private Hostel hostel;
+
+
 }

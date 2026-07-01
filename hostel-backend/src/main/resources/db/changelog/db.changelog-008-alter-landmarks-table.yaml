@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      author: Leroy
+      id: alter-landmarks-table
+      changes:
+        - sqlFile:
+            path: scripts/alter-landmarks-table.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+            stripComments: true

@@ -1,7 +1,6 @@
 package com.leroy.hostelbackend.module.preference.model;
 
 import com.leroy.hostelbackend.module.user.model.User;
-import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +23,7 @@ import java.util.UUID;
  * {@code &&} (array overlap) operator fast — used by the roommate matching query.
  *
  * <p><strong>Hypersistence Utilities:</strong> The {@code TEXT[]} array is mapped
- * with {@link ListArrayType} from {@code io.hypersistence:hypersistence-utils-hibernate-63}.
+ * with {@link SqlTypes} from {@code io.hypersistence:hypersistence-utils-hibernate-63}.
  * Add this dependency to {@code pom.xml}:
  * <pre>
  * {@code
@@ -74,6 +73,7 @@ public class StudentPreference {
     @Column(name = "tags", nullable = false, columnDefinition = "text[]")
     @Array(length = 100)
     @JdbcTypeCode(SqlTypes.ARRAY)
+    @Enumerated(EnumType.STRING)
     private List<PreferenceTag> tags = new ArrayList<>();
 
     @UpdateTimestamp

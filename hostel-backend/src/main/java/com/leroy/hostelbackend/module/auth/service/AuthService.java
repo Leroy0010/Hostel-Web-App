@@ -154,11 +154,11 @@ public class AuthService {
         // HttpOnly + Secure cookie — never readable by JavaScript
         var cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false);
+        cookie.setSecure(jwtConfig.isCookieSecure());
         cookie.setPath("/api/auth/refresh");   // scoped: only sent to the refresh endpoint
         cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
-        cookie.setAttribute("SameSite", "LAX");
-        cookie.setDomain("localhost");
+        cookie.setAttribute("SameSite", jwtConfig.getCookieSameSite());
+        cookie.setDomain(jwtConfig.getCookieDomain());
         response.addCookie(cookie);
     }
 

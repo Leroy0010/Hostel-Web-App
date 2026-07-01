@@ -15,6 +15,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * REST controller for user account creation.
  *
@@ -56,24 +58,6 @@ public class UserController {
                         created));
     }
 
-    /**
-     * Admin-only staff account creation.
-     *
-     * <p>{@code @PreAuthorize("hasRole('ADMIN')")} is evaluated by Spring Security
-     * <em>before</em> the method runs. Any non-ADMIN caller receives a
-     * {@code 403 Forbidden} via the global exception handler.
-     *
-     * @param request validated staff creation payload (phone required, role must be MANAGER or ADMIN)
-     * @return {@code 201 Created} with the new {@link UserDto}
-     */
-    @PostMapping("/admin/users")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<UserDto>> createStaff(@Valid @RequestBody CreateStaffRequest request) {
-        var created = userService.createStaff(request);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(ApiResponse.success(request.getRole() + " created successfully.", created));
-    }
 
     /**
      * Returns the profile of the currently authenticated user.
@@ -93,5 +77,18 @@ public class UserController {
     public ResponseEntity<ApiResponse<Void>> updateUserProfile(@AuthenticationPrincipal CustomUserDetails user, @Valid @RequestBody UpdateProfileRequest request) {
         userService.updateProfile(user.getUserId(), request);
         return ResponseEntity.ok(ApiResponse.success("Profile update successfully"));
+    }
+
+
+    @PatchMapping("/users/me/profile-url")
+    public ResponseEntity<ApiResponse<Void>> updateUserProfileUrl(@AuthenticationPrincipal CustomUserDetails user, @Valid @RequestBody UpdateProfileUrlRequest request) {
+        userService.updateProfileUrl( request.getProfileUrl(), user.getUserId());
+        return ResponseEntity.ok(ApiResponse.success("Profile update successfully"));
+    }
+
+    @GetMapping("/users/managers")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<List<UserSummary>>> getManagers(){
+        return ResponseEntity.ok(ApiResponse.success("Managers fetched", userService.getManagers()));
     }
 }

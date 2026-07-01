@@ -1,28 +1,29 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { GenderPolicyBadge } from './GenderPolicyBadge';
+import { GenderPolicyBadge } from '../components/GenderPolicyBadge';
 import {
     RoomPreviewCard,
     RoomPreviewCardSkeleton,
 } from '@/features/room/components/RoomPreviewCard';
-import type { HostelSummaryDto } from '../types/hostel.types';
-import type { RoomSummaryDto } from '@/features/room/types/room.types';
+import type { HostelSectionDto, RoomDisplayDto } from '../types/hostel.types';
 
 interface HostelWithRoomsSectionProps {
-    hostel: HostelSummaryDto;
     /**
-     * Room preview data for this hostel — up to 6 items.
-     * Passed in from the parent page which uses {@code useRoomPreviews}
-     * to batch-fetch all visible hostels in parallel (avoiding N+1 requests).
+     * Hostel section data from the sections endpoint.
+     * Carries the hostel summary + up to 6 room previews in one object.
      */
-    rooms: RoomSummaryDto[];
-    /** True while the room preview fetch is still in flight. */
-    isLoadingRooms: boolean;
+    hostel: HostelSectionDto;
+    /**
+     * When true, renders skeleton room cards instead of real data.
+     * Passed from the page skeleton state — not the per-hostel loading state
+     * (which no longer exists since rooms are embedded in the section response).
+     */
+    isLoading?: boolean;
 }
 
 /**
- * A single hostel section on the student hostels discovery page.
+ * A single hostel section on the student hostel discovery page.
  *
  * Layout pattern (Netflix / Airbnb / Booking.com):
  * ┌──────────────────────────────────────────────────────────┐
@@ -30,24 +31,25 @@ interface HostelWithRoomsSectionProps {
  * │  [Gender badge]                                           │
  * ├──────────────────────────────────────────────────────────┤
  * │  ← [Room] [Room] [Room] [Room] [Room] [Room] [See All] → │
- * │       (horizontal CSS scroll snap track, no infinite scroll) │
+ * │       (horizontal CSS scroll snap track)                  │
  * └──────────────────────────────────────────────────────────┘
  *
+ * **Key change from the old version:**
+ * Room data now comes embedded in the {@link HostelSectionDto} from the
+ * {@code GET /api/hostels/with-room-sections} endpoint — no separate per-hostel
+ * room fetch is needed. The parent page no longer uses {@code useRoomPreviews}.
+ *
  * UX decisions:
- * - Room count is **capped at 6** — no infinite horizontal scroll.
- * - CSS {@code snap-x snap-mandatory} gives native-app snappiness on touch.
- * - The "See All" card at the end of the track is a tappable CTA.
- * - {@code scrollbar-none} hides the scrollbar on all browsers.
- * - No gesture conflict with vertical page scroll because horizontal momentum
- *   is isolated to the inner track container.
+ * - Room count capped at 6 by the backend — no infinite horizontal scroll.
+ * - CSS {@code snap-x snap-mandatory} for native-app snappiness on touch.
+ * - A "See All" card anchors the right end of every non-empty strip.
+ * - {@code scrollbar-none} hides the scrollbar across all browsers.
  */
 export function HostelWithRoomsSection({
     hostel,
-    rooms,
-    isLoadingRooms,
+    isLoading = false,
 }: HostelWithRoomsSectionProps) {
     const navigate = useNavigate();
-
     const handleViewAll = () => navigate(`/hostels/${hostel.id}`);
 
     return (
@@ -90,24 +92,24 @@ export function HostelWithRoomsSection({
 
             {/* ── Horizontal room preview strip ─────────────────────────── */}
             {/*
-             * scroll-smooth:    smooth programmatic scrolls
-             * snap-x:           horizontal scroll snapping axis
-             * snap-mandatory:   forces snap to a card boundary after each swipe
-             * scrollbar-none:   hides scrollbar on all browsers (see globals.css)
-             *
-             * The pb-2 prevents card shadows from being clipped by overflow-hidden.
+             * overflow-x-auto + snap-x + snap-mandatory:
+             *   Horizontal scroll snapping — each card snaps cleanly after swipe.
+             * scrollbar-none:
+             *   Hides scrollbar on all browsers (utility defined in globals.css).
+             * pb-2:
+             *   Prevents card shadows from being clipped by overflow-hidden.
              */}
             <div className="relative">
-                <div className="flex snap-x snap-mandatory scrollbar-none gap-4 overflow-x-auto scroll-smooth pt-1 pb-2">
-                    {/* Loading skeletons */}
-                    {isLoadingRooms &&
+                <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-2 pt-1 scrollbar-none">
+                    {/* Loading skeletons — shown during page-level loading */}
+                    {isLoading &&
                         Array.from({ length: 4 }).map((_, i) => (
                             <RoomPreviewCardSkeleton key={i} />
                         ))}
 
-                    {/* Room preview cards */}
-                    {!isLoadingRooms &&
-                        rooms.map((room) => (
+                    {/* Room preview cards — embedded in the section response */}
+                    {!isLoading &&
+                        hostel.rooms.map((room: RoomDisplayDto) => (
                             <RoomPreviewCard
                                 key={room.id}
                                 room={room}
@@ -115,16 +117,16 @@ export function HostelWithRoomsSection({
                             />
                         ))}
 
-                    {/* End-of-track "See All" card — always rendered after rooms load */}
-                    {!isLoadingRooms && (
+                    {/* "See All" end-of-track card */}
+                    {!isLoading && (
                         <SeeAllCard
-                            roomCount={rooms.length}
+                            roomCount={hostel.rooms.length}
                             onClick={handleViewAll}
                         />
                     )}
 
-                    {/* Empty state when hostel has no rooms yet */}
-                    {!isLoadingRooms && rooms.length === 0 && (
+                    {/* Empty state when hostel has no rooms */}
+                    {!isLoading && hostel.rooms.length === 0 && (
                         <NoRoomsCard onClick={handleViewAll} />
                     )}
                 </div>
@@ -137,7 +139,7 @@ export function HostelWithRoomsSection({
 // Internal sub-components
 // =============================================================================
 
-/** "See All Rooms" end-of-track card with arrow CTA. */
+/** "See All Rooms" end-of-track CTA card. */
 function SeeAllCard({
     roomCount,
     onClick,
@@ -153,7 +155,10 @@ function SeeAllCard({
             className="flex w-36 shrink-0 snap-start flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-gray-200 bg-gray-50 transition-colors duration-200 hover:border-gray-300 hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:outline-none dark:border-gray-700 dark:bg-gray-900 dark:hover:border-gray-600 dark:hover:bg-gray-800"
         >
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm dark:bg-gray-800">
-                <ArrowRight className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                <ArrowRight
+                    className="h-5 w-5 text-gray-500 dark:text-gray-400"
+                    aria-hidden="true"
+                />
             </div>
             <span className="px-2 text-center text-xs font-semibold text-gray-600 dark:text-gray-400">
                 See all {roomCount > 0 ? `${roomCount}+` : ''} rooms
@@ -162,14 +167,14 @@ function SeeAllCard({
     );
 }
 
-/** Shown when a hostel has no rooms available yet. */
+/** Shown when a hostel has no rooms added yet. */
 function NoRoomsCard({ onClick }: { onClick: () => void }) {
     return (
         <button
             type="button"
             onClick={onClick}
             aria-label="No rooms available, view hostel details"
-            className="flex w-65 shrink-0 snap-start flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-gray-200 bg-gray-50 py-10 text-center dark:border-gray-700 dark:bg-gray-900"
+            className="flex w-56 shrink-0 snap-start flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-gray-200 bg-gray-50 py-10 text-center dark:border-gray-700 dark:bg-gray-900"
         >
             <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
                 No rooms available

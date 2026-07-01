@@ -19,7 +19,10 @@ import { Button } from '@/components/ui/button';
 import { FieldError } from '@/components/ui/FieldError';
 
 import { transition } from '@/features/auth/utils/transition';
-import { useGetCurrentProfile, useUpdateProfileMutation } from '@/features/user/hooks/user.hooks';
+import {
+    useGetCurrentProfile,
+    useUpdateProfileMutation,
+} from '@/features/user/hooks/user.hooks';
 import type { ApiError } from '@/types/api';
 
 // 1. Updated Schema to match backend DTO
@@ -35,8 +38,6 @@ const itemVariants = {
     hidden: { opacity: 0, y: 10 },
     visible: { opacity: 1, y: 0, transition },
 };
-
-
 
 export function ProfileTab() {
     const { data: response, isLoading, isError } = useGetCurrentProfile();
@@ -269,15 +270,6 @@ export function ProfileTab() {
                         </CardHeader>
                         <CardContent className="pt-6">
                             <div className="flex flex-col items-start gap-6 sm:flex-row">
-                                {hostel.imageUrl && (
-                                    <div className="relative h-32 w-full shrink-0 overflow-hidden rounded-lg sm:w-48">
-                                        <img
-                                            src={hostel.imageUrl}
-                                            alt={hostel.name}
-                                            className="absolute inset-0 h-full w-full object-cover"
-                                        />
-                                    </div>
-                                )}
                                 <div className="flex-1 space-y-3">
                                     <div>
                                         <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
@@ -288,7 +280,7 @@ export function ProfileTab() {
                                             {hostel.address}
                                         </p>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4 pt-2">
+                                    {/* <div className="grid grid-cols-2 gap-4 pt-2">
                                         <div>
                                             <p className="text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400">
                                                 Gender Policy
@@ -311,7 +303,7 @@ export function ProfileTab() {
                                                 </p>
                                             </div>
                                         )}
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </CardContent>

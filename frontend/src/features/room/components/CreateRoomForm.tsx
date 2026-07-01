@@ -352,7 +352,7 @@ export function CreateRoomForm({
                 {/* ── Amenities (optional dynamic list) ───────────────── */}
                 <motion.div
                     variants={shouldReduceMotion ? {} : rowVariants}
-                    className="space-y-3"
+                    className="space-y-4"
                 >
                     <div className="flex items-center justify-between">
                         <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -383,7 +383,7 @@ export function CreateRoomForm({
                         </p>
                     )}
 
-                    <div className="space-y-2">
+                    <div className="space-y-4 sm:space-y-3">
                         {fields.map((field, index) => (
                             <motion.div
                                 key={field.id}
@@ -391,10 +391,14 @@ export function CreateRoomForm({
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -6 }}
                                 transition={{ duration: 0.18 }}
-                                className="flex items-start gap-2"
+                                className="flex flex-col gap-3 rounded-md border border-gray-100 p-3 sm:flex-row sm:items-start sm:border-none sm:p-0 dark:border-gray-800/60"
                             >
                                 {/* Amenity label */}
-                                <div className="flex-1 space-y-1">
+                                <div className="flex-1 space-y-1.5">
+                                    <Label className="text-xs text-gray-500 sm:hidden">
+                                        Amenity Name{' '}
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         placeholder="e.g. Air Conditioning"
                                         className={INPUT_CLS}
@@ -412,13 +416,25 @@ export function CreateRoomForm({
                                     )}
                                 </div>
 
-                                {/* Icon URL (optional) */}
-                                <div className="flex-1 space-y-1">
-                                    <Input
-                                        placeholder="Icon URL (optional)"
-                                        className={INPUT_CLS}
-                                        {...register(
-                                            `amenities.${index}.imageUrl`
+                                {/* Icon Upload (optional) */}
+                                <div className="flex-1 space-y-1.5">
+                                    <Label className="text-xs text-gray-500 sm:hidden">
+                                        Icon (optional)
+                                    </Label>
+                                    <Controller
+                                        control={control}
+                                        name={`amenities.${index}.imageUrl`}
+                                        render={({ field: uploadField }) => (
+                                            <ImageUpload
+                                                value={
+                                                    uploadField.value ||
+                                                    undefined
+                                                }
+                                                onChange={uploadField.onChange}
+                                                onUpload={onUploadImage}
+                                                aspectRatio="aspect-video" // Ideal for icons/thumbnails
+                                                hint="PNG, SVG, WEBP"
+                                            />
                                         )}
                                     />
                                 </div>
@@ -428,7 +444,7 @@ export function CreateRoomForm({
                                     type="button"
                                     onClick={() => remove(index)}
                                     aria-label={`Remove amenity ${index + 1}`}
-                                    className="mt-2 shrink-0 rounded-md p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500 dark:text-gray-600 dark:hover:bg-red-950/30 dark:hover:text-red-400"
+                                    className="mt-1 shrink-0 self-end rounded-md p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500 sm:self-auto dark:text-gray-600 dark:hover:bg-red-950/30 dark:hover:text-red-400"
                                 >
                                     <Trash2
                                         className="h-4 w-4"

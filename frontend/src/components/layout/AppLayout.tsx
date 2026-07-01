@@ -23,6 +23,7 @@ import { Link, Outlet } from 'react-router-dom';
 import { useUnreadCount } from '@/features/notification/hooks/useNotifications';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/features/auth/store/useAuthStore';
+import { useNotificationStomp } from '@/features/notification/hooks/useNotificationStomp';
 
 // Animation variants for text elements
 const textVariants = {
@@ -41,7 +42,7 @@ interface AppLayoutProps {
 export function AppLayout({ isHomePage }: AppLayoutProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-    const isInitialized = useAuthStore((state) => state.isInitialized);
+    useNotificationStomp(isAuthenticated);
 
     const { data: unreadCountData } = useUnreadCount(isAuthenticated);
 
@@ -59,7 +60,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
         <div className="flex h-screen w-full flex-col overflow-hidden bg-gray-50 text-gray-900 transition-colors duration-200 selection:bg-gray-200 dark:bg-gray-900 dark:text-gray-100 dark:selection:bg-gray-800">
             {/* ── Topbar ────────────────────────────────────────────────────────────── */}
             <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-gray-200 bg-white/80 px-4 backdrop-blur-md transition-colors dark:border-gray-800 dark:bg-gray-900/80">
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 z-99999">
                     {/* Mobile Hamburger (Opens Sheet) */}
                     <div className="lg:hidden">
                         <Sheet
@@ -78,7 +79,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                             </SheetTrigger>
                             <SheetContent
                                 side="left"
-                                className="w-64 border-r border-gray-200 bg-white p-0 text-gray-900 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100"
+                                className="w-64 border-r z-9999999 border-gray-200 bg-white p-0 text-gray-900 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100"
                             >
                                 <SheetTitle className="sr-only">
                                     Navigation Menu
@@ -112,8 +113,8 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                     </Button>
 
                     {/* Brand Name */}
-                    <div className="flex shrink-0 items-center border-b border-gray-200 px-4 pl-1 dark:border-gray-800">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-blue-600 font-bold text-white">
+                    <div className="flex shrink-0 items-center border-b border-gray-200 px-3 pl-1 sm:px-4 dark:border-gray-800">
+                        <div className="hidden h-8 w-8 shrink-0 items-center justify-center rounded-md font-bold text-white sm:flex">
                             <img
                                 src="/icons/icon-512x512.png"
                                 alt="app-logo"
@@ -127,11 +128,11 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                                     initial="hidden"
                                     animate="visible"
                                     exit="hidden"
-                                    className="ml-3 text-lg font-bold tracking-tight whitespace-nowrap text-gray-900 dark:text-gray-100"
+                                    className="ml-1 text-lg font-bold tracking-tight whitespace-nowrap text-gray-900 sm:ml-3 dark:text-gray-100"
                                 >
                                     <Link
                                         to="/"
-                                        className="rounded-md bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-xl font-bold text-transparent drop-shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none dark:from-blue-400 dark:to-purple-400"
+                                        className="rounded-md bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-xl font-bold text-transparent drop-shadow-sm focus:ring-2 focus:outline-none dark:from-blue-400 dark:to-purple-400"
                                     >
                                         HostelLife+
                                     </Link>
@@ -161,9 +162,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                     </Button>
 
                     {/* Conditional Rendering based on Auth State */}
-                    {!isInitialized ? (
-                        <div className="h-9 w-32 animate-pulse rounded-md bg-muted" />
-                    ) : isAuthenticated ? (
+                    {isAuthenticated ? (
                         <>
                             {/* Notifications */}
                             <Link
@@ -177,7 +176,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                                     'relative text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
                                 )}
                             >
-                                <Bell size={32} />
+                                <Bell size={32} aria-label='Notification Bell' />
 
                                 {/* Unread Count Badge */}
                                 <AnimatePresence>
@@ -198,7 +197,8 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                                                     stiffness: 500,
                                                     damping: 30,
                                                 }}
-                                                className="absolute top-0 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-gray-900"
+                                                className="absolute top-0 animate-ping right-1 flex h-2 w-2 items-center justify-center rounded-full bg-red-500 text-[6px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-gray-900"
+                                                aria-label='Notification unread count'
                                             >
                                                 {unreadCountData.count > 99
                                                     ? '99+'
@@ -229,6 +229,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                             <Link
                                 to="/login"
                                 className={buttonVariants({ variant: 'ghost' })}
+                                aria-label='Login'
                             >
                                 Log in
                             </Link>
@@ -239,6 +240,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                                 className={buttonVariants({
                                     variant: 'default',
                                 })}
+                                aria-label='Register'
                             >
                                 Register
                             </Link>
@@ -258,7 +260,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                             : SIDEBAR_WIDTH_EXPANDED,
                     }}
                     transition={{ duration: 0.4, ease: 'easeInOut' }}
-                    className="relative z-20 hidden shrink-0 scrollbar-none! flex-col overflow-hidden border-r border-gray-200 bg-white/80 backdrop-blur-xl [-ms-overflow-style:none] lg:flex dark:border-gray-800 dark:bg-gray-900/50"
+                    className="relative z-9999999! hidden shrink-0 scrollbar-none! flex-col overflow-hidden border-r border-gray-200 bg-white/80 backdrop-blur-xl [-ms-overflow-style:none] lg:flex dark:border-gray-800 dark:bg-gray-900/50"
                 >
                     <NavContent isCollapsed={isCollapsed} />
                 </motion.aside>

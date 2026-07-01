@@ -4,7 +4,7 @@ import { apiClient } from '@/lib/axios';
 import type { ApiError } from '@/types/api';
 import type { UpdateProfileValues } from '@/features/user/components/ProfileTab';
 import { toast } from 'sonner';
-import type { MeResponse } from '../types/user.types';
+import { getManagers, getProfile } from '../api/user.api';
 
 /**
  * Fetches the currently authenticated user's profile and hostel context.
@@ -15,7 +15,7 @@ import type { MeResponse } from '../types/user.types';
 export function useGetCurrentProfile() {
     return useQuery({
         queryKey: userKeys.me(),
-        queryFn: async () => apiClient.get<never, MeResponse>('/users/me'),
+        queryFn: getProfile,
         retry: false,
         staleTime: Infinity,
     });
@@ -36,4 +36,12 @@ export function useUpdateProfileMutation() {
             }
         },
     });
+}
+
+
+export function useGetManagers(){
+    return useQuery({
+        queryKey: userKeys.managers(),
+        queryFn: getManagers
+    })
 }

@@ -5,6 +5,8 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Size;
 
+import java.util.UUID;
+
 /**
  * Request body for updating a landmark (ADMIN only). Patch semantics — null = no change.
  */
@@ -23,5 +25,7 @@ public record UpdateLandmarkRequest(
         @DecimalMax(value = "180.0",  message = "Longitude must be between −180 and 180")
         Double longitude,
 
-        String description
+        String description,
+
+        UUID hostelId
 ) {}

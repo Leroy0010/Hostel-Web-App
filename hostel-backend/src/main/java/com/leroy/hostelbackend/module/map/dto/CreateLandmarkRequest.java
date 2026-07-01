@@ -3,6 +3,8 @@ package com.leroy.hostelbackend.module.map.dto;
 import com.leroy.hostelbackend.module.map.model.LandmarkCategory;
 import jakarta.validation.constraints.*;
 
+import java.util.UUID;
+
 
 /**
  * Request body for creating a new landmark (ADMIN only).
@@ -33,5 +35,7 @@ public record CreateLandmarkRequest(
         Double longitude,
 
         @Size(max = 500, message = "Description must not exceed 500 characters")
-        String description
+        String description,
+
+        UUID hostelId
 ) {}

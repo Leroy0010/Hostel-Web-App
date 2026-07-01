@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     ArrowLeft,
     DoorOpen,
+    ExternalLink,
     Layers,
     Pencil,
     Plus,
@@ -30,6 +31,8 @@ import { useAllRooms, useDeleteRoom } from '../hooks/room.hooks';
 import { fetchRoomById } from '../api/room.api';
 import { bedsLabel, formatPrice, roomImageFallback } from '../utils/room.utils';
 import type { RoomDto } from '../types/room.types';
+import { handleUploadImage } from '@/services/cloudinary.service';
+import { RoomListSkeleton } from '../components/ManagerRoomsListSkeleton';
 
 // =============================================================================
 // Types
@@ -54,6 +57,9 @@ type ActiveDialog =
  *
  * Features:
  *  - Paginated list of ALL rooms in the hostel (including occupied/maintenance).
+ *  - Room name is a tappable link navigating to the full room detail page
+ *    at `/hostels/:hostelId/rooms/:roomId` — managers see the same detail
+ *    view as students but with a manager action bar overlay.
  *  - Create room dialog (opens {@link CreateRoomForm}).
  *  - Edit room dialog (opens {@link UpdateRoomForm}, includes status change).
  *  - Manage amenities dialog (opens {@link AmenityManager}).
@@ -61,6 +67,12 @@ type ActiveDialog =
  *  - Full loading, error, and empty states per §8 of agent2.md.
  *
  * Route: {@code /manager/hostels/:hostelId/rooms} — protected, MANAGER only.
+ *
+ * ## Navigation to room detail
+ * Clicking the room number navigates to `/hostels/:hostelId/rooms/:roomId`.
+ * This is intentional — managers and students share the same room detail
+ * page, with the manager action bar conditionally rendered based on role.
+ * This avoids maintaining two separate detail pages.
  *
  * The full {@link RoomDto} (with amenities) is fetched on-demand when the
  * edit or amenities dialog is opened, because the list endpoint returns
@@ -109,15 +121,6 @@ export default function ManagerRoomsPage() {
         }
     };
 
-    /**
-     * Placeholder upload handler.
-     * Replace with real S3/backend upload in production.
-     */
-    const handleUploadImage = async (file: File): Promise<string> => {
-        // TODO: replace with actual upload endpoint
-        return URL.createObjectURL(file);
-    };
-
     if (!hostelId) {
         return (
             <EmptyState
@@ -150,7 +153,7 @@ export default function ManagerRoomsPage() {
                     <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => navigate(-1)}
+                        onClick={() => navigate('/manager/hostels')}
                         className="gap-1.5 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
                     >
                         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -212,7 +215,9 @@ export default function ManagerRoomsPage() {
                     />
                 ) : (
                     <div
-                        className={`space-y-2 transition-opacity duration-200 ${isFetching ? 'opacity-60' : 'opacity-100'}`}
+                        className={`space-y-2 transition-opacity duration-200 ${
+                            isFetching ? 'opacity-60' : 'opacity-100'
+                        }`}
                     >
                         <AnimatePresence mode="popLayout">
                             {rooms.map((room) => (
@@ -224,15 +229,24 @@ export default function ManagerRoomsPage() {
                                     transition={{ duration: 0.2 }}
                                     className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white sm:flex-row dark:border-gray-800 dark:bg-gray-950"
                                 >
-                                    {/* Thumbnail */}
-                                    <div className="h-32 w-full shrink-0 overflow-hidden bg-gray-100 sm:h-auto sm:w-36 dark:bg-gray-800">
+                                    {/* Thumbnail — clicking also navigates to detail */}
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            navigate(
+                                                `/hostels/${hostelId}/rooms/${room.id}`
+                                            )
+                                        }
+                                        aria-label={`View details for room ${room.roomNumber}`}
+                                        className="h-32 w-full shrink-0 overflow-hidden bg-gray-100 sm:h-auto sm:w-36 dark:bg-gray-800"
+                                    >
                                         <img
                                             src={
                                                 room.imageUrl ||
                                                 roomImageFallback()
                                             }
                                             alt={`Room ${room.roomNumber}`}
-                                            className="h-full w-full object-cover"
+                                            className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                                             loading="lazy"
                                             onError={(e) => {
                                                 (
@@ -240,15 +254,34 @@ export default function ManagerRoomsPage() {
                                                 ).src = roomImageFallback();
                                             }}
                                         />
-                                    </div>
+                                    </button>
 
                                     {/* Details */}
                                     <div className="flex min-w-0 flex-1 flex-col justify-between gap-3 p-4">
                                         <div className="flex flex-wrap items-start justify-between gap-2">
                                             <div className="min-w-0 space-y-1">
-                                                <p className="font-semibold text-gray-900 dark:text-gray-100">
+                                                {/*
+                                                 * Room number — navigates to the shared room detail page.
+                                                 * Managers land on the same page as students but see
+                                                 * the ManagerRoomActions bar rendered conditionally by role.
+                                                 */}
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/hostels/${hostelId}/rooms/${room.id}`
+                                                        )
+                                                    }
+                                                    className="group flex items-center gap-1.5 font-semibold text-gray-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300"
+                                                    aria-label={`View room ${room.roomNumber} details`}
+                                                >
                                                     Room {room.roomNumber}
-                                                </p>
+                                                    <ExternalLink
+                                                        className="h-3.5 w-3.5 text-gray-400 opacity-0 transition-opacity group-hover:opacity-100"
+                                                        aria-hidden="true"
+                                                    />
+                                                </button>
+
                                                 <div className="flex flex-wrap items-center gap-1.5">
                                                     <RoomTypeBadge
                                                         type={room.roomType}
@@ -259,13 +292,17 @@ export default function ManagerRoomsPage() {
                                                     {room.floorNumber !==
                                                         null && (
                                                         <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                                                            <Layers className="h-3 w-3" />
+                                                            <Layers
+                                                                className="h-3 w-3"
+                                                                aria-hidden="true"
+                                                            />
                                                             Floor{' '}
                                                             {room.floorNumber}
                                                         </span>
                                                     )}
                                                 </div>
                                             </div>
+
                                             <p className="font-bold text-gray-900 dark:text-gray-100">
                                                 {formatPrice(
                                                     room.pricePerSemester
@@ -276,6 +313,7 @@ export default function ManagerRoomsPage() {
                                             </p>
                                         </div>
 
+                                        {/* Bottom row — beds available + actions */}
                                         <div className="flex items-center justify-between border-t border-gray-100 pt-3 dark:border-gray-800">
                                             <span className="text-xs text-gray-500 dark:text-gray-400">
                                                 {bedsLabel(room.bedsAvailable)}
@@ -364,7 +402,7 @@ export default function ManagerRoomsPage() {
                 open={activeDialog?.kind === 'create'}
                 onOpenChange={(open) => !open && closeDialog()}
             >
-                <DialogContent className="max-h-[90vh] w-screen max-w-2xl scrollbar-none overflow-y-auto border-gray-200 bg-white sm:max-w-2xl dark:border-gray-800 dark:bg-gray-950">
+                <DialogContent className="max-h-[90vh] w-screen max-w-2xl scrollbar-none overflow-y-auto border-gray-200 bg-white sm:max-w-lg dark:border-gray-800 dark:bg-gray-950">
                     <DialogHeader>
                         <DialogTitle className="text-gray-900 dark:text-gray-100">
                             Create Room
@@ -374,7 +412,9 @@ export default function ManagerRoomsPage() {
                         hostelId={hostelId}
                         onSuccess={closeDialog}
                         onCancel={closeDialog}
-                        onUploadImage={handleUploadImage}
+                        onUploadImage={(file) =>
+                            handleUploadImage(file, 'rooms')
+                        }
                     />
                 </DialogContent>
             </Dialog>
@@ -382,7 +422,7 @@ export default function ManagerRoomsPage() {
             {/* Edit room */}
             {activeDialog?.kind === 'edit' && (
                 <Dialog open onOpenChange={(open) => !open && closeDialog()}>
-                    <DialogContent className="max-h-[90vh] max-w-2xl scrollbar-none overflow-y-auto border-gray-200 bg-white sm:max-w-2xl dark:border-gray-800 dark:bg-gray-950">
+                    <DialogContent className="max-h-[90vh] max-w-2xl scrollbar-none overflow-y-auto border-gray-200 bg-white sm:max-w-lg dark:border-gray-800 dark:bg-gray-950">
                         <DialogHeader>
                             <DialogTitle className="text-gray-900 dark:text-gray-100">
                                 Edit Room {activeDialog.room.roomNumber}
@@ -393,7 +433,9 @@ export default function ManagerRoomsPage() {
                             hostelId={hostelId}
                             onSuccess={closeDialog}
                             onCancel={closeDialog}
-                            onUploadImage={handleUploadImage}
+                            onUploadImage={(file) =>
+                                handleUploadImage(file, 'rooms')
+                            }
                         />
                     </DialogContent>
                 </Dialog>
@@ -402,7 +444,7 @@ export default function ManagerRoomsPage() {
             {/* Amenity manager */}
             {activeDialog?.kind === 'amenities' && (
                 <Dialog open onOpenChange={(open) => !open && closeDialog()}>
-                    <DialogContent className="max-w-xl border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
+                    <DialogContent className="max-h-[90vh] w-screen max-w-xl scrollbar-none overflow-y-auto border-gray-200 bg-white sm:max-w-lg dark:border-gray-800 dark:bg-gray-950">
                         <DialogHeader>
                             <DialogTitle className="text-gray-900 dark:text-gray-100">
                                 Amenities — Room {activeDialog.room.roomNumber}
@@ -412,6 +454,9 @@ export default function ManagerRoomsPage() {
                             roomId={activeDialog.room.id}
                             hostelId={hostelId}
                             currentAmenities={activeDialog.room.amenities}
+                            onUploadImage={(file) =>
+                                handleUploadImage(file, 'amenities')
+                            }
                         />
                     </DialogContent>
                 </Dialog>
@@ -438,40 +483,4 @@ export default function ManagerRoomsPage() {
     );
 }
 
-// =============================================================================
-// Internal skeleton
-// =============================================================================
 
-/** Loading skeleton matching the room list card layout. */
-function RoomListSkeleton() {
-    return (
-        <div
-            className="space-y-2"
-            aria-hidden="true"
-            aria-label="Loading rooms"
-        >
-            {Array.from({ length: 5 }).map((_, i) => (
-                <div
-                    key={i}
-                    className="flex overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950"
-                >
-                    <div className="h-24 w-36 animate-pulse bg-gray-100 dark:bg-gray-800" />
-                    <div className="flex flex-1 flex-col justify-between p-4">
-                        <div className="space-y-2">
-                            <div className="h-4 w-24 animate-pulse rounded-md bg-gray-200 dark:bg-gray-700" />
-                            <div className="flex gap-2">
-                                <div className="h-5 w-16 animate-pulse rounded-full bg-gray-100 dark:bg-gray-800" />
-                                <div className="h-5 w-20 animate-pulse rounded-full bg-gray-100 dark:bg-gray-800" />
-                            </div>
-                        </div>
-                        <div className="flex justify-end gap-1.5 border-t border-gray-100 pt-3 dark:border-gray-800">
-                            <div className="h-7 w-20 animate-pulse rounded-md bg-gray-100 dark:bg-gray-800" />
-                            <div className="h-7 w-8 animate-pulse rounded-md bg-gray-100 dark:bg-gray-800" />
-                            <div className="h-7 w-8 animate-pulse rounded-md bg-gray-100 dark:bg-gray-800" />
-                        </div>
-                    </div>
-                </div>
-            ))}
-        </div>
-    );
-}

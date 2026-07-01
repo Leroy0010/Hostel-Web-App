@@ -1,6 +1,7 @@
 package com.leroy.hostelbackend.module.map.service;
 
 import com.leroy.hostelbackend.module.hostel.repository.HostelRepository;
+import com.leroy.hostelbackend.module.map.specification.LandmarkSpecification;
 import com.leroy.hostelbackend.module.map.dto.*;
 import com.leroy.hostelbackend.module.map.mapper.LandmarkMapper;
 import com.leroy.hostelbackend.module.map.model.Landmark;
@@ -13,6 +14,7 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +47,7 @@ public class LandmarkService {
 
     private static final double WALKING_SPEED_MPS = 5000.0 / 60.0; // 5 km/h in metres/min
     private static final int    SRID              = 4326;
+    private static final float DEFAULT_NEARBY_RADIUS_METRES = 1000.0F;
 
     private final LandmarkRepository landmarkRepository;
     private final HostelRepository   hostelRepository;
@@ -59,25 +62,15 @@ public class LandmarkService {
      * Sorted alphabetically for consistent display.
      */
     @Transactional(readOnly = true)
-    public List<LandmarkDto> getAllLandmarks() {
-        return landmarkRepository.findAllByOrderByNameAsc()
+    public List<LandmarkDto> getAllLandmarks(LandmarkCategory category, String search) {
+        Specification<Landmark> spec = LandmarkSpecification.filterLandmarks(category != null ? category.name() : null, search);
+        return landmarkRepository.findAll(spec)
                 .stream()
                 .map(this::buildLandmarkDto)
                 .toList();
     }
 
-    /**
-     * Landmarks filtered by category — for map filter chip interactions.
-     *
-     * @param category the category to filter by
-     */
-    @Transactional(readOnly = true)
-    public List<LandmarkDto> getLandmarksByCategory(LandmarkCategory category) {
-        return landmarkRepository.findByCategoryOrderByNameAsc(category)
-                .stream()
-                .map(this::buildLandmarkDto)
-                .toList();
-    }
+
 
     /**
      * Single landmark detail by UUID.
@@ -117,9 +110,12 @@ public class LandmarkService {
         return buildDistanceDto(hostel.getName(), hostelId, landmark.getName(), landmarkId, metres);
     }
 
+
     /**
-     * All landmarks within a given radius of a hostel, nearest first.
-     * Useful for the "nearby landmarks" section on the hostel detail page.
+     * All landmarks within a given radius of a hostel, nearest first.<p>
+     * Useful for the "nearby landmarks" section on the hostel detail page.<p>
+     * High-Performance Fix: Now runs without N+1 queries<p>
+     * and filters out self-references on the database layer.
      *
      * @param hostelId     the reference hostel
      * @param radiusMetres search radius in metres (default 1000 m = 1 km)
@@ -130,15 +126,27 @@ public class LandmarkService {
             throw new ResourceNotFoundException("Hostel not found: " + hostelId);
         }
 
-        return landmarkRepository.findNearbyLandmarks(hostelId, radiusMetres)
+        // Single DB roundtrip fetches data coordinates and spatial calculations transparently
+        return landmarkRepository.findNearbyLandmarksWithDistance(hostelId, radiusMetres)
                 .stream()
-                .map(landmark -> {
-                    Double metres = landmarkRepository.calculateDistanceMetres(hostelId, landmark.getId());
-                    double dist   = metres != null ? metres : 0.0;
+                .map(result -> {
+                    double dist = result.getDistanceMetres() != null ? result.getDistanceMetres() : 0.0;
+
+                    // Directly map properties from the flat projection layer
+                    var landmarkDto = new LandmarkDto(
+                            result.getId(),
+                            result.getName(),
+                            result.getCategory().name(),
+                            result.getLatitude(),
+                            result.getLongitude(),
+                            result.getDescription(),
+                            result.getHostelId()
+                    );
+
                     return new NearbyLandmarkDto(
-                            buildLandmarkDto(landmark),
+                            landmarkDto,
                             round2dp(dist),
-                            round2dp(dist / 1000.0),
+                            round2dp(dist / DEFAULT_NEARBY_RADIUS_METRES),
                             walkingMinutes(dist)
                     );
                 })
@@ -166,10 +174,33 @@ public class LandmarkService {
         landmark.setName(request.name().trim());
         landmark.setCategory(request.category());
         landmark.setDescription(request.description());
-        landmark.setLocation(buildPoint(request.latitude(), request.longitude()));
+
+        // Evaluate coordinate synchronization rules
+        if (request.hostelId() != null) {
+            var hostelRef = hostelRepository.findById(request.hostelId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Linked hostel not found: " + request.hostelId()));
+
+            landmark.setHostel(hostelRef);
+
+            if (hostelRef.getLocation() != null) {
+                // Scenario 1: Hostel already has a location -> Snap landmark to match it perfectly
+                landmark.setLocation(hostelRef.getLocation());
+                log.info("Landmark '{}' coordinates snapped to existing Hostel location.", request.name());
+            } else {
+                // Scenario 2: Hostel has NO location -> Use provided coords to update BOTH records
+                Point providedLocation = buildPoint(request.latitude(), request.longitude());
+                landmark.setLocation(providedLocation);
+
+                hostelRef.setLocation(providedLocation);
+                hostelRepository.save(hostelRef); // Flushes the location back to the hostels table
+                log.info("Hostel '{}' was missing coordinates. Back-populated from landmark entry.", hostelRef.getName());
+            }
+        } else {
+            // Standard landmark with no linked hostel (e.g., Cafeteria, Science Lab)
+            landmark.setLocation(buildPoint(request.latitude(), request.longitude()));
+        }
 
         var saved = landmarkRepository.save(landmark);
-        log.info("Landmark created: id={}, name={}, category={}", saved.getId(), saved.getName(), saved.getCategory());
         return buildLandmarkDto(saved);
     }
 
@@ -187,13 +218,31 @@ public class LandmarkService {
         if (request.category()    != null) landmark.setCategory(request.category());
         if (request.description() != null) landmark.setDescription(request.description());
 
-        // Only update location if BOTH coordinates are provided
-        if (request.latitude() != null && request.longitude() != null) {
-            landmark.setLocation(buildPoint(request.latitude(), request.longitude()));
+        // Standard fallback coordinate tracking
+        Point manualPoint = (request.latitude() != null && request.longitude() != null)
+                ? buildPoint(request.latitude(), request.longitude())
+                : null;
+
+        if (request.hostelId() != null) {
+            var hostelRef = hostelRepository.findById(request.hostelId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Linked hostel not found: " + request.hostelId()));
+            landmark.setHostel(hostelRef);
+
+            if (hostelRef.getLocation() != null) {
+                // Enforce snapping on update
+                landmark.setLocation(hostelRef.getLocation());
+            } else if (manualPoint != null) {
+                // If the hostel is blank, fill it using manual coordinates passed in the update
+                landmark.setLocation(manualPoint);
+                hostelRef.setLocation(manualPoint);
+                hostelRepository.save(hostelRef);
+            }
+        } else if (manualPoint != null) {
+            // No hostel linked, standard manual coordinate override
+            landmark.setLocation(manualPoint);
         }
 
         var saved = landmarkRepository.save(landmark);
-        log.info("Landmark updated: id={}", landmarkId);
         return buildLandmarkDto(saved);
     }
 
@@ -230,7 +279,11 @@ public class LandmarkService {
             lat = landmark.getLocation().getY(); // Y = latitude
             lon = landmark.getLocation().getX(); // X = longitude
         }
-        return new LandmarkDto(base.id(), base.name(), base.category(), lat, lon, base.description());
+
+        // Ensure your LandmarkDto signature supports returning the hostelId to the frontend
+        UUID linkedHostelId = (landmark.getHostel() != null) ? landmark.getHostel().getId() : null;
+
+        return new LandmarkDto(base.id(), base.name(), base.category(), lat, lon, base.description(), linkedHostelId);
     }
 
     /**
@@ -244,7 +297,7 @@ public class LandmarkService {
                 hostelId, hostelName,
                 landmarkId, landmarkName,
                 round2dp(metres),
-                round2dp(metres / 1000.0),
+                round2dp(metres / DEFAULT_NEARBY_RADIUS_METRES),
                 walkingMinutes(metres)
         );
     }

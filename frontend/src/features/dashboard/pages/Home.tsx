@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useTypingEffect } from '../hooks/useTypingEffect'; // Adjust path as per feature structure
-import bgImage from '@/assets/hostel-life-home-bg.jpg';
+import bgImage from '@/assets/hostel-life-home-bg.webp';
 
 const PHRASES = [
     'Discover verified hostels.',
@@ -11,7 +11,7 @@ const PHRASES = [
     'Find your perfect home away from home.',
 ];
 
-export default function Home() {
+export function Home() {
     // Use the extracted custom hook
     const displayedText = useTypingEffect(PHRASES);
 

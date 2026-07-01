@@ -3,6 +3,7 @@ package com.leroy.hostelbackend.config;
 import com.leroy.hostelbackend.module.auth.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -48,10 +49,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final JwtService jwtService;
 
+    @Value("${app.frontend.base-url}")
+    private String frontendUrl;
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         // In-memory broker handles /topic (broadcast) and /user (point-to-point)
-        registry.enableSimpleBroker("/topic", "/user");
+        registry.enableSimpleBroker("/topic", "/queue");
 
         // Client-to-server messages are prefixed with /app
         registry.setApplicationDestinationPrefixes("/app");
@@ -63,8 +67,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*")   // tighten to your frontend origin in production
-                .withSockJS();
+                .setAllowedOriginPatterns(frontendUrl);
     }
 
     /**

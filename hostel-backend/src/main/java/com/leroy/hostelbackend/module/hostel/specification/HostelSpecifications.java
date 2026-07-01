@@ -27,7 +27,7 @@ public class HostelSpecifications {
             }
 
             // 2. Full-text search (Name OR Address) - Case Insensitive & Null Safe
-            if (search != null && !search.trim().isEmpty()) {
+            if (search != null && !search.isBlank()) {
                 String safeSearchPattern = "%" + search.trim().toLowerCase() + "%";
                 Predicate nameLike = cb.like(cb.lower(root.get("name")), safeSearchPattern);
                 Predicate addressLike = cb.like(cb.lower(root.get("address")), safeSearchPattern);

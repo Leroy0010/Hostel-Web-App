@@ -40,7 +40,7 @@ export function AmenityChip({ amenity, className }: AmenityChipProps) {
                     }}
                 />
             )}
-            <span className="text-[11px] font-medium text-gray-600 dark:text-gray-300">
+            <span className="text-xs font-medium text-gray-600 md:text-base dark:text-gray-300">
                 {amenity.amenity}
             </span>
         </div>

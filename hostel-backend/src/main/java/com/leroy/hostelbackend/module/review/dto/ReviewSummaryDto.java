@@ -9,8 +9,10 @@ import java.util.UUID;
 public record ReviewSummaryDto(
         UUID   id,
         UUID   authorId,
+        UUID hostelId,
         String authorName,
         short  rating,
         String comment,
         LocalDateTime createdAt
 ) {}
+

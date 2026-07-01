@@ -1,0 +1,39 @@
+# ==========================================
+# Stage 1: Build the application
+# ==========================================
+FROM eclipse-temurin:25-jdk-jammy AS builder
+
+WORKDIR /build
+
+# Copy the Maven wrapper and pom.xml first to cache dependencies
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+
+# Make the wrapper executable and download dependencies (caches this layer)
+RUN chmod +x ./mvnw
+RUN ./mvnw dependency:go-offline -B
+
+# Copy the actual source code and build the JAR
+COPY src ./src
+RUN ./mvnw clean package -DskipTests
+
+# ==========================================
+# Stage 2: Run the application
+# ==========================================
+FROM eclipse-temurin:25-jre-jammy
+
+WORKDIR /app
+
+# Copy ONLY the built JAR from the builder stage
+COPY --from=builder /build/target/*.jar app.jar
+
+EXPOSE 8080
+
+ENV SPRING_PROFILES_ACTIVE=prod
+
+# Run the app as a non-root user for security
+RUN useradd -m springuser && chown -R springuser /app
+USER springuser
+
+CMD ["java", "-Xms512m", "-Xmx1g", "-jar", "app.jar"]

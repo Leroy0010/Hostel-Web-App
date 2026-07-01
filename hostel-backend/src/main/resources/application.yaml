@@ -27,28 +27,6 @@ spring:
     enabled: true
   application:
     name: ${APPLICATION_NAME:HOSTELBOOKING}
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-            # Spring Security OAuth2 callback URI
-            redirect-uri: ${GOOGLE_REDIRECT_URI:http://localhost:8080/oauth2/code/google}
-            scope:
-              - email
-              - profile
-              - openid
-            authorization-grant-type: authorization_code
-            client-name: Google
-        provider:
-          google:
-            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
-            token-uri: https://oauth2.googleapis.com/token
-            user-info-uri: https://www.googleapis.com/oauth2/v2/userinfo
-            jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
-            user-name-attribute: email
   mail:
     host: ${MAIL_HOST:smtp.gmail.com}
     port: ${MAIL_PORT:465}
@@ -78,6 +56,9 @@ jwt:
   secret: ${JWT_SECRET}
   tokenExpiration: ${JWT_EXPIRATION:1800000} # 30 minutes in milliseconds
   refreshTokenExpiration: ${JWT_REFRESH_EXPIRATION:7200000}
+  cookieSecure: ${JWT_COOKIE_SECURE:false}
+  cookieDomain: ${JWT_COOKIE_DOMAIN:localhost}
+  cookieSameSite: ${JWT_COOKIE_SAME_SITE:LAX}
 
 vapid:
   public-key: ${VAPID_PUBLIC_KEY}   # generate once with VapidKeyGenerator util below
@@ -88,11 +69,18 @@ hostel:
   sweeper:
     rate: ${HOSTEL_SWEEPER_RATE}
 
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
+
 springdoc:
   api-docs:
     enabled: true
   swagger-ui:
     enabled: true
+
+
 
 # Server Configuration for Production
 server:
@@ -103,7 +91,7 @@ server:
         same-site: ${COOKIE_SAME_SITE:LAX}
         secure: ${COOKIE_SECURE:true}
         max-age: 1800 # 30 minutes
-    context-path: ${SERVER_CONTEXT_PATH:}
+    context-path: ${SERVER_CONTEXT_PATH:/}
   compression:
     enabled: true
     mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
@@ -127,7 +115,8 @@ app:
 
 
 logging:
-  level:
-    org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer: ERROR
-    org.springframework.boot.autoconfigure.liquibase: DEBUG
-    org.springframework.boot.autoconfigure: DEBUG
+   level:
+     org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer: ERROR
+    # org.springframework.messaging: TRACE
+   # org.springframework.web.socket : TRACE
+

@@ -1,105 +1,78 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import type { GenderPolicy } from '../types/hostel.types';
+import type { GenderPolicy, HostelSectionParams } from '../types/hostel.types';
 import type { HostelFilterValues } from '../components/HostelFilters';
-
-// =============================================================================
-// Types
-// =============================================================================
-
-interface UseHostelFiltersReturn {
-    /** Current filter values read from URL search params. */
-    filters: HostelFilterValues;
-    /** Current zero-based page number. */
-    page: number;
-    /** Update one or more filter values and reset page to 0. */
-    setFilters: (values: HostelFilterValues) => void;
-    /** Navigate to a specific page. */
-    setPage: (page: number) => void;
-    /** Build the params object to pass to the API hook. */
-    apiParams: {
-        search?: string;
-        genderPolicy?: string;
-        page: number;
-        size: number;
-    };
-}
-
-// =============================================================================
-// Hook
-// =============================================================================
+import { useDebounce } from '@/hooks/useDebounce';
 
 /**
- * Manages hostel list filter state synchronized with URL search params.
+ * Manages hostel filter state for the student discovery page.
  *
- * Storing state in the URL gives us:
- *  - Shareable filtered URLs (e.g. `/hostels?genderPolicy=MALE_ONLY`).
- *  - Correct browser back/forward navigation.
- *  - Filters that survive a page refresh.
+ * Syncs search and gender policy to URL search params so filters survive
+ * page refresh and can be bookmarked or shared.
  *
- * Used by {@link HostelsPage} and {@link AdminHostelsPage}.
+ * Produces a {@link HostelSectionParams} object ready to pass to
+ * {@link useHostelSections} — the new single-call sections endpoint.
  *
- * @param pageSize - Number of items per page (defaults to 10 for students, 20 for admin).
+ * @param pageSize - Number of hostel sections per page (default 8).
+ * @returns Filter values, page index, setters, and the ready-to-use API params.
+ *
+ * @example
+ * ```tsx
+ * const { filters, page, setFilters, setPage, apiParams } = useHostelFilters(8);
+ * const { data } = useHostelSections(apiParams);
+ * ```
  */
-export function useHostelFilters(pageSize = 10): UseHostelFiltersReturn {
+export function useHostelFilters(pageSize = 8) {
     const [searchParams, setSearchParams] = useSearchParams();
+    const [page, setPageState] = useState(0);
 
-    // Read current state from URL
-    const search = searchParams.get('search') ?? '';
-    const genderPolicy = (searchParams.get('genderPolicy') ?? 'ALL') as
-        | GenderPolicy
-        | 'ALL';
-    const page = Math.max(0, Number(searchParams.get('page') ?? '0'));
+    // Read filters from URL params so they survive refresh
+    const filters: HostelFilterValues = {
+        search: searchParams.get('search') ?? '',
+        genderPolicy:
+            (searchParams.get('genderPolicy') as GenderPolicy | 'ALL') ?? 'ALL',
+    };
 
-    const filters: HostelFilterValues = { search, genderPolicy };
-
-    /** Write filter values back to the URL, always resetting page to 0. */
+    /** Update filter values and reset page to 0. */
     const setFilters = useCallback(
-        (values: HostelFilterValues) => {
-            setSearchParams((prev) => {
-                const next = new URLSearchParams(prev);
-                if (values.search) {
-                    next.set('search', values.search);
-                } else {
-                    next.delete('search');
-                }
-                if (values.genderPolicy !== 'ALL') {
-                    next.set('genderPolicy', values.genderPolicy);
-                } else {
-                    next.delete('genderPolicy');
-                }
-                // Reset to page 0 whenever filters change
-                next.delete('page');
-                return next;
-            });
+        (next: HostelFilterValues) => {
+            setPageState(0);
+            setSearchParams(
+                (prev) => {
+                    const updated = new URLSearchParams(prev);
+                    if (next.search) {
+                        updated.set('search', next.search);
+                    } else {
+                        updated.delete('search');
+                    }
+                    if (next.genderPolicy && next.genderPolicy !== 'ALL') {
+                        updated.set('genderPolicy', next.genderPolicy);
+                    } else {
+                        updated.delete('genderPolicy');
+                    }
+                    return updated;
+                },
+                { replace: true }
+            );
         },
         [setSearchParams]
     );
 
-    /** Navigate to a specific zero-based page number. */
-    const setPage = useCallback(
-        (newPage: number) => {
-            setSearchParams((prev) => {
-                const next = new URLSearchParams(prev);
-                if (newPage === 0) {
-                    next.delete('page');
-                } else {
-                    next.set('page', String(newPage));
-                }
-                return next;
-            });
-        },
-        [setSearchParams]
-    );
+    /** Change the page index without resetting filters. */
+    const setPage = useCallback((nextPage: number) => {
+        setPageState(nextPage);
+    }, []);
+
+    const debouncedSearch = useDebounce(filters.search, 400);
 
     /**
-     * API params object — pass directly to {@code useActiveHostels} or
-     * {@code useAdminHostels}. Omits undefined fields so the API
-     * doesn't receive empty string params.
+     * Ready-to-use params for {@link useHostelSections}.
+     * The 'ALL' sentinel is handled inside {@link fetchHostelSections}
+     * where it is converted to undefined before the HTTP call.
      */
-    const apiParams = {
-        ...(search && { search }),
-        ...(genderPolicy !== 'ALL' && { genderPolicy }),
+    const apiParams: HostelSectionParams = {
+        search: debouncedSearch || undefined,
+        genderPolicy: filters.genderPolicy,
         page,
         size: pageSize,
     };
