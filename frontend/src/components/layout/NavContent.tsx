@@ -34,11 +34,11 @@ export function NavContent({
     isCollapsed = false,
 }: NavContentProps) {
     const user = useAuthStore((state) => state.user);
-    const isAthtenticated = useAuthStore(state => state.isAuthenticated)
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const navigate = useNavigate();
     const { mutate: logout, isPending: isLoggingOut } = useLogoutMutation();
 
-    const visibleItems = navigation(isAthtenticated).filter((item) =>
+    const visibleItems = navigation(isAuthenticated).filter((item) =>
         (user && item.roles?.includes(user.role)) || !item.roles
     );
 
@@ -51,7 +51,7 @@ export function NavContent({
     return (
         <div className="flex h-full flex-col gap-4 overflow-hidden">
             {/* ── Navigation Links ───────────────────────────────────────── */}
-            <nav className="flex-1 scrollbar-none space-y-1 overflow-x-hidden overflow-y-auto px-2">
+            <nav className="scrollbar-none flex-1 space-y-1 overflow-x-hidden overflow-y-auto px-2">
                 {visibleItems.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -100,9 +100,22 @@ export function NavContent({
                     <div
                         className={`flex items-center rounded-md ${isCollapsed ? 'justify-center' : 'px-3 py-2'}`}
                     >
-                        <Link to={'/profile'} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-200 font-bold text-gray-600 dark:bg-gray-700 dark:text-gray-300">
-                            {user.name.charAt(0)}
+                        {/* Avatar Update: Display URL if it exists, otherwise initial */}
+                        <Link 
+                            to={'/profile'} 
+                            className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200 font-bold text-gray-600 ring-1 ring-gray-200 transition-opacity hover:opacity-80 dark:bg-gray-700 dark:text-gray-300 dark:ring-gray-800"
+                        >
+                            {user.profileUrl ? (
+                                <img
+                                    src={user.profileUrl}
+                                    alt={user.name}
+                                    className="h-full w-full object-cover"
+                                />
+                            ) : (
+                                <span>{user.name.charAt(0).toUpperCase()}</span>
+                            )}
                         </Link>
+                        
                         <AnimatePresence initial={false}>
                             {!isCollapsed && (
                                 <motion.div
@@ -115,7 +128,6 @@ export function NavContent({
                                     <p className="text-xs font-semibold text-gray-800 dark:text-gray-200">
                                         {user.name.split(' ')[0]}
                                     </p>
-                                    
                                 </motion.div>
                             )}
                         </AnimatePresence>

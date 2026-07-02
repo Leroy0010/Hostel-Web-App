@@ -15,13 +15,20 @@ import { authKeys } from './auth.keys';
 // ---------------------------------------------------------------------------
 // Query hooks
 // ---------------------------------------------------------------------------
+interface VerifyEmailResponse {
+    success: boolean;
+    message: string;
+    timestamp: string;
+}
 
 export function useVerifyEmail(params: { token: string }) {
     return useQuery({
         queryKey: authKeys.verifyEmail(params.token),
 
         queryFn: () =>
-            apiClient.get<never, void>(`/auth/verify-email`, { params }),
+            apiClient.get<VerifyEmailResponse>(`/auth/verify-email`, {
+                params,
+            }),
 
         enabled: !!params.token,
         retry: false,

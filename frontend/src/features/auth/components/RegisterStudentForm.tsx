@@ -105,7 +105,8 @@ export function RegisterStudentForm() {
 
                 // 2. Update the toast to inform them of the next step.
                 toast.success(
-                    'Account created successfully! Please check your email to verify your account.'
+                    'Account created successfully! Please check your email to verify your account.',
+                    { duration: 8000 }
                 );
 
                 // 3. Send them to the login page instead of the 'from' route.

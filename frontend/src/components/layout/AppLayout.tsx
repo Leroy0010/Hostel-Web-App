@@ -6,7 +6,7 @@ import {
     Bell,
     Sun,
     Moon,
-    User, // Added User icon for Profile
+    User,
 } from 'lucide-react';
 import {
     Sheet,
@@ -41,7 +41,13 @@ interface AppLayoutProps {
 
 export function AppLayout({ isHomePage }: AppLayoutProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+    // Fetch both isAuthenticated and the user object to get the profileUrl
+    const { isAuthenticated, user } = useAuthStore((state) => ({
+        isAuthenticated: state.isAuthenticated,
+        user: state.user,
+    }));
+
     useNotificationStomp(isAuthenticated);
 
     const { data: unreadCountData } = useUnreadCount(isAuthenticated);
@@ -60,7 +66,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
         <div className="flex h-screen w-full flex-col overflow-hidden bg-gray-50 text-gray-900 transition-colors duration-200 selection:bg-gray-200 dark:bg-gray-900 dark:text-gray-100 dark:selection:bg-gray-800">
             {/* ── Topbar ────────────────────────────────────────────────────────────── */}
             <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-gray-200 bg-white/80 px-4 backdrop-blur-md transition-colors dark:border-gray-800 dark:bg-gray-900/80">
-                <div className="flex items-center gap-1 z-99999">
+                <div className="z-99999 flex items-center gap-1">
                     {/* Mobile Hamburger (Opens Sheet) */}
                     <div className="lg:hidden">
                         <Sheet
@@ -79,7 +85,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                             </SheetTrigger>
                             <SheetContent
                                 side="left"
-                                className="w-64 border-r z-9999999 border-gray-200 bg-white p-0 text-gray-900 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100"
+                                className="z-9999999 w-64 border-r border-gray-200 bg-white p-0 text-gray-900 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100"
                             >
                                 <SheetTitle className="sr-only">
                                     Navigation Menu
@@ -155,9 +161,9 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                         aria-label="Toggle theme"
                     >
                         {theme === 'dark' ? (
-                            <Sun size={32} />
+                            <Sun size={24} /> // Adjusted sizes slightly for standard UI flow
                         ) : (
-                            <Moon size={32} />
+                            <Moon size={24} />
                         )}
                     </Button>
 
@@ -176,7 +182,10 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                                     'relative text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
                                 )}
                             >
-                                <Bell size={32} aria-label='Notification Bell' />
+                                <Bell
+                                    size={24}
+                                    aria-label="Notification Bell"
+                                />
 
                                 {/* Unread Count Badge */}
                                 <AnimatePresence>
@@ -197,8 +206,8 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                                                     stiffness: 500,
                                                     damping: 30,
                                                 }}
-                                                className="absolute top-0 animate-ping right-1 flex h-2 w-2 items-center justify-center rounded-full bg-red-500 text-[6px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-gray-900"
-                                                aria-label='Notification unread count'
+                                                className="absolute top-0 right-1 flex h-2 w-2 animate-ping items-center justify-center rounded-full bg-red-500 text-[6px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-gray-900"
+                                                aria-label="Notification unread count"
                                             >
                                                 {unreadCountData.count > 99
                                                     ? '99+'
@@ -208,7 +217,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                                 </AnimatePresence>
                             </Link>
 
-                            {/* Profile */}
+                            {/* Profile Update: URL mapping & Avatar formatting */}
                             <Link
                                 to="/profile"
                                 aria-label="Profile"
@@ -217,10 +226,22 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                                         variant: 'ghost',
                                         size: 'icon',
                                     }),
-                                    'text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
+                                    'overflow-hidden rounded-full text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
                                 )}
                             >
-                                <User size={32} />
+                                {user?.profileUrl ? (
+                                    <img
+                                        src={user.profileUrl}
+                                        alt={user.name}
+                                        className="h-8 w-8 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-800"
+                                    />
+                                ) : user?.name ? (
+                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 font-bold text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                                        {user.name.charAt(0).toUpperCase()}
+                                    </div>
+                                ) : (
+                                    <User size={24} />
+                                )}
                             </Link>
                         </>
                     ) : (
@@ -229,7 +250,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                             <Link
                                 to="/login"
                                 className={buttonVariants({ variant: 'ghost' })}
-                                aria-label='Login'
+                                aria-label="Login"
                             >
                                 Log in
                             </Link>
@@ -240,7 +261,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                                 className={buttonVariants({
                                     variant: 'default',
                                 })}
-                                aria-label='Register'
+                                aria-label="Register"
                             >
                                 Register
                             </Link>
