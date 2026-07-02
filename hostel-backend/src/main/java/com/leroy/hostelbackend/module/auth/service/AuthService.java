@@ -155,7 +155,7 @@ public class AuthService {
         var cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
         cookie.setSecure(jwtConfig.isCookieSecure());
-        cookie.setPath("/api/auth/refresh");   // scoped: only sent to the refresh endpoint
+        cookie.setPath("/api/auth/refresh");
         cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
         cookie.setAttribute("SameSite", jwtConfig.getCookieSameSite());
         cookie.setDomain(jwtConfig.getCookieDomain());
