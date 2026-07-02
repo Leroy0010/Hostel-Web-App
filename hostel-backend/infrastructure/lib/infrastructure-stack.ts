@@ -64,6 +64,11 @@ export class InfrastructureStack extends cdk.Stack {
     const bastion = new ec2.BastionHostLinux(this, "HostelBastion", {
       vpc,
       subnetSelection: { subnetType: ec2.SubnetType.PUBLIC },
+      // Explicitly set to the official Free Tier instance for eu-north-1
+      instanceType: ec2.InstanceType.of(
+        ec2.InstanceClass.T3, 
+        ec2.InstanceSize.MICRO
+      ),
     });
 
     // Allow the Bastion Host to talk to the Database
