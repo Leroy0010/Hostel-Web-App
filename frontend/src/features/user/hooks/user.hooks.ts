@@ -47,7 +47,6 @@ export function useUpdateProfileUrlMutation() {
 
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: userKeys.me() });
-            toast.success('Profile image updated successfully.');
         },
 
         onError: (error) => {
