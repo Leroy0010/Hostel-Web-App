@@ -42,11 +42,8 @@ interface AppLayoutProps {
 export function AppLayout({ isHomePage }: AppLayoutProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // Fetch both isAuthenticated and the user object to get the profileUrl
-    const { isAuthenticated, user } = useAuthStore((state) => ({
-        isAuthenticated: state.isAuthenticated,
-        user: state.user,
-    }));
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const user = useAuthStore((state) => state.user);
 
     useNotificationStomp(isAuthenticated);
 

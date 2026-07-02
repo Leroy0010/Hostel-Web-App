@@ -9,7 +9,7 @@ export function AppLoader() {
                     <div className="absolute h-16 w-16 animate-ping rounded-full border-2 border-gray-200/40 opacity-20 dark:border-gray-800/40" />
                 </div>
                 <p className="animate-pulse font-mono text-xs font-medium tracking-widest text-gray-400 uppercase dark:text-gray-500">
-                    Loading Environment
+                    Loading...
                 </p>
             </div>
         </div>
