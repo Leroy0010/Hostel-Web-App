@@ -11,6 +11,7 @@ import {
     useGetCurrentProfile,
     useUpdateProfileUrlMutation,
 } from '@/features/user/hooks/user.hooks';
+import { handleUploadImage } from '@/services/cloudinary.service';
 
 const pageVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -61,7 +62,8 @@ export default function Profile() {
         try {
             setIsUploadingImage(true);
             // Connect to your file upload service (e.g., S3 presigned URL handler) here
-            const uploadedUrl = URL.createObjectURL(file);
+            const uploadedUrl = await handleUploadImage(file, 'profiles');
+
             updateProfileUrl({ profileUrl: uploadedUrl });
             toast.success('Avatar updated successfully');
         } catch {
