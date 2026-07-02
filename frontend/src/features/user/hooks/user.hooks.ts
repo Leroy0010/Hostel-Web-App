@@ -22,11 +22,13 @@ export function useGetCurrentProfile() {
 }
 
 export function useUpdateProfileMutation() {
+    const queryClient = useQueryClient();
     return useMutation<void, ApiError, UpdateProfileValues>({
         mutationFn: (payload) =>
             apiClient.put<UpdateProfileValues, void>('/users/me', payload),
 
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: userKeys.me() });
             toast.success('Profile updated successfully.');
         },
 
@@ -44,8 +46,8 @@ export function useUpdateProfileUrlMutation() {
         mutationFn: (payload) => updateProfileUrl(payload.profileUrl),
 
         onSuccess: () => {
-            toast.success('Profile updated successfully.');
             queryClient.invalidateQueries({ queryKey: userKeys.me() });
+            toast.success('Profile image updated successfully.');
         },
 
         onError: (error) => {

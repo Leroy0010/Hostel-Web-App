@@ -1,13 +1,6 @@
 import { useState, useRef } from 'react';
 import { useReducedMotion, motion } from 'framer-motion';
-import {
-    Loader2,
-    User,
-    Calendar,
-    Shield,
-    Building,
-    Pencil,
-} from 'lucide-react';
+import { Loader2, User, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -46,17 +39,13 @@ export default function Profile() {
 
     if (isError || !response) {
         return (
-            <div className="mx-auto max-w-md rounded-xl border border-red-200 bg-red-50 p-6 text-center text-red-600 dark:border-red-900/50 dark:bg-red-900/20">
+            <div className="mx-auto mt-8 max-w-md rounded-xl border border-red-200 bg-red-50 p-6 text-center text-red-600 dark:border-red-900/50 dark:bg-red-900/20">
                 Failed to load account settings. Please try again later.
             </div>
         );
     }
 
-    const { user, hostel } = response;
-    const joinedDate = new Date(user.createdAt).toLocaleDateString('en-US', {
-        month: 'short',
-        year: 'numeric',
-    });
+    const { user } = response;
     const canEdit = user.role === 'ADMIN' || user.role === 'STUDENT';
 
     const handleAvatarChange = async (
@@ -84,116 +73,73 @@ export default function Profile() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50/50 px-4 py-8 transition-colors duration-200 dark:bg-gray-950">
+        <div className="min-h-screen bg-gray-50 px-4 py-8 transition-colors duration-200 dark:bg-gray-900">
             <motion.div
                 {...motionProps}
-                className="mx-auto max-w-md overflow-hidden rounded-[40px] bg-white shadow-sm ring-1 ring-gray-100 dark:bg-gray-900 dark:ring-gray-800"
+                className="mx-auto max-w-4xl space-y-8"
             >
-                {/* ── Master Card Curved Pink Header ────────────────── */}
-                <div className="bg-[#fdf2f8] px-6 pt-8 pb-8 dark:bg-pink-950/20">
-                    <div className="flex flex-col items-center">
-                        <div className="relative">
-                            <div className="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-white shadow-sm dark:border-gray-900 dark:bg-gray-900">
-                                {isUploadingImage || isUpdatingUrl ? (
-                                    <Loader2 className="h-8 w-8 animate-spin text-pink-500" />
-                                ) : user.profileUrl ? (
-                                    <img
-                                        src={user.profileUrl}
-                                        alt={user.name}
-                                        className="h-full w-full object-cover"
-                                    />
-                                ) : (
-                                    <User className="h-12 w-12 text-gray-300" />
-                                )}
-                            </div>
-
-                            <input
-                                type="file"
-                                ref={fileInputRef}
-                                className="hidden"
-                                accept="image/jpeg, image/png, image/webp"
-                                onChange={handleAvatarChange}
-                                disabled={
-                                    !canEdit ||
-                                    isUploadingImage ||
-                                    isUpdatingUrl
-                                }
-                            />
-
-                            {canEdit && (
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        fileInputRef.current?.click()
-                                    }
-                                    disabled={isUploadingImage || isUpdatingUrl}
-                                    className="absolute right-0 bottom-0 flex h-8 w-8 items-center justify-center rounded-full bg-[#7c3aed] text-white shadow-sm ring-4 ring-white transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 dark:ring-gray-900"
-                                >
-                                    <Pencil className="h-4 w-4" />
-                                </button>
+                {/* ── Consolidated Top Header ────────────────── */}
+                <div className="flex flex-col items-center text-center">
+                    <div className="relative mb-5">
+                        <div className="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-white shadow-sm dark:border-gray-800 dark:bg-gray-800">
+                            {isUploadingImage || isUpdatingUrl ? (
+                                <Loader2 className="h-8 w-8 animate-spin text-pink-500" />
+                            ) : user.profileUrl ? (
+                                <img
+                                    src={user.profileUrl}
+                                    alt={user.name}
+                                    className="h-full w-full object-cover"
+                                />
+                            ) : (
+                                <User className="h-12 w-12 text-gray-300 dark:text-gray-600" />
                             )}
                         </div>
 
-                        <h2 className="mt-5 text-2xl font-bold text-gray-900 dark:text-gray-100">
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            className="hidden"
+                            accept="image/jpeg, image/png, image/webp"
+                            onChange={handleAvatarChange}
+                            disabled={
+                                !canEdit || isUploadingImage || isUpdatingUrl
+                            }
+                        />
+
+                        {canEdit && (
+                            <button
+                                type="button"
+                                onClick={() => fileInputRef.current?.click()}
+                                disabled={isUploadingImage || isUpdatingUrl}
+                                className="absolute right-0 bottom-0 flex h-8 w-8 items-center justify-center rounded-full bg-[#7c3aed] text-white shadow-sm ring-4 ring-white transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 dark:ring-gray-900"
+                            >
+                                <Pencil className="h-4 w-4" />
+                            </button>
+                        )}
+                    </div>
+
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
                             Hello, {user.name.split(' ')[0]}!
-                        </h2>
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        </h1>
+                        <p className="mt-1 text-gray-500 dark:text-gray-400">
                             {user.email}
                         </p>
                     </div>
                 </div>
 
-                {/* ── 3-Column Profile Statistics Row ────────────────── */}
-                <div className="flex justify-between border-b border-gray-50 px-8 py-6 dark:border-gray-800/50">
-                    <div className="flex flex-col items-center">
-                        <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-full bg-[#fdf2f8] text-[#e879f9] dark:bg-pink-950/30">
-                            <Calendar className="h-5 w-5" />
-                        </div>
-                        <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
-                            {joinedDate}
-                        </span>
-                        <span className="mt-0.5 text-[11px] font-medium tracking-wider text-gray-400 uppercase">
-                            Joined
-                        </span>
-                    </div>
-
-                    <div className="flex flex-col items-center">
-                        <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-full bg-[#fdf2f8] text-[#e879f9] dark:bg-pink-950/30">
-                            <Shield className="h-5 w-5" />
-                        </div>
-                        <span className="text-sm font-bold text-gray-900 capitalize dark:text-gray-100">
-                            {user.role.toLowerCase()}
-                        </span>
-                        <span className="mt-0.5 text-[11px] font-medium tracking-wider text-gray-400 uppercase">
-                            Account
-                        </span>
-                    </div>
-
-                    <div className="flex flex-col items-center">
-                        <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-full bg-[#fdf2f8] text-[#e879f9] dark:bg-pink-950/30">
-                            <Building className="h-5 w-5" />
-                        </div>
-                        <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
-                            {hostel ? 'Assigned' : 'None'}
-                        </span>
-                        <span className="mt-0.5 text-[11px] font-medium tracking-wider text-gray-400 uppercase">
-                            Hostel
-                        </span>
-                    </div>
-                </div>
-
                 {/* ── Tab View Content Router ────────────────────────── */}
-                <Tabs defaultValue="profile" className="w-full p-6">
-                    <TabsList className="mb-6 grid w-full grid-cols-2 rounded-2xl bg-gray-100/80 p-1 dark:bg-gray-800/50">
+                <Tabs defaultValue="profile" className="w-full">
+                    <TabsList className="w-full flex-row bg-gray-200/50 dark:bg-gray-800/50">
                         <TabsTrigger
                             value="profile"
-                            className="rounded-xl py-2.5 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm dark:data-[state=active]:bg-gray-900 dark:data-[state=active]:text-gray-100"
+                            className="data-[state=active]:bg-white data-[state=active]:text-gray-900 dark:data-[state=active]:bg-gray-950 dark:data-[state=active]:text-gray-100"
                         >
-                            Profile
+                            Profile Information
                         </TabsTrigger>
                         <TabsTrigger
                             value="security"
-                            className="rounded-xl py-2.5 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm dark:data-[state=active]:bg-gray-900 dark:data-[state=active]:text-gray-100"
+                            className="data-[state=active]:bg-white data-[state=active]:text-gray-900 dark:data-[state=active]:bg-gray-950 dark:data-[state=active]:text-gray-100"
                         >
                             Security
                         </TabsTrigger>
@@ -201,7 +147,7 @@ export default function Profile() {
 
                     <TabsContent
                         value="profile"
-                        className="mt-0 focus-visible:outline-none"
+                        className="mt-4 focus-visible:outline-none"
                     >
                         <ProfileTab
                             data={response}
@@ -212,7 +158,7 @@ export default function Profile() {
 
                     <TabsContent
                         value="security"
-                        className="mt-0 focus-visible:outline-none"
+                        className="mt-4 focus-visible:outline-none"
                     >
                         <ChangePasswordForm />
                     </TabsContent>
