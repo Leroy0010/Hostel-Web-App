@@ -8,3 +8,8 @@ export function getManagers(): Promise<UserSummary[]> {
 export function getProfile(): Promise<MeResponse> {
     return apiClient.get('/users/me')
 }
+
+
+export function updateProfileUrl(profileUrl: string): Promise<void> {
+    return apiClient.patch('/users/me/profile-url', { profileUrl });
+}

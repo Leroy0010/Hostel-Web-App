@@ -1,10 +1,10 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { userKeys } from '../types/user.keys';
 import { apiClient } from '@/lib/axios';
 import type { ApiError } from '@/types/api';
 import type { UpdateProfileValues } from '@/features/user/components/ProfileTab';
 import { toast } from 'sonner';
-import { getManagers, getProfile } from '../api/user.api';
+import { getManagers, getProfile, updateProfileUrl } from '../api/user.api';
 
 /**
  * Fetches the currently authenticated user's profile and hostel context.
@@ -38,10 +38,27 @@ export function useUpdateProfileMutation() {
     });
 }
 
+export function useUpdateProfileUrlMutation() {
+    const queryClient = useQueryClient();
+    return useMutation<void, ApiError, { profileUrl: string }>({
+        mutationFn: (payload) => updateProfileUrl(payload.profileUrl),
 
-export function useGetManagers(){
+        onSuccess: () => {
+            toast.success('Profile updated successfully.');
+            queryClient.invalidateQueries({ queryKey: userKeys.me() });
+        },
+
+        onError: (error) => {
+            if (error.code !== 'VALIDATION_FAILED') {
+                toast.error(error.message);
+            }
+        },
+    });
+}
+
+export function useGetManagers() {
     return useQuery({
         queryKey: userKeys.managers(),
-        queryFn: getManagers
-    })
+        queryFn: getManagers,
+    });
 }

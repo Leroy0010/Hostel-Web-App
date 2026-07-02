@@ -14,6 +14,7 @@ export interface ProfileUser {
     createdAt: string;
     updatedAt: string;
     isActive: boolean;
+    profileUrl?: string 
 }
 
 /**

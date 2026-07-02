@@ -20,10 +20,10 @@ import { FieldError } from '@/components/ui/FieldError';
 
 import { transition } from '@/features/auth/utils/transition';
 import {
-    useGetCurrentProfile,
     useUpdateProfileMutation,
 } from '@/features/user/hooks/user.hooks';
 import type { ApiError } from '@/types/api';
+import type { MeResponse } from '../types/user.types';
 
 // 1. Updated Schema to match backend DTO
 const updateProfileSchema = z.object({
@@ -39,8 +39,17 @@ const itemVariants = {
     visible: { opacity: 1, y: 0, transition },
 };
 
-export function ProfileTab() {
-    const { data: response, isLoading, isError } = useGetCurrentProfile();
+interface ProfileTabProps {
+    data?: NoInfer<MeResponse>;
+    isLoading: boolean;
+    isError: boolean;
+}
+
+export function ProfileTab({
+    data: response,
+    isLoading,
+    isError,
+}: ProfileTabProps) {
     const { mutate: updateProfile, isPending: isUpdating } =
         useUpdateProfileMutation();
     const [isEditing, setIsEditing] = useState(false);
