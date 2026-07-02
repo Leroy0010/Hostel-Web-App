@@ -60,6 +60,19 @@ export class InfrastructureStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.SNAPSHOT, // Don't lose data if stack is destroyed
     });
 
+    // Create a small, secure Bastion Host in the public subnet
+    const bastion = new ec2.BastionHostLinux(this, "HostelBastion", {
+      vpc,
+      subnetSelection: { subnetType: ec2.SubnetType.PUBLIC },
+    });
+
+    // Allow the Bastion Host to talk to the Database
+    database.connections.allowFrom(
+      bastion,
+      ec2.Port.tcp(5432),
+      "Allow Bastion to access DB",
+    );
+
     // =========================================================================
     // 3. Secrets Injection from SSM Parameter Store
     // =========================================================================
