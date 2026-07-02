@@ -1,8 +1,5 @@
 package com.leroy.hostelbackend.module.user.service;
 
-import com.leroy.hostelbackend.module.auth.dto.LoginResponse;
-import com.leroy.hostelbackend.module.auth.mapper.AuthMapper;
-import com.leroy.hostelbackend.module.auth.model.AuthTokenType;
 import com.leroy.hostelbackend.module.auth.security.JwtService;
 import com.leroy.hostelbackend.module.auth.service.AuthService;
 import com.leroy.hostelbackend.module.booking.repository.BookingRepository;
@@ -35,10 +32,9 @@ public class UserService {
     private final EmailService emailService;
     private final AuthService authService; // Injected to handle token workflows
     private final JwtService jwtService;
-    private final AuthMapper authMapper;
 
     @Transactional
-    public LoginResponse registerStudent(CreateStudentRequest request, HttpServletResponse response) {
+    public void registerStudent(CreateStudentRequest request, HttpServletResponse response) {
         assertEmailAvailable(request.getEmail());
 
         // Set to false initially — student must verify email before logging in
@@ -48,20 +44,17 @@ public class UserService {
 
         var saved = userRepository.save(user);
 
-        var accessToken  = jwtService.generateAccessToken(saved);
         var refreshToken = jwtService.generateRefreshToken(saved);
 
         // HttpOnly + Secure cookie — never readable by JavaScript
         authService.setAuthCookie(response, refreshToken.toString());
-
-        var userResponse = userMapper.toResponse(user, null);
 
         // Generate security token and trigger email asynchronously
         String rawToken = authService.createEmailVerificationToken(saved);
         emailService.sendStudentVerificationEmail(saved.getEmail(), user.getName(), rawToken);
 
         log.info("New student account created (Pending Verification): id={}, email={}", saved.getId(), saved.getEmail());
-        return authMapper.toLoginResponse(userResponse, accessToken.toString());
+
     }
 
 

@@ -3,7 +3,7 @@ import { useReducedMotion } from 'framer-motion';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Loader2, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -18,7 +18,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
-import { useAuthStore } from '../store/useAuthStore';
 import { useRegisterStudentMutation } from '../api/registration';
 import {
     registerStudentSchema,
@@ -62,9 +61,6 @@ const itemVariants = {
  * Flow:
  *  1. User fills in the form (validated with Zod via React Hook Form).
  *  2. On submit, `POST /api/users` is called.
- *  3. The backend returns a {@link LoginResponse} (token + profile).
- *  4. `setAuth` is called immediately, logging the user in.
- *  5. User is redirected to their intended destination (or `/`).
  *
  * Field notes:
  *  - Phone is optional; an empty string is stripped before the API call.
@@ -73,15 +69,8 @@ const itemVariants = {
  */
 export function RegisterStudentForm() {
     const { mutate, isPending } = useRegisterStudentMutation();
-    const setAuth = useAuthStore((state) => state.setAuth);
     const navigate = useNavigate();
-    const location = useLocation();
     const shouldReduceMotion = useReducedMotion();
-
-    // Redirect to the page the user originally tried to access, or "/" by default
-    const from =
-        (location.state as { from?: { pathname: string } })?.from?.pathname ??
-        '/';
 
     const {
         register,
@@ -111,14 +100,16 @@ export function RegisterStudentForm() {
         const payload = { ...rest, ...(phone ? { phone } : {}) };
 
         mutate(payload, {
-            onSuccess: (response) => {
-                setAuth(
-                    response.token,
-                    response.user.user,
-                    response.user.hostel
+            onSuccess: () => {
+                // 1. Removed setAuth() since the user isn't fully verified yet.
+
+                // 2. Update the toast to inform them of the next step.
+                toast.success(
+                    'Account created successfully! Please check your email to verify your account.'
                 );
-                toast.success('Welcome! Your account has been created.');
-                navigate(from, { replace: true });
+
+                // 3. Send them to the login page instead of the 'from' route.
+                navigate('/login', { replace: true });
             },
             onError: (err: ApiError) => {
                 // Map per-field server validation errors back onto form fields

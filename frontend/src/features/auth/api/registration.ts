@@ -5,7 +5,6 @@ import type {
     CreateStudentPayload,
     CreateStaffFormValues,
 } from '../types/registration';
-import type { LoginResponse } from '../types';
 import { toast } from 'sonner';
 
 // ---------------------------------------------------------------------------
@@ -46,14 +45,14 @@ export const USERS_QUERY_KEY = ['users'] as const;
  */
 export function useRegisterStudentMutation() {
     const queryClient = useQueryClient();
-    return useMutation<LoginResponse, ApiError, CreateStudentPayload>({
+    return useMutation<void, ApiError, CreateStudentPayload>({
         mutationFn: (payload) => {
             // Strip empty phone string before sending — backend expects the
             // field to be absent rather than an empty string.
             const body: Partial<CreateStudentPayload> = { ...payload };
             if (!body.phone) delete body.phone;
 
-            return apiClient.post<CreateStudentPayload, LoginResponse>(
+            return apiClient.post<CreateStudentPayload, void>(
                 '/users',
                 body
             );

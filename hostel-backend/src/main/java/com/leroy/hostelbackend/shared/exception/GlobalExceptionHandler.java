@@ -9,6 +9,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
@@ -75,7 +76,7 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.UNAUTHORIZED, "Invalid verification data or bad credentials provided.", null, ErrorCode.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(DisabledException.class)
+    @ExceptionHandler({DisabledException.class, InternalAuthenticationServiceException.class})
     public ResponseEntity<ApiError> handleDisabledAccount() {
         return build(HttpStatus.FORBIDDEN, "Your email verification is pending or your account has been suspended.", null, ErrorCode.USER_DEACTIVATED);
     }

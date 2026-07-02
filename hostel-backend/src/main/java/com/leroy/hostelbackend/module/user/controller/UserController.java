@@ -1,6 +1,5 @@
 package com.leroy.hostelbackend.module.user.controller;
 
-import com.leroy.hostelbackend.module.auth.dto.LoginResponse;
 import com.leroy.hostelbackend.module.user.dto.*;
 import com.leroy.hostelbackend.module.user.model.CustomUserDetails;
 import com.leroy.hostelbackend.module.user.service.UserService;
@@ -47,15 +46,14 @@ public class UserController {
      * @return {@code 201 Created} with the new {@link UserDto}
      */
     @PostMapping("/users")
-    public ResponseEntity<ApiResponse<LoginResponse>> registerStudent(@Valid @RequestBody CreateStudentRequest request, HttpServletResponse response) {
-        var created = userService.registerStudent(request, response);
+    public ResponseEntity<ApiResponse<Void>> registerStudent(@Valid @RequestBody CreateStudentRequest request, HttpServletResponse response) {
+        userService.registerStudent(request, response);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(
                         ApiResponse
                         .success(
-                        "User registered successfully! Check your mailbox and verify your email to be able to login.",
-                        created));
+                        "User registered successfully! Check your mailbox and verify your email to be able to login."));
     }
 
 
