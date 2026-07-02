@@ -48,6 +48,7 @@ jobs:
           audience: sts.amazonaws.com
           aws-region: ${{ vars.AWS_REGION }}
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/Hostel-Github-Actions
+          role-duration-seconds: 3600
 
       - name: Install CDK and Infrastructure Dependencies
         run: |
