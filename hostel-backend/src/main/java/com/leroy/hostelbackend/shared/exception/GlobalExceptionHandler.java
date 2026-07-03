@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage(), null, ErrorCode.ILLEGAL_STATE);
     }
 
-    @ExceptionHandler(IllegalStateException.class)
+    @ExceptionHandler(TokenExpiredException.class)
     public ResponseEntity<ApiError> handleTokenExpired(TokenExpiredException ex, HttpServletResponse response) {
         if (response.isCommitted()) return null;
         log.warn("Token expired: {}", ex.getMessage());
