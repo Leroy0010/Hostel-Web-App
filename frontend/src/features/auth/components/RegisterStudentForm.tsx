@@ -85,7 +85,7 @@ export function RegisterStudentForm() {
 
     // Local State
     const [successEmail, setSuccessEmail] = useState<string | null>(null);
-    const [resendCountdown, setResendCountdown] = useState(10);
+    const [resendCountdown, setResendCountdown] = useState(60);
 
     const {
         register,

@@ -16,6 +16,7 @@ import { BookingCard, BookingCardSkeleton } from '../components/BookingCard';
 import { useMyBookings } from '../hooks/booking.hooks';
 import { useBookingFilters } from '../hooks/useBookingFilters';
 import type { BookingStatus } from '../types/booking.types';
+import { Link } from 'react-router-dom';
 
 // =============================================================================
 // Page component
@@ -126,7 +127,7 @@ export default function StudentBookings() {
                         description="There was a problem fetching your booking history. Please try again."
                         action={
                             <Button
-                                variant="outline"
+                                variant="default"
                                 size="sm"
                                 onClick={() => refetch()}
                             >
@@ -164,7 +165,9 @@ export default function StudentBookings() {
                                 >
                                     Clear filter
                                 </Button>
-                            ) : undefined
+                            ) : (
+                                <Link to="/hostels">Browse Hostels</Link>
+                            )
                         }
                     />
                 ) : (
