@@ -11,6 +11,10 @@ export interface LoginResponse {
     user: MeResponse;
 }
 
+export interface ResendVerificationForm {
+    email: string;
+}
+
 /**
  * Minimal response from POST /auth/refresh.
  * The backend also sets / rotates the HttpOnly refresh cookie in this call.

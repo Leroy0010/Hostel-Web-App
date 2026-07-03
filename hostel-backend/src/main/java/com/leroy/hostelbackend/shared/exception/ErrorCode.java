@@ -32,6 +32,7 @@ public enum ErrorCode {
     VALIDATION_FAILED,
     ILLEGAL_ARGUMENT,
     ILLEGAL_STATE,
+    TOKEN_EXPIRED,
 
     // --- 429 Rate Limiting ---
     TOO_MANY_REQUESTS,

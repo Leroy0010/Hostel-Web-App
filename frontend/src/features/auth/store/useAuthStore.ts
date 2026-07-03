@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 import { tokenManager } from '@/lib/tokenManager';
-import type { ProfileUser, UserHostelDto } from '@/features/user/types/user.types';
+import type {
+    ProfileUser,
+    UserHostelDto,
+} from '@/features/user/types/user.types';
 
 // ---------------------------------------------------------------------------
 // State shape
@@ -41,6 +44,8 @@ interface AuthState {
         user: ProfileUser,
         hostel: UserHostelDto | null
     ) => void;
+
+    setUser: (user: ProfileUser) => void;
 
     /**
      * Updates only the access token (e.g. after a silent refresh).
@@ -84,6 +89,7 @@ export const useAuthStore = create<AuthState>((set) => ({
             isInitialized: true,
         });
     },
+    setUser: (user) => set({ user }),
 
     updateAccessToken: (token) => {
         tokenManager.setToken(token);

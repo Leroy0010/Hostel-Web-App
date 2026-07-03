@@ -18,7 +18,7 @@ const phoneSchema = z
     .string()
     .regex(
         /^[\d\s+\-()]{7,20}$/,
-        'Phone number must be 7–20 characters and contain only digits, spaces, +, -, or parentheses'
+        'Phone number must be 7-20 characters and contain only digits, spaces, +, -, or parentheses'
     );
 
 /**
@@ -36,12 +36,29 @@ export const strongPasswordSchema = z
     .string()
     .min(8, 'Password must be at least 8 characters')
     .max(72, 'Password must not exceed 72 characters')
-    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-    .regex(/\d/, 'Password must contain at least one number')
-    .regex(
-        /[^A-Za-z0-9]/,
-        'Password must contain at least one special character'
+    .refine(
+        (val) => {
+            // 1. Define the 4 condition checks
+            const hasUpper = /[A-Z]/.test(val);
+            const hasLower = /[a-z]/.test(val);
+            const hasDigit = /\d/.test(val);
+            const hasSpecial = /[^A-Za-z0-9]/.test(val);
+
+            // 2. Count how many conditions are met
+            const conditionsMet = [
+                hasUpper,
+                hasLower,
+                hasDigit,
+                hasSpecial,
+            ].filter(Boolean).length;
+
+            // 3. Pass if 2 or more conditions are true
+            return conditionsMet >= 2;
+        },
+        {
+            message:
+                'Password must contain at least 2 of the following: uppercase, lowercase, numbers, or special characters',
+        }
     );
 
 // ---------------------------------------------------------------------------

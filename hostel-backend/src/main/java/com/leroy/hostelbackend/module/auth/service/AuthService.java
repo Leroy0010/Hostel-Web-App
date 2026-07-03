@@ -9,6 +9,7 @@ import com.leroy.hostelbackend.module.email.service.EmailService;
 import com.leroy.hostelbackend.module.user.model.CustomUserDetails;
 import com.leroy.hostelbackend.module.user.model.User;
 import com.leroy.hostelbackend.module.user.repository.UserRepository;
+import com.leroy.hostelbackend.shared.exception.TokenExpiredException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +77,7 @@ public class AuthService {
 
         if (tokenEntity.isExpired()) {
             authTokenRepository.delete(tokenEntity);
-            throw new IllegalStateException("Verification token has expired. Please register again.");
+            throw new TokenExpiredException("Verification token has expired. Please register again.");
         }
 
         User user = tokenEntity.getUser();
@@ -85,6 +86,32 @@ public class AuthService {
 
         authTokenRepository.delete(tokenEntity); // Single-use guarantee
         log.info("Email verified successfully for user ID: {}", user.getId());
+    }
+
+    @Transactional
+    public void resendVerificationEmail(ResendVerificationRequest request) {
+        // Security: Prevent email enumeration by failing silently if the user doesn't exist
+        var userOpt = userRepository.findByEmailIgnoreCase(request.email().trim());
+        if (userOpt.isEmpty()) {
+            log.info("Resend verification requested for non-existent email: {}", request.email());
+            return;
+        }
+
+        User user = userOpt.get();
+
+        // Security: Prevent sending tokens to already active accounts
+        if (user.getIsActive()) {
+            log.info("Resend verification requested for already active user ID: {}", user.getId());
+            return;
+        }
+
+        // Generate a new 24-hour token (this automatically drops the old one via generateAndSaveToken)
+        String rawToken = generateAndSaveToken(user, AuthTokenType.EMAIL_VERIFICATION, 24 * 60);
+
+        // Ensure you have this corresponding method in your EmailService
+        emailService.sendStudentVerificationEmail(user.getEmail(), user.getName(), rawToken);
+
+        log.info("New verification email sent securely for user ID: {}", user.getId());
     }
 
     // -------------------------------------------------------------------------

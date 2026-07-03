@@ -71,6 +71,13 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage(), null, ErrorCode.ILLEGAL_STATE);
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiError> handleTokenExpired(TokenExpiredException ex, HttpServletResponse response) {
+        if (response.isCommitted()) return null;
+        log.warn("Token expired: {}", ex.getMessage());
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage(), null, ErrorCode.TOKEN_EXPIRED);
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiError> handleBadCredentials() {
         return build(HttpStatus.UNAUTHORIZED, "Invalid verification data or bad credentials provided.", null, ErrorCode.UNAUTHORIZED);

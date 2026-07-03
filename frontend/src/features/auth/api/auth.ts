@@ -7,6 +7,7 @@ import type {
     LoginResponse,
     PasswordResetConfirmForm,
     PasswordResetRequestForm,
+    ResendVerificationForm,
 } from '../types';
 import type { ApiError } from '@/types/api';
 import { toast } from 'sonner';
@@ -16,14 +17,15 @@ import { authKeys } from './auth.keys';
 // Query hooks
 // ---------------------------------------------------------------------------
 
-
 export function useVerifyEmail(params: { token: string }) {
-    return useQuery({
+    return useQuery<boolean, ApiError>({
         queryKey: authKeys.verifyEmail(params.token),
-        queryFn: () =>
+        queryFn: () => {
             apiClient.get(`/auth/verify-email`, {
                 params,
-            }),
+            });
+            return true;
+        },
 
         enabled: !!params.token,
         retry: false,
@@ -31,6 +33,28 @@ export function useVerifyEmail(params: { token: string }) {
         refetchOnMount: false, // Don't refetch if component re-mounts
         refetchOnReconnect: false, // Don't refetch if network drops and restores
         staleTime: Infinity,
+    });
+}
+
+export function useResendVerificationMutation() {
+    return useMutation<void, ApiError, ResendVerificationForm>({
+        mutationFn: (payload) =>
+            apiClient.post<ResendVerificationForm, void>(
+                '/auth/verify-email/resend',
+                payload
+            ),
+        onSuccess: () => {
+            // Vague success message prevents attackers from knowing if the email exists
+            toast.success(
+                'If your email is registered and unverified, a new link has been sent.'
+            );
+        },
+        onError: (error) => {
+            // Ignore validation errors in the toast, let the form handle them
+            if (error.code !== 'VALIDATION_FAILED') {
+                toast.error(error.message);
+            }
+        },
     });
 }
 

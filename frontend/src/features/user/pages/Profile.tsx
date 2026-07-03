@@ -12,6 +12,7 @@ import {
     useUpdateProfileUrlMutation,
 } from '@/features/user/hooks/user.hooks';
 import { handleUploadImage } from '@/services/cloudinary.service';
+import { useAuthStore } from '@/features/auth/store/useAuthStore';
 
 const pageVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -22,6 +23,8 @@ export default function Profile() {
     const { data: response, isLoading, isError } = useGetCurrentProfile();
     const { mutate: updateProfileUrl, isPending: isUpdatingUrl } =
         useUpdateProfileUrlMutation();
+
+    const setUser = useAuthStore((state) => state.setUser);
     const [isUploadingImage, setIsUploadingImage] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -65,6 +68,7 @@ export default function Profile() {
             const uploadedUrl = await handleUploadImage(file, 'profiles');
 
             updateProfileUrl({ profileUrl: uploadedUrl });
+            setUser({ ...user, profileUrl: uploadedUrl });
             toast.success('Avatar updated successfully');
         } catch {
             toast.error('Failed to upload image.');

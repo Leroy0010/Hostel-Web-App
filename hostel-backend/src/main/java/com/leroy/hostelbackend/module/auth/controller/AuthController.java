@@ -140,6 +140,13 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.success("Email verification successful! Your account is now active."));
     }
 
+    @PostMapping("/verify-email/resend")
+    public ResponseEntity<ApiResponse<Void>> resendVerificationToken(@Valid @RequestBody ResendVerificationRequest request){
+        authService.resendVerificationEmail(request);
+        return ResponseEntity.ok(ApiResponse.success("Verification email has been sent."));
+    }
+
+
     // -------------------------------------------------------------------------
     // Authenticated Password Operations
     // -------------------------------------------------------------------------
