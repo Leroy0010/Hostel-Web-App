@@ -81,7 +81,7 @@ public class UserService {
         user.setFirstName(request.getFirstName().trim());
         user.setLastName(request.getLastName().trim());
 
-        if (request.getPhone() != null) {
+        if (request.getPhone() != null && !request.getPhone().isBlank()) {
             user.setPhone(request.getPhone().trim());
         } else {
             user.setPhone(null);

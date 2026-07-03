@@ -104,17 +104,47 @@ public class User {
         return firstName + " " + lastName;
     }
 
+    public void setPhone(String phone) {
+        this.phone = normalizeGhanaianPhoneNumber(phone);
+    }
+
     public static @NonNull User create(String email, String firstName, String lastName, String phone, boolean isActive) {
         var user = new User();
         user.setEmail(email.toLowerCase().trim());
         user.setFirstName(firstName.trim());
         user.setLastName(lastName.trim());
-        user.setPhone(phone);
+        user.setPhone(normalizeGhanaianPhoneNumber(phone));
         user.setIsActive(isActive);
         return user;
     }
 
     public void updateProfileUrl(String profileUrl) {
         this.profileUrl = profileUrl;
+    }
+
+    private static String normalizeGhanaianPhoneNumber(String phone) {
+        if (phone == null || phone.isBlank()) {
+            return null;
+        }
+
+        // Remove all spaces, dashes, and special characters except '+'
+        String cleaned = phone.replaceAll("[^0-9+]", "");
+
+        // Convert local 024... / 055... to +23324... / +23355...
+        if (cleaned.startsWith("0") && cleaned.length() == 10) {
+            return "+233" + cleaned.substring(1);
+        }
+
+        // Convert 23324... to +23324...
+        if (cleaned.startsWith("233") && cleaned.length() == 12) {
+            return "+" + cleaned;
+        }
+
+        // Already in +233 format
+        if (cleaned.startsWith("+233") && cleaned.length() == 13) {
+            return cleaned;
+        }
+
+        return cleaned; // Fallback for invalid formats to be caught by validation constraints
     }
 }

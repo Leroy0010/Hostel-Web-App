@@ -48,4 +48,6 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
     Optional<User> findManagerByHostelId(@Param("hostelId") UUID hostelId);
 
     List<User> findAllByRoleAndIsActiveTrue(UserRole role);
+
+    boolean existsByPhoneAndRoleNot(String phone, UserRole userRole);
 }

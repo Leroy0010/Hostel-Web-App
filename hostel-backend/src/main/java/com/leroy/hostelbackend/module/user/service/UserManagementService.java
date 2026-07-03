@@ -92,9 +92,11 @@ public class UserManagementService {
             throw new IllegalArgumentException(
                     "Use the student registration endpoint to create student accounts.");
         }
-        if (userRepository.existsByEmailIgnoreCase(request.getEmail())) {
-            throw new IllegalArgumentException(
-                    "An account with this email address already exists.");
+        assertEmailAvailable(request.getEmail());
+
+        // Business Rule: Validate that the corporate staff number is unique among active staff members
+        if (request.getPhone() != null && !request.getPhone().isBlank()) {
+            assertStaffPhoneAvailable(request.getPhone().trim());
         }
 
         var user = User.create(
@@ -162,6 +164,19 @@ public class UserManagementService {
     private User requireUser(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
+    }
+
+    private void assertEmailAvailable(String email) {
+        if (userRepository.existsByEmailIgnoreCase(email)) {
+            throw new IllegalArgumentException("An account with this email address already exists.");
+        }
+    }
+
+    private void assertStaffPhoneAvailable(String phone) {
+        // Enforce uniqueness check against normalized values inside repository
+        if (userRepository.existsByPhoneAndRoleNot(phone, UserRole.STUDENT)) {
+            throw new IllegalArgumentException("This phone number is already assigned to another staff member.");
+        }
     }
 
     /**
