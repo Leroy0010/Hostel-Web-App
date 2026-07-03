@@ -24,6 +24,7 @@ import { useUnreadCount } from '@/features/notification/hooks/useNotifications';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/features/auth/store/useAuthStore';
 import { useNotificationStomp } from '@/features/notification/hooks/useNotificationStomp';
+import { PushNotificationPrompt } from '@/features/notification/components/PushNotificationPrompt';
 
 // Animation variants for text elements
 const textVariants = {
@@ -290,6 +291,8 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                     <Outlet />
                 </main>
             </div>
+            {/* 2. Conditionally render the push notification prompt here */}
+            {isAuthenticated && <PushNotificationPrompt />}
         </div>
     );
 }
