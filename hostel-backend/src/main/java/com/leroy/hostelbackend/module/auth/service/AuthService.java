@@ -185,7 +185,7 @@ public class AuthService {
                 .path("/") // Fix: Allows cookie to survive document refresh state
                 .maxAge(jwtConfig.getRefreshTokenExpiration())
                 .sameSite(jwtConfig.getCookieSameSite()) // Ensure this string resolves exactly to "Lax"
-                .domain(jwtConfig.getCookieDomain())     // Ensure this resolves exactly to "hostellifeplus.com"
+//                .domain(jwtConfig.getCookieDomain())
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());

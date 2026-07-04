@@ -11,7 +11,11 @@
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "prepare": "cd .. && husky frontend/.husky",
-    "start": "vite preview"
+    "start": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
@@ -47,20 +51,28 @@
   },
   "devDependencies": {
     "@eslint/js": "^10",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/geojson": "^7946.0.16",
     "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@vitejs/plugin-react": "^6",
+    "@vitejs/plugin-react": "^6.0.3",
+    "@vitest/coverage-v8": "^4.1.9",
+    "@vitest/ui": "^4.1.9",
+    "axios-mock-adapter": "^2.1.0",
     "eslint": "^10",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17",
+    "jsdom": "^29.1.1",
     "prettier": "^3.9.4",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "typescript": "~6",
     "typescript-eslint": "^8",
     "vite": "^8",
-    "vite-plugin-sitemap": "^0.8.2"
+    "vite-plugin-sitemap": "^0.8.2",
+    "vitest": "^4.1.9"
   }
 }

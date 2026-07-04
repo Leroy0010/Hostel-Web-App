@@ -201,7 +201,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(false)
                 .path("/api/auth/refresh")
-                .domain("localhost")
+//                .domain("localhost")
                 .maxAge(0)
                 .sameSite("Lax")
                 .build();
