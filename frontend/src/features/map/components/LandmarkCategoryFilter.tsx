@@ -11,13 +11,13 @@ import type { LandmarkCategory } from '../types/map.types';
 // =============================================================================
 
 const ALL_CATEGORIES: LandmarkCategory[] = [
+    'HOSTEL',
     'ACADEMIC',
     'LIBRARY',
     'ADMINISTRATIVE',
     'CAFETERIA',
     'MEDICAL',
     'SPORTS',
-    'HOSTEL',
     'OTHER',
 ];
 

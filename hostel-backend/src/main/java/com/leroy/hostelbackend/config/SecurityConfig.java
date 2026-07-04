@@ -26,7 +26,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.time.Duration;
 import java.util.List;
 
 /**
@@ -63,8 +62,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Switch from setAllowedOriginPatterns to setAllowedOrigins for iOS stability
-        configuration.setAllowedOrigins(List.of(
+        // Switch this back to restore Chrome/Firefox functionality
+        configuration.setAllowedOriginPatterns(List.of(
                 frontendBaseUrl,
                 "http://localhost:5173",
                 "http://127.0.0.1:5173",
@@ -85,7 +84,7 @@ public class SecurityConfig {
         configuration.setExposedHeaders(List.of("X-XSRF-TOKEN", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "Access-Control-Allow-Headers", "Access-Control-Allow-Methods"));
 
         // Cache preflight for 1 hour
-        configuration.setMaxAge(Duration.ofDays(3600L));
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
