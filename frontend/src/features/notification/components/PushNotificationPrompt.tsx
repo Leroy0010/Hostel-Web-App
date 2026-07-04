@@ -33,7 +33,7 @@ export function PushNotificationPrompt() {
         // 4. Show the prompt with a slight delay (better UX than instant pop-up)
         const timer = setTimeout(() => {
             setIsVisible(true);
-        }, 10000);
+        }, 3000);
 
         return () => clearTimeout(timer);
     }, []);

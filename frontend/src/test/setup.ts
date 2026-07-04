@@ -73,3 +73,11 @@ if (!Element.prototype.releasePointerCapture) {
 if (!Element.prototype.scrollIntoView) {
     Element.prototype.scrollIntoView = vi.fn();
 }
+
+// -----------------------------------------------------------------------
+// jsdom does not implement window.scrollTo, which some interactions
+// (e.g. focus management after removing a react-hook-form field-array row)
+// call incidentally. Without this it just prints a noisy "Not implemented"
+// warning to the console on every such interaction.
+// -----------------------------------------------------------------------
+window.scrollTo = vi.fn();
