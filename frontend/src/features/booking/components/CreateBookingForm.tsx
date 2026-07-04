@@ -6,7 +6,6 @@ import { Loader2, CalendarCheck } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
-
 import { useCreateBooking } from '../hooks/booking.hooks';
 import {
     createBookingSchema,
@@ -58,8 +57,6 @@ const rowVariants = {
         transition,
     },
 };
-
-
 
 // =============================================================================
 // Component
@@ -167,7 +164,7 @@ export function CreateBookingForm({
                         name="selectedPeriodKey"
                         render={({ field: { value, onChange } }) => (
                             <Combobox
-                            placeholder='Select period'
+                                placeholder="Select period"
                                 value={value}
                                 onValueChange={(val) => {
                                     onChange(val);
@@ -184,11 +181,13 @@ export function CreateBookingForm({
                             />
                         )}
                     />
-                    {errors.academicYear && (
-                        <FieldError message={errors.academicYear.message!} />
+                    {errors.selectedPeriodKey && (
+                        <FieldError
+                            message={errors.selectedPeriodKey.message!}
+                        />
                     )}
                 </motion.div>
-                
+
                 {/* <motion.div
                     variants={shouldReduceMotion ? {} : rowVariants}
                     className="space-y-1.5"

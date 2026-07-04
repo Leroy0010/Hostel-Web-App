@@ -62,8 +62,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        
-        configuration.setAllowedOriginPatterns(List.of(frontendBaseUrl, "http://localhost:5173", "http://127.0.0.1:5173", "http://192.168.0.101:5173"));
+
+        // Switch from setAllowedOriginPatterns to setAllowedOrigins for iOS stability
+        configuration.setAllowedOrigins(List.of(
+                frontendBaseUrl,
+                "http://localhost:5173",
+                "http://127.0.0.1:5173",
+                "http://192.168.0.101:5173"
+        ));
 
         // Allow all HTTP methods including PATCH
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"));
@@ -96,6 +102,7 @@ public class SecurityConfig {
                 // CORS configuration
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(c -> c
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         // Student self-registration — open to everyone
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .requestMatchers("/actuator/**").permitAll()

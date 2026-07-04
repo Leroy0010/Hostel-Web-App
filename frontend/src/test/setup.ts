@@ -52,6 +52,22 @@ class MockIntersectionObserver {
 vi.stubGlobal('IntersectionObserver', MockIntersectionObserver);
 
 // -----------------------------------------------------------------------
+// jsdom does not implement the Pointer Capture API, which Radix UI's
+// Select/Combobox primitives call on pointerdown. Without these, clicking
+// a Radix <Select> trigger throws "target.hasPointerCapture is not a
+// function" and aborts the test.
+// -----------------------------------------------------------------------
+if (!Element.prototype.hasPointerCapture) {
+    Element.prototype.hasPointerCapture = vi.fn(() => false);
+}
+if (!Element.prototype.setPointerCapture) {
+    Element.prototype.setPointerCapture = vi.fn();
+}
+if (!Element.prototype.releasePointerCapture) {
+    Element.prototype.releasePointerCapture = vi.fn();
+}
+
+// -----------------------------------------------------------------------
 // scrollIntoView is used by Radix Select/Combobox and is missing in jsdom.
 // -----------------------------------------------------------------------
 if (!Element.prototype.scrollIntoView) {
