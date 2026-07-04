@@ -53,6 +53,7 @@ export function useAuthInit() {
 
                 // ── Step 3: Hydrate store ────────────────────────────────────
                 setAuth(token, user, hostel);
+                tokenManager.registerLogoutCallback(clearAuth);
             } catch {
                 // Any failure (expired cookie, network error, etc.) is safe:
                 // clear any stale state and let routing handle the redirect.

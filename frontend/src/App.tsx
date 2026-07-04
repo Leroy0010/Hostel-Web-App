@@ -12,6 +12,7 @@ import { Suspense, useEffect } from 'react';
 import { useServiceWorker } from './hooks/useServiceWorker';
 import { useAuthStore } from './features/auth/store/useAuthStore';
 import { requestPushPermission } from './features/notification/hooks/useWebPush';
+import { IosInstallPrompt } from './components/ui/IosInstallPrompt';
 
 // ---------------------------------------------------------------------------
 // RootAppEngine
@@ -73,6 +74,8 @@ function RootAppEngine() {
             <Suspense fallback={<AppLoader />}>
                 <AppRoutes />
             </Suspense>
+            {/* Render globally here, alongside your routes */}
+            <IosInstallPrompt />
         </ErrorBoundary>
     );
 }

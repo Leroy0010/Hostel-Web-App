@@ -10,6 +10,7 @@ class TokenManager {
     private accessToken: string | null = null;
     private refreshTimeoutId: number | null = null;
     private refreshCallback: RefreshTokenFunction | null = null;
+    private onLogout: (() => void) | null = null;
 
     private static instance: TokenManager;
 
@@ -51,6 +52,10 @@ class TokenManager {
         }
 
         return this.refreshCallback();
+    }
+
+    public registerLogoutCallback(fn: () => void) {
+        this.onLogout = fn;
     }
 
     private scheduleRefresh() {
@@ -95,13 +100,8 @@ class TokenManager {
 
             this.clearToken();
 
-            if (
-                !window.location.pathname.endsWith('/login') &&
-                !window.location.pathname.endsWith('/') &&
-                !window.location.pathname.endsWith('/hostels') &&
-                !window.location.pathname.endsWith('/map')
-            ) {
-                window.location.href = '/login';
+            if (this.onLogout) {
+                this.onLogout();
             }
         }
     }

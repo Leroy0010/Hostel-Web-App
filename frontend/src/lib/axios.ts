@@ -65,9 +65,9 @@ apiClient.interceptors.request.use((config) => {
 });
 
 // Response Interceptor: Flatten Wrapper & Handle Refresh Pipeline
+// Response Interceptor: Flatten Wrapper & Handle Refresh Pipeline
 apiClient.interceptors.response.use(
     (response) => {
-        // If the backend response matches our ApiResponse envelope structure, unwrap it
         if (
             response.data &&
             Object.prototype.hasOwnProperty.call(response.data, 'success')
@@ -85,6 +85,7 @@ apiClient.interceptors.response.use(
         const isLoginRequest = originalRequest.url?.includes('/auth/login');
         const isRefreshRequest = originalRequest.url?.includes('/auth/refresh');
 
+        // ── 1. Token Refresh Logic (401s) ───────────────────────────────────
         if (
             error.response?.status === 401 &&
             !originalRequest._retry &&
@@ -109,14 +110,12 @@ apiClient.interceptors.response.use(
             useAuthStore.getState().setRefreshing(true);
 
             try {
-                // Request token renewal via HttpOnly cookie setup
                 const response = await axios.post(
                     `${apiClient.defaults.baseURL}/auth/refresh`,
                     {},
                     { withCredentials: true }
                 );
 
-                // Handle wrapper configurations if present
                 const dataPayload = response.data.success
                     ? response.data.data
                     : response.data;
@@ -133,17 +132,18 @@ apiClient.interceptors.response.use(
                 processQueue(refreshError as Error, null);
                 useAuthStore.getState().clearAuth();
 
-                // Prevent toast spamming if already at login screen
-                if (
-                    !window.location.pathname.endsWith('/login') &&
-                    !window.location.pathname.endsWith('/') &&
-                    !window.location.pathname.endsWith('/hostels') &&
-                    !window.location.pathname.endsWith('/map')
+                // FIXED: Use startsWith for dynamic routes like /hostels/:id
+                const path = window.location.pathname;
+                const isPublicRoute =
+                    path === '/' ||
+                    path === '/login' ||
+                    path === '/map' ||
+                    path.startsWith('/hostels');
 
-                ) {
+                if (!isPublicRoute) {
                     toast.error('Session expired. Please log in again.');
-                    window.location.href = '/login';
                 }
+
                 return Promise.reject(refreshError);
             } finally {
                 isRefreshing = false;
@@ -151,12 +151,22 @@ apiClient.interceptors.response.use(
             }
         }
 
-        // Standard business logic notification rendering
-        // if (!apiError) {
-        //     toast.error(
-        //         'Network connection error. Check your API server connectivity.'
-        //     );
-        // }
+        // ── 2. Global Network & Server Error Logic ──────────────────────────
+
+        // FIXED: Moved outside the 401 block so it catches all network drops
+        if (error.code === 'ERR_NETWORK') {
+            toast.error(
+                'Network error. Please check your internet connection or try again later.'
+            );
+            return Promise.reject(error);
+        }
+
+        // FIXED: Moved outside to catch all 500+ server crashes
+        if (!apiError && error.response && error.response.status >= 500) {
+            toast.error(
+                'Our servers are currently experiencing issues. Please try again.'
+            );
+        }
 
         return Promise.reject(apiError || error);
     }
