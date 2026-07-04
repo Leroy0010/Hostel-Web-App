@@ -194,10 +194,7 @@ export function JoinWaitlistDialog({
                         )}
                     </motion.div>
 
-                    <motion.div
-                        variants={rowVariants}
-                        className="space-y-1.5"
-                    >
+                    <motion.div variants={rowVariants} className="space-y-1.5">
                         <Label
                             htmlFor="cb-period"
                             className="text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -229,9 +226,9 @@ export function JoinWaitlistDialog({
                                 />
                             )}
                         />
-                        {errors.academicYear && (
+                        {errors.selectedPeriodKey && (
                             <FieldError
-                                message={errors.academicYear.message!}
+                                message={errors.selectedPeriodKey.message!}
                             />
                         )}
                     </motion.div>

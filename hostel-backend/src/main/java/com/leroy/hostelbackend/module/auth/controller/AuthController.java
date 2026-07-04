@@ -9,14 +9,11 @@ import com.leroy.hostelbackend.module.user.mapper.UserMapper;
 import com.leroy.hostelbackend.module.user.repository.UserRepository;
 import com.leroy.hostelbackend.shared.response.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -120,13 +117,11 @@ public class AuthController {
         } catch (RuntimeException e) {
             log.error("Token verification failure: {}", e.getMessage());
 
-            // Wipe bad/compromised cookie traces from client storage
-            Cookie cookie = new Cookie("refreshToken", "");
-            cookie.setHttpOnly(true);
-            cookie.setPath("/api/auth/refresh");
-            cookie.setMaxAge(0);
-            cookie.setDomain("localhost");
-            response.addCookie(cookie);
+            // Wipe the bad/compromised cookie using the SAME attributes it was
+            // set with (see AuthService.clearAuthCookie) — a hardcoded "localhost"
+            // domain and a mismatched path here meant this never actually cleared
+            // the cookie in production.
+            authService.clearAuthCookie(response);
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.error(e.getMessage()));
@@ -197,15 +192,11 @@ public class AuthController {
             refreshTokenService.revokeToken(refreshToken);
         }
 
-        var cookie = ResponseCookie.from("refreshToken", "")
-                .httpOnly(true)
-                .secure(false)
-                .path("/api/auth/refresh")
-//                .domain("localhost")
-                .maxAge(0)
-                .sameSite("Lax")
-                .build();
-        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        // Was previously hand-rolled with secure(false)/path("/api/auth/refresh"),
+        // which never matched the cookie set at login (secure=config, path="/"),
+        // so logout looked successful but silently left the real session cookie
+        // alive in the browser. Now uses the single shared helper.
+        authService.clearAuthCookie(response);
 
         return ResponseEntity.ok(ApiResponse.success("Logout successful!"));
     }

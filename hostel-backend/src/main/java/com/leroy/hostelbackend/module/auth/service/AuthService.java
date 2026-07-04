@@ -182,9 +182,39 @@ public class AuthService {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(jwtConfig.isCookieSecure())
-                .path("/") // Fix: Allows cookie to survive document refresh state
+                .path("/") // Path MUST match clearAuthCookie() below or the browser will
+                // treat clears as a *different* cookie and never actually delete this one.
                 .maxAge(jwtConfig.getRefreshTokenExpiration())
-                .sameSite(jwtConfig.getCookieSameSite()) // Ensure this string resolves exactly to "Lax"
+                .sameSite(jwtConfig.getCookieSameSite()) // Must resolve to exactly "Lax", "Strict", or "None"
+//                .domain(jwtConfig.getCookieDomain())
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
+
+    /**
+     * Expires the {@code refreshToken} cookie on the client.
+     *
+     * <p><strong>Critical:</strong> a cookie is identified by the tuple
+     * (name, domain, path). To actually delete a cookie you must re-issue it
+     * with the exact same {@code path}/{@code secure}/{@code sameSite} attributes
+     * it was originally set with and {@code maxAge(0)} — otherwise the browser
+     * silently creates a second, separate cookie and the original one (still
+     * holding a live session) is left completely untouched.
+     *
+     * <p>This is the single source of truth for clearing the cookie; both
+     * {@code /auth/logout} and the {@code /auth/refresh} failure path must call
+     * this instead of hand-rolling their own {@link ResponseCookie} (previously
+     * they used mismatched paths and a hardcoded {@code "localhost"} domain,
+     * which meant logging out never actually cleared the cookie in production).
+     */
+    public void clearAuthCookie(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(jwtConfig.isCookieSecure())
+                .path("/") // Must match setAuthCookie()
+                .maxAge(0)
+                .sameSite(jwtConfig.getCookieSameSite())
 //                .domain(jwtConfig.getCookieDomain())
                 .build();
 

@@ -35,7 +35,6 @@ function RootAppEngine() {
 
     // 1. Use atomic selectors to prevent unnecessary re-renders
     const user = useAuthStore((state) => state.user);
-    const isInitialized = useAuthStore((state) => state.isInitialized);
 
     useEffect(() => {
         if (!user) return;
@@ -54,12 +53,14 @@ function RootAppEngine() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?.email]);
 
-    // 2. 🔥 The Core Fix: Block rendering until auth resolves
-    if (!isInitialized) {
-        // This guarantees NO routes or layouts evaluate prematurely
-        return <AppLoader />;
-    }
-
+    // NOTE: We deliberately do NOT gate rendering here on `isInitialized`.
+    // Previously this blocked EVERY route — including fully public/unguarded
+    // ones like "/", "/hostels", and "/hostels/:id" that render outside
+    // ProtectedRoute/PublicRoute — behind the /auth/refresh network round-trip.
+    // That made the app feel slow on every single load, even for visitors who
+    // were never logged in. ProtectedRoute and PublicRoute already show their
+    // own <AppLoader /> while `isInitialized` is false, which is the only
+    // place that actually needs to wait for the auth bootstrap to resolve.
     return (
         <ErrorBoundary
             fallback={
