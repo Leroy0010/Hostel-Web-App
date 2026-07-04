@@ -196,8 +196,8 @@ export class InfrastructureStack extends cdk.Stack {
         "HostelFargateService",
         {
           cluster,
-          cpu: 1024, // 0.5 vCPU
-          memoryLimitMiB: 3072, // 1 GB RAM (perfect for Spring Boot with optimized JVM memory)
+          cpu: 2048, // 2 vCPU
+          memoryLimitMiB: 3072, // 3 GB RAM (perfect for Spring Boot with optimized JVM memory)
           desiredCount: 1,
           publicLoadBalancer: true, // Exposed to the public internet
           circuitBreaker: { rollback: true },
