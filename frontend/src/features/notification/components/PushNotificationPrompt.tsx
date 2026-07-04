@@ -79,9 +79,8 @@ export function PushNotificationPrompt() {
                                 Stay Updated
                             </h3>
                             <p className="text-sm text-muted-foreground">
-                                Get instantly notified about maintenance
-                                replies, warden announcements, and hostel
-                                updates.
+                                Get instantly notified about complaint replies,
+                                warden announcements, and hostel updates.
                             </p>
                         </div>
 
