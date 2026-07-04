@@ -182,8 +182,7 @@ public class AuthService {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(jwtConfig.isCookieSecure())
-                .path("/") // Path MUST match clearAuthCookie() below or the browser will
-                // treat clears as a *different* cookie and never actually delete this one.
+                .path("/") 
                 .maxAge(jwtConfig.getRefreshTokenExpiration())
                 .sameSite(jwtConfig.getCookieSameSite()) // Must resolve to exactly "Lax", "Strict", or "None"
                 .domain(jwtConfig.getCookieDomain())
