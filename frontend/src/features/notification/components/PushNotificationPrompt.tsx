@@ -67,7 +67,7 @@ export function PushNotificationPrompt() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 20, scale: 0.95 }}
                     transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                    className="fixed right-4 bottom-4 z-50 w-full max-w-sm rounded-xl border border-border bg-background p-4 shadow-xl sm:right-6 sm:bottom-6"
+                    className="fixed right-2 bottom-4 z-50 w-full max-w-sm rounded-xl border border-border bg-background p-4 shadow-xl sm:right-6 sm:bottom-6"
                 >
                     <div className="flex items-start gap-4">
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
