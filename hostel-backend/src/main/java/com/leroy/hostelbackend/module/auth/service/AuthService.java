@@ -186,7 +186,7 @@ public class AuthService {
                 // treat clears as a *different* cookie and never actually delete this one.
                 .maxAge(jwtConfig.getRefreshTokenExpiration())
                 .sameSite(jwtConfig.getCookieSameSite()) // Must resolve to exactly "Lax", "Strict", or "None"
-//                .domain(jwtConfig.getCookieDomain())
+                .domain(jwtConfig.getCookieDomain())
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
@@ -215,7 +215,7 @@ public class AuthService {
                 .path("/") // Must match setAuthCookie()
                 .maxAge(0)
                 .sameSite(jwtConfig.getCookieSameSite())
-//                .domain(jwtConfig.getCookieDomain())
+                .domain(jwtConfig.getCookieDomain())
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
