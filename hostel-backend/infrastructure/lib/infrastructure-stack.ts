@@ -197,7 +197,7 @@ export class InfrastructureStack extends cdk.Stack {
         {
           cluster,
           cpu: 2048, // 2 vCPU
-          memoryLimitMiB: 3072, // 3 GB RAM (perfect for Spring Boot with optimized JVM memory)
+          memoryLimitMiB: 4096, // 3 GB RAM (perfect for Spring Boot with optimized JVM memory)
           desiredCount: 1,
           publicLoadBalancer: true, // Exposed to the public internet
           circuitBreaker: { rollback: true },
