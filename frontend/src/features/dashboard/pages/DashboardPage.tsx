@@ -15,6 +15,7 @@ import type {
     ManagerDashboard as ManagerDashboardType,
 } from '../types/dashboard.types';
 import { Home } from './Home';
+import { AppLoader } from '@/components/ui/AppLoader';
 
 // =============================================================================
 // Animation
@@ -47,7 +48,7 @@ const pageVariants = {
  * Route: {@code /dashboard} — protected, all authenticated roles.
  */
 export default function DashboardPage() {
-    const { user, isAuthenticated } = useAuthStore();
+    const { user, isAuthenticated, isInitialized } = useAuthStore();
 
     const { data, isLoading, isError, refetch, isFetching } =
         useDashboard(isAuthenticated);
@@ -57,6 +58,9 @@ export default function DashboardPage() {
     const greeting = firstName
         ? `Welcome back, ${firstName}.`
         : 'Welcome back.';
+
+    // 2. ADD THIS GUARD: Wait for the auth check to finish completely
+    if (!isInitialized) return <AppLoader />;
 
     if (!isAuthenticated) return <Home />;
 
