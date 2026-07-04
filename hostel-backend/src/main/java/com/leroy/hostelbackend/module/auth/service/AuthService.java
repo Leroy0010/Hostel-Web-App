@@ -182,9 +182,9 @@ public class AuthService {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(jwtConfig.isCookieSecure())
-                .path("/") 
+                .path("/")
                 .maxAge(jwtConfig.getRefreshTokenExpiration())
-                .sameSite(jwtConfig.getCookieSameSite()) // Must resolve to exactly "Lax", "Strict", or "None"
+                .sameSite(jwtConfig.getCookieSameSite())
                 .domain(jwtConfig.getCookieDomain())
                 .build();
 
