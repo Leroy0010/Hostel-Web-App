@@ -10,10 +10,11 @@ import com.leroy.hostelbackend.module.user.model.CustomUserDetails;
 import com.leroy.hostelbackend.module.user.model.User;
 import com.leroy.hostelbackend.module.user.repository.UserRepository;
 import com.leroy.hostelbackend.shared.exception.TokenExpiredException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -178,15 +179,16 @@ public class AuthService {
     }
 
     public void setAuthCookie(HttpServletResponse response, String refreshToken) {
-        // HttpOnly + Secure cookie — never readable by JavaScript
-        var cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(jwtConfig.isCookieSecure());
-        cookie.setPath("/api/auth/refresh");
-        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
-        cookie.setAttribute("SameSite", jwtConfig.getCookieSameSite());
-        cookie.setDomain(jwtConfig.getCookieDomain());
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(jwtConfig.isCookieSecure())
+                .path("/") // Fix: Allows cookie to survive document refresh state
+                .maxAge(jwtConfig.getRefreshTokenExpiration())
+                .sameSite(jwtConfig.getCookieSameSite()) // Ensure this string resolves exactly to "Lax"
+                .domain(jwtConfig.getCookieDomain())     // Ensure this resolves exactly to "hostellifeplus.com"
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
 

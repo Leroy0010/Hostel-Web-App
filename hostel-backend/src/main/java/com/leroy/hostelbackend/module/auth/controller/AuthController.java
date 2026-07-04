@@ -14,7 +14,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -195,14 +197,15 @@ public class AuthController {
             refreshTokenService.revokeToken(refreshToken);
         }
 
-        var cookie = new Cookie("refreshToken", "");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);
-        cookie.setPath("/api/auth/refresh");
-        cookie.setDomain("localhost");
-        cookie.setMaxAge(0);
-        cookie.setAttribute("SameSite", "LAX");
-        response.addCookie(cookie);
+        var cookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/api/auth/refresh")
+                .domain("localhost")
+                .maxAge(0)
+                .sameSite("Lax")
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
         return ResponseEntity.ok(ApiResponse.success("Logout successful!"));
     }
