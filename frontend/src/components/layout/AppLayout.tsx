@@ -44,6 +44,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const isInitialized = useAuthStore((state) => state.isInitialized);
     const user = useAuthStore((state) => state.user);
 
     useNotificationStomp(isAuthenticated);
@@ -155,18 +156,23 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                         onClick={() =>
                             setTheme(theme === 'dark' ? 'light' : 'dark')
                         }
-                        className="text-gray-500 dark:text-gray-400"
-                        aria-label="Toggle theme"
                     >
                         {theme === 'dark' ? (
-                            <Sun size={24} /> // Adjusted sizes slightly for standard UI flow
+                            <Sun size={24} />
                         ) : (
                             <Moon size={24} />
                         )}
                     </Button>
 
-                    {/* Conditional Rendering based on Auth State */}
-                    {isAuthenticated ? (
+                    {/* Auth Conditional Rendering */}
+                    {!isInitialized ? (
+                        // 1. LOADING STATE: Show skeleton placeholders while checking auth
+                        <div className="ml-2 flex items-center gap-3">
+                            <div className="h-8 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-800" />
+                            <div className="h-8 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-800" />
+                        </div>
+                    ) : isAuthenticated ? (
+                        // 2. AUTHENTICATED STATE: Show Notifications and Profile
                         <>
                             {/* Notifications */}
                             <Link
@@ -243,23 +249,19 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                             </Link>
                         </>
                     ) : (
+                        // 3. UNAUTHENTICATED STATE: Show Login and Register
                         <div className="ml-2 flex items-center gap-2">
-                            {/* Login */}
                             <Link
                                 to="/login"
                                 className={buttonVariants({ variant: 'ghost' })}
-                                aria-label="Login"
                             >
                                 Log in
                             </Link>
-
-                            {/* Register */}
                             <Link
                                 to="/register"
                                 className={buttonVariants({
                                     variant: 'default',
                                 })}
-                                aria-label="Register"
                             >
                                 Register
                             </Link>

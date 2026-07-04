@@ -3,9 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '@/features/auth/api/auth';
 import { useAuthStore } from '@/features/auth/store/useAuthStore';
-import type { UserRole } from '@/features/user/types/user.types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { navigation } from './navigation';
+import type { UserRole } from '@/features/user/types/user.types';
 
 export interface NavItem {
     name: string;
@@ -19,7 +19,6 @@ interface NavContentProps {
     isCollapsed?: boolean;
 }
 
-// Animation variants for text elements
 const textVariants = {
     hidden: { opacity: 0, width: 0, transition: { duration: 0.2 } },
     visible: {
@@ -35,11 +34,49 @@ export function NavContent({
 }: NavContentProps) {
     const user = useAuthStore((state) => state.user);
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const isInitialized = useAuthStore((state) => state.isInitialized); // Add this
     const navigate = useNavigate();
     const { mutate: logout, isPending: isLoggingOut } = useLogoutMutation();
 
-    const visibleItems = navigation(isAuthenticated).filter((item) =>
-        (user && item.roles?.includes(user.role)) || !item.roles
+    // ── 1. Skeleton Loading State ─────────────────────────────────────────
+    if (!isInitialized) {
+        return (
+            <div className="flex h-full flex-col gap-4 overflow-hidden">
+                {/* Skeleton Nav Links */}
+                <nav className="flex-1 space-y-1 px-2 py-2">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                        <div
+                            key={i}
+                            className={`h-10 animate-pulse rounded-md bg-gray-200 dark:bg-gray-800 ${
+                                isCollapsed ? 'mx-auto w-10' : 'w-full'
+                            }`}
+                        />
+                    ))}
+                </nav>
+
+                {/* Skeleton User Profile & Logout */}
+                <div className="space-y-2 border-t border-gray-200 p-3 dark:border-gray-800">
+                    <div
+                        className={`flex items-center ${isCollapsed ? 'justify-center' : 'px-3 py-2'}`}
+                    >
+                        <div className="h-8 w-8 shrink-0 animate-pulse rounded-full bg-gray-200 dark:bg-gray-800" />
+                        {!isCollapsed && (
+                            <div className="ml-3 h-4 w-20 animate-pulse rounded bg-gray-200 dark:bg-gray-800" />
+                        )}
+                    </div>
+                    <div
+                        className={`h-9 animate-pulse rounded-md bg-gray-200 dark:bg-gray-800 ${
+                            isCollapsed ? 'mx-auto w-full' : 'w-full'
+                        }`}
+                    />
+                </div>
+            </div>
+        );
+    }
+
+    // ── 2. Normal Render Logic (Runs after init) ──────────────────────────
+    const visibleItems = navigation(isAuthenticated).filter(
+        (item) => (user && item.roles?.includes(user.role)) || !item.roles
     );
 
     const handleLogout = () => {
@@ -51,7 +88,7 @@ export function NavContent({
     return (
         <div className="flex h-full flex-col gap-4 overflow-hidden">
             {/* ── Navigation Links ───────────────────────────────────────── */}
-            <nav className="scrollbar-none flex-1 space-y-1 overflow-x-hidden overflow-y-auto px-2">
+            <nav className="flex-1 scrollbar-none space-y-1 overflow-x-hidden overflow-y-auto px-2">
                 {visibleItems.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -59,7 +96,7 @@ export function NavContent({
                             key={item.name}
                             to={item.href}
                             onClick={onItemClick}
-                            title={isCollapsed ? item.name : undefined} // Native tooltip when collapsed
+                            title={isCollapsed ? item.name : undefined}
                             className={({ isActive }) =>
                                 [
                                     'group flex items-center rounded-md px-3 py-2.5 text-sm font-medium transition-colors duration-150',
@@ -100,9 +137,8 @@ export function NavContent({
                     <div
                         className={`flex items-center rounded-md ${isCollapsed ? 'justify-center' : 'px-3 py-2'}`}
                     >
-                        {/* Avatar Update: Display URL if it exists, otherwise initial */}
-                        <Link 
-                            to={'/profile'} 
+                        <Link
+                            to={'/profile'}
                             className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200 font-bold text-gray-600 ring-1 ring-gray-200 transition-opacity hover:opacity-80 dark:bg-gray-700 dark:text-gray-300 dark:ring-gray-800"
                         >
                             {user.profileUrl ? (
@@ -115,7 +151,7 @@ export function NavContent({
                                 <span>{user.name.charAt(0).toUpperCase()}</span>
                             )}
                         </Link>
-                        
+
                         <AnimatePresence initial={false}>
                             {!isCollapsed && (
                                 <motion.div
