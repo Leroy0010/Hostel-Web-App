@@ -156,6 +156,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                         onClick={() =>
                             setTheme(theme === 'dark' ? 'light' : 'dark')
                         }
+                        aria-label="theme-toggle"
                     >
                         {theme === 'dark' ? (
                             <Sun size={24} />
