@@ -114,6 +114,8 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/hostels").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/hostels/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/rooms").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/rooms/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/landmarks/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reviews/").permitAll()
                         .requestMatchers("/ws/**").permitAll()
