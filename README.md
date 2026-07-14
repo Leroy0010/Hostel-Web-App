@@ -39,7 +39,7 @@ The project consists of two independently deployable applications:
 
 | App | Description | Path |
 | --- | --- | --- |
-| **Backend** | Spring Boot 4 REST + WebSocket API | [`/backend`](./hostel-backend) |
+| **Backend** | Spring Boot 4 REST + WebSocket API | [`/hostel-backend`](./hostel-backend) |
 | **Frontend** | React 19 + TypeScript single-page application | [`/frontend`](./frontend) |
 
 ---
