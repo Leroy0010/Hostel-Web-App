@@ -97,12 +97,12 @@ public class RoomController {
     }
 
     // =========================================================================
-    // Manager + Admin writes
+    // Manager writes
     // =========================================================================
 
     /** Create a new room in a hostel. */
     @PostMapping("/manager/hostels/{hostelId}/rooms")
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ApiResponse<RoomDto>> createRoom(
             @PathVariable UUID hostelId,
             @Valid @RequestBody CreateRoomRequest request,
@@ -126,7 +126,7 @@ public class RoomController {
 
     /** Change room operational status (e.g. mark UNDER_MAINTENANCE). */
     @PatchMapping("/manager/rooms/{id}/status")
-    @PreAuthorize("hasAnyRole('MANAGER')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ApiResponse<RoomDto>> updateStatus(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateRoomStatusRequest request,

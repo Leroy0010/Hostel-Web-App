@@ -6,8 +6,10 @@ import com.leroy.hostelbackend.module.hostel.model.Hostel;
 import com.leroy.hostelbackend.module.room.model.Room;
 import com.leroy.hostelbackend.module.room.model.RoomStatus;
 import com.leroy.hostelbackend.module.room.model.RoomType;
+import com.leroy.hostelbackend.module.user.model.CustomUserDetails;
 import com.leroy.hostelbackend.module.user.model.User;
 import com.leroy.hostelbackend.module.user.model.UserRole;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -47,6 +49,28 @@ public final class TestFixtures {
         user.setLastName(lastName);
         user.setRole(UserRole.MANAGER);
         return user;
+    }
+
+    public static User admin(String firstName, String lastName) {
+        var user = new User();
+        user.setId(UUID.randomUUID());
+        user.setEmail(firstName.toLowerCase() + "." + lastName.toLowerCase() + "@leroy.com");
+        user.setPassword("hashed-password");
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setRole(UserRole.ADMIN);
+        return user;
+    }
+
+    /**
+     * Wraps a fixture {@link User} into the same {@link UsernamePasswordAuthenticationToken}
+     * shape {@code JwtAuthenticationFilter} constructs in production, for use with
+     * {@code SecurityMockMvcRequestPostProcessors.authentication(...)} in
+     * {@code @WebMvcTest} controller slice tests (see {@link MethodSecurityTestConfig}).
+     */
+    public static UsernamePasswordAuthenticationToken authFor(User user) {
+        var principal = new CustomUserDetails(user);
+        return new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
     }
 
     public static Hostel hostel(String name) {

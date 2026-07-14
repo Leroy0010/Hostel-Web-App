@@ -57,7 +57,7 @@ import static org.mockito.Mockito.*;
  * own internal behavior (each has its own test suite / is generated code).
  */
 @ExtendWith(MockitoExtension.class)
-class BookingServiceTest {
+public class BookingServiceTest {
 
     @Mock private BookingRepository   bookingRepository;
     @Mock private RoomRepository      roomRepository;

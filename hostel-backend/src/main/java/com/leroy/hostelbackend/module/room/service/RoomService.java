@@ -33,7 +33,7 @@ import java.util.UUID;
  *
  * <p><strong>Access rules:</strong>
  * <ul>
- *   <li>ADMIN  — full CRUD on any room in any hostel.</li>
+ *   <li>ADMIN  — read only(I want only the managers to have control over the rooms)</li>
  *   <li>MANAGER — CRUD on rooms within their own assigned hostels only.
  *       Ownership is verified by {@link HostelService#assertManagerOwns}.</li>
  *   <li>STUDENT — read-only availability queries.</li>
@@ -119,12 +119,12 @@ public class RoomService {
     }
 
     // -------------------------------------------------------------------------
-    // Manager / Admin writes
+    // Manager  writes
     // -------------------------------------------------------------------------
 
     /**
      * Creates a room inside a hostel.
-     * ADMIN can create in any hostel. MANAGER is validated against their assignment.
+     * MANAGER is validated against their assignment.
      *
      * @param hostelId  the target hostel
      * @param request   validated creation payload
@@ -157,7 +157,7 @@ public class RoomService {
     }
 
     /**
-     * Updates room details. ADMIN can update any room; MANAGER only their hostel's rooms.
+     * Updates room details. MANAGER only their hostel's rooms.
      * Patch semantics — null fields are ignored.
      */
     @Transactional
@@ -197,7 +197,7 @@ public class RoomService {
 
     /**
      * Changes the room's operational status (e.g. to UNDER_MAINTENANCE or RESERVED).
-     * ADMIN or the assigned MANAGER only.
+     * The assigned MANAGER only.
      *
      * @throws IllegalArgumentException if the status string is not a valid {@link RoomStatus}
      */
@@ -214,7 +214,7 @@ public class RoomService {
     }
 
     /**
-     * Deletes a room entirely. ADMIN only (managers cannot delete rooms — they deactivate them).
+     * Deletes a room entirely.
      *
      * @throws IllegalStateException if the room has active bookings (enforced at DB level)
      */

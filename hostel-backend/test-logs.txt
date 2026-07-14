@@ -1,0 +1,1211 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.leroy:hostel-backend >----------------------
+[INFO] Building hostel-backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ hostel-backend ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 8 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ hostel-backend ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 199 source files with javac [debug parameters release 25] to target\classes
+[INFO] /C:/Users/Evans Kojo Aidoo/Desktop/Hostel-Web-App/hostel-backend/src/main/java/com/leroy/hostelbackend/module/email/service/EmailService.java: C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend\src\main\java\com\leroy\hostelbackend\module\email\service\EmailService.java uses unchecked or unsafe operations.
+[INFO] /C:/Users/Evans Kojo Aidoo/Desktop/Hostel-Web-App/hostel-backend/src/main/java/com/leroy/hostelbackend/module/email/service/EmailService.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ hostel-backend ---
+[INFO] skip non existing resourceDirectory C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ hostel-backend ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 16 source files with javac [debug parameters release 25] to target\test-classes
+[INFO] /C:/Users/Evans Kojo Aidoo/Desktop/Hostel-Web-App/hostel-backend/src/test/java/com/leroy/hostelbackend/module/hostel/controller/HostelControllerTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/Evans Kojo Aidoo/Desktop/Hostel-Web-App/hostel-backend/src/test/java/com/leroy/hostelbackend/module/hostel/controller/HostelControllerTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ hostel-backend ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.leroy.hostelbackend.config.JwtConfigTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.251 s -- in com.leroy.hostelbackend.config.JwtConfigTest
+[INFO] Running com.leroy.hostelbackend.HostelBackendApplicationTests
+18:40:29.945 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.leroy.hostelbackend.HostelBackendApplicationTests]: HostelBackendApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+18:40:30.194 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.HostelBackendApplicationTests
+18:40:30.379 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.leroy.hostelbackend.HostelBackendApplicationTests]: HostelBackendApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+18:40:30.381 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.HostelBackendApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.6)
+
+2026-07-13T18:40:31.182Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.HostelBackendApplicationTests      : Starting HostelBackendApplicationTests using Java 25.0.1 with PID 28528 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
+2026-07-13T18:40:31.185Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.HostelBackendApplicationTests      : The following 1 profile is active: "dev"
+2026-07-13T18:40:34.476Z  INFO 28528 --- [HOSTELBOOKING] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-13T18:40:34.782Z  INFO 28528 --- [HOSTELBOOKING] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 288 ms. Found 16 JPA repository interfaces.
+2026-07-13T18:40:36.058Z  INFO 28528 --- [HOSTELBOOKING] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-07-13T18:40:39.981Z  WARN 28528 --- [HOSTELBOOKING] [           main] o.s.w.c.s.GenericWebApplicationContext   : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Failed to initialize dependency 'liquibase' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/liquibase/autoconfigure/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
+2026-07-13T18:40:40.012Z  INFO 28528 --- [HOSTELBOOKING] [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-07-13T18:40:40.064Z ERROR 28528 --- [HOSTELBOOKING] [           main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Failed to initialize dependency 'liquibase' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/liquibase/autoconfigure/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:201) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:977) ~[spring-context-7.0.7.jar:7.0.7]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621) ~[spring-context-7.0.7.jar:7.0.7]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:756) ~[spring-boot-4.0.6.jar:4.0.6]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445) ~[spring-boot-4.0.6.jar:4.0.6]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:321) ~[spring-boot-4.0.6.jar:4.0.6]
+	at org.springframework.boot.test.context.SpringBootContextLoader.lambda$loadContext$2(SpringBootContextLoader.java:155) ~[spring-boot-test-4.0.6.jar:4.0.6]
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:58) ~[spring-core-7.0.7.jar:7.0.7]
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:46) ~[spring-core-7.0.7.jar:7.0.7]
+	at org.springframework.boot.SpringApplication.withHook(SpringApplication.java:1465) ~[spring-boot-4.0.6.jar:4.0.6]
+	at org.springframework.boot.test.context.SpringBootContextLoader$ContextLoaderHook.run(SpringBootContextLoader.java:600) ~[spring-boot-test-4.0.6.jar:4.0.6]
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:155) ~[spring-boot-test-4.0.6.jar:4.0.6]
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:114) ~[spring-boot-test-4.0.6.jar:4.0.6]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:247) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.lambda$loadContext$0(DefaultCacheAwareContextLoaderDelegate.java:167) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.cache.DefaultContextCache.put(DefaultContextCache.java:214) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:160) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:128) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:200) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:139) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:260) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:242) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$1(ClassBasedTestDescriptor.java:423) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.executeAndMaskThrowable(ClassBasedTestDescriptor.java:428) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$0(ClassBasedTestDescriptor.java:422) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:214) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:197) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:214) ~[na:na]
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1716) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560) ~[na:na]
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153) ~[na:na]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:632) ~[na:na]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeTestInstancePostProcessors(ClassBasedTestDescriptor.java:422) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$instantiateAndPostProcessTestInstance$0(ClassBasedTestDescriptor.java:334) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.instantiateAndPostProcessTestInstance(ClassBasedTestDescriptor.java:333) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$1(ClassBasedTestDescriptor.java:322) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.Optional.orElseGet(Optional.java:364) ~[na:na]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$0(ClassBasedTestDescriptor.java:321) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.TestInstancesProvider.getTestInstances(TestInstancesProvider.java:27) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$prepare$0(TestMethodTestDescriptor.java:127) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:126) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:70) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$prepare$0(NodeTestTask.java:144) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.prepare(NodeTestTask.java:144) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:110) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:36) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:52) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:58) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.executeEngine(EngineExecutionOrchestrator.java:246) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.failOrExecuteEngine(EngineExecutionOrchestrator.java:218) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:179) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:66) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:157) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:65) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:125) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$2(InterceptingLauncher.java:57) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:56) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.apache.maven.surefire.api.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:125) ~[surefire-api-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithCancellationToken(LauncherAdapter.java:68) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:54) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.5.5.jar:3.5.5]
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/liquibase/autoconfigure/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1817) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:603) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:196) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:309) ~[spring-beans-7.0.7.jar:7.0.7]
+	... 101 common frames omitted
+Caused by: liquibase.exception.LiquibaseException: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:289) ~[liquibase-core-5.0.2.jar:na]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1864) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1813) ~[spring-beans-7.0.7.jar:7.0.7]
+	... 108 common frames omitted
+Caused by: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
+	at liquibase.integration.spring.SpringLiquibase.lambda$afterPropertiesSet$0(SpringLiquibase.java:281) ~[liquibase-core-5.0.2.jar:na]
+	at liquibase.Scope.lambda$child$0(Scope.java:241) ~[liquibase-core-5.0.2.jar:na]
+	at liquibase.Scope.child(Scope.java:250) ~[liquibase-core-5.0.2.jar:na]
+	at liquibase.Scope.child(Scope.java:240) ~[liquibase-core-5.0.2.jar:na]
+	at liquibase.Scope.child(Scope.java:219) ~[liquibase-core-5.0.2.jar:na]
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:272) ~[liquibase-core-5.0.2.jar:na]
+	... 110 common frames omitted
+Caused by: org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:385) ~[postgresql-42.7.10.jar:42.7.10]
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:57) ~[postgresql-42.7.10.jar:42.7.10]
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:290) ~[postgresql-42.7.10.jar:42.7.10]
+	at org.postgresql.Driver.makeConnection(Driver.java:448) ~[postgresql-42.7.10.jar:42.7.10]
+	at org.postgresql.Driver.connect(Driver.java:298) ~[postgresql-42.7.10.jar:42.7.10]
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:144) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:373) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:210) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:488) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:576) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:97) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111) ~[HikariCP-7.0.2.jar:na]
+	at liquibase.integration.spring.SpringLiquibase.lambda$afterPropertiesSet$0(SpringLiquibase.java:276) ~[liquibase-core-5.0.2.jar:na]
+	... 115 common frames omitted
+Caused by: java.net.UnknownHostException: postgres
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:569) ~[na:na]
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:284) ~[na:na]
+	at java.base/java.net.Socket.connect(Socket.java:659) ~[na:na]
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:261) ~[postgresql-42.7.10.jar:42.7.10]
+	at org.postgresql.core.PGStream.<init>(PGStream.java:122) ~[postgresql-42.7.10.jar:42.7.10]
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:146) ~[postgresql-42.7.10.jar:42.7.10]
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:289) ~[postgresql-42.7.10.jar:42.7.10]
+	... 127 common frames omitted
+
+2026-07-13T18:40:40.083Z  WARN 28528 --- [HOSTELBOOKING] [           main] o.s.test.context.TestContextManager      : Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener] to prepare test instance [com.leroy.hostelbackend.HostelBackendApplicationTests@2a9f8d47]
+
+java.lang.IllegalStateException: Failed to load ApplicationContext for [WebMergedContextConfiguration@4ce18cec testClass = com.leroy.hostelbackend.HostelBackendApplicationTests, locations = [], classes = [com.leroy.hostelbackend.HostelBackendApplication], contextInitializerClasses = [], activeProfiles = [], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [org.springframework.boot.test.context.PropertyMappingContextCustomizer@0, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@73386d72, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@2f19f2aa, org.springframework.boot.test.autoconfigure.OnFailureConditionReportContextCustomizerFactory$OnFailureConditionReportContextCustomizer@79c5636f, org.springframework.test.context.support.DynamicPropertiesContextCustomizer@0, org.springframework.boot.webmvc.test.autoconfigure.WebDriverContextCustomizer@64d43929, org.springframework.boot.web.server.context.SpringBootTestRandomPortContextCustomizer@41c89d2f, org.springframework.boot.test.context.SpringBootTestAnnotation@6420d90], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.lambda$loadContext$0(DefaultCacheAwareContextLoaderDelegate.java:195) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.cache.DefaultContextCache.put(DefaultContextCache.java:214) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:160) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:128) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:200) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:139) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:260) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:242) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$1(ClassBasedTestDescriptor.java:423) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.executeAndMaskThrowable(ClassBasedTestDescriptor.java:428) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$0(ClassBasedTestDescriptor.java:422) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:214) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:197) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:214) ~[na:na]
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1716) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560) ~[na:na]
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153) ~[na:na]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:632) ~[na:na]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeTestInstancePostProcessors(ClassBasedTestDescriptor.java:422) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$instantiateAndPostProcessTestInstance$0(ClassBasedTestDescriptor.java:334) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.instantiateAndPostProcessTestInstance(ClassBasedTestDescriptor.java:333) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$1(ClassBasedTestDescriptor.java:322) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.Optional.orElseGet(Optional.java:364) ~[na:na]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$0(ClassBasedTestDescriptor.java:321) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.TestInstancesProvider.getTestInstances(TestInstancesProvider.java:27) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$prepare$0(TestMethodTestDescriptor.java:127) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:126) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:70) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$prepare$0(NodeTestTask.java:144) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.prepare(NodeTestTask.java:144) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:110) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:36) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:52) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:58) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.executeEngine(EngineExecutionOrchestrator.java:246) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.failOrExecuteEngine(EngineExecutionOrchestrator.java:218) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:179) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:66) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:157) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:65) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:125) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$2(InterceptingLauncher.java:57) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:56) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.apache.maven.surefire.api.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:125) ~[surefire-api-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithCancellationToken(LauncherAdapter.java:68) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:54) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.5.5.jar:3.5.5]
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Failed to initialize dependency 'liquibase' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/liquibase/autoconfigure/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:201) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:977) ~[spring-context-7.0.7.jar:7.0.7]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621) ~[spring-context-7.0.7.jar:7.0.7]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:756) ~[spring-boot-4.0.6.jar:4.0.6]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445) ~[spring-boot-4.0.6.jar:4.0.6]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:321) ~[spring-boot-4.0.6.jar:4.0.6]
+	at org.springframework.boot.test.context.SpringBootContextLoader.lambda$loadContext$2(SpringBootContextLoader.java:155) ~[spring-boot-test-4.0.6.jar:4.0.6]
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:58) ~[spring-core-7.0.7.jar:7.0.7]
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:46) ~[spring-core-7.0.7.jar:7.0.7]
+	at org.springframework.boot.SpringApplication.withHook(SpringApplication.java:1465) ~[spring-boot-4.0.6.jar:4.0.6]
+	at org.springframework.boot.test.context.SpringBootContextLoader$ContextLoaderHook.run(SpringBootContextLoader.java:600) ~[spring-boot-test-4.0.6.jar:4.0.6]
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:155) ~[spring-boot-test-4.0.6.jar:4.0.6]
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:114) ~[spring-boot-test-4.0.6.jar:4.0.6]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:247) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.lambda$loadContext$0(DefaultCacheAwareContextLoaderDelegate.java:167) ~[spring-test-7.0.7.jar:7.0.7]
+	... 86 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/liquibase/autoconfigure/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1817) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:603) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:196) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:309) ~[spring-beans-7.0.7.jar:7.0.7]
+	... 101 common frames omitted
+Caused by: liquibase.exception.LiquibaseException: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:289) ~[liquibase-core-5.0.2.jar:na]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1864) ~[spring-beans-7.0.7.jar:7.0.7]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1813) ~[spring-beans-7.0.7.jar:7.0.7]
+	... 108 common frames omitted
+Caused by: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
+	at liquibase.integration.spring.SpringLiquibase.lambda$afterPropertiesSet$0(SpringLiquibase.java:281) ~[liquibase-core-5.0.2.jar:na]
+	at liquibase.Scope.lambda$child$0(Scope.java:241) ~[liquibase-core-5.0.2.jar:na]
+	at liquibase.Scope.child(Scope.java:250) ~[liquibase-core-5.0.2.jar:na]
+	at liquibase.Scope.child(Scope.java:240) ~[liquibase-core-5.0.2.jar:na]
+	at liquibase.Scope.child(Scope.java:219) ~[liquibase-core-5.0.2.jar:na]
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:272) ~[liquibase-core-5.0.2.jar:na]
+	... 110 common frames omitted
+Caused by: org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:385) ~[postgresql-42.7.10.jar:42.7.10]
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:57) ~[postgresql-42.7.10.jar:42.7.10]
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:290) ~[postgresql-42.7.10.jar:42.7.10]
+	at org.postgresql.Driver.makeConnection(Driver.java:448) ~[postgresql-42.7.10.jar:42.7.10]
+	at org.postgresql.Driver.connect(Driver.java:298) ~[postgresql-42.7.10.jar:42.7.10]
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:144) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:373) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:210) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:488) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:576) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:97) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111) ~[HikariCP-7.0.2.jar:na]
+	at liquibase.integration.spring.SpringLiquibase.lambda$afterPropertiesSet$0(SpringLiquibase.java:276) ~[liquibase-core-5.0.2.jar:na]
+	... 115 common frames omitted
+Caused by: java.net.UnknownHostException: postgres
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:569) ~[na:na]
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:284) ~[na:na]
+	at java.base/java.net.Socket.connect(Socket.java:659) ~[na:na]
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:261) ~[postgresql-42.7.10.jar:42.7.10]
+	at org.postgresql.core.PGStream.<init>(PGStream.java:122) ~[postgresql-42.7.10.jar:42.7.10]
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:146) ~[postgresql-42.7.10.jar:42.7.10]
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:289) ~[postgresql-42.7.10.jar:42.7.10]
+	... 127 common frames omitted
+
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 10.60 s <<< FAILURE! -- in com.leroy.hostelbackend.HostelBackendApplicationTests
+[ERROR] com.leroy.hostelbackend.HostelBackendApplicationTests.contextLoads -- Time elapsed: 0.009 s <<< ERROR!
+java.lang.IllegalStateException: Failed to load ApplicationContext for [WebMergedContextConfiguration@4ce18cec testClass = com.leroy.hostelbackend.HostelBackendApplicationTests, locations = [], classes = [com.leroy.hostelbackend.HostelBackendApplication], contextInitializerClasses = [], activeProfiles = [], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [org.springframework.boot.test.context.PropertyMappingContextCustomizer@0, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@73386d72, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@2f19f2aa, org.springframework.boot.test.autoconfigure.OnFailureConditionReportContextCustomizerFactory$OnFailureConditionReportContextCustomizer@79c5636f, org.springframework.test.context.support.DynamicPropertiesContextCustomizer@0, org.springframework.boot.webmvc.test.autoconfigure.WebDriverContextCustomizer@64d43929, org.springframework.boot.web.server.context.SpringBootTestRandomPortContextCustomizer@41c89d2f, org.springframework.boot.test.context.SpringBootTestAnnotation@6420d90], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.lambda$loadContext$0(DefaultCacheAwareContextLoaderDelegate.java:195)
+	at org.springframework.test.context.cache.DefaultContextCache.put(DefaultContextCache.java:214)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:160)
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:128)
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:200)
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:139)
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:260)
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:242)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:214)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:214)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1716)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:570)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:632)
+	at java.base/java.util.Optional.orElseGet(Optional.java:364)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Failed to initialize dependency 'liquibase' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/liquibase/autoconfigure/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:201)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:977)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:756)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:321)
+	at org.springframework.boot.test.context.SpringBootContextLoader.lambda$loadContext$2(SpringBootContextLoader.java:155)
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:58)
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:46)
+	at org.springframework.boot.SpringApplication.withHook(SpringApplication.java:1465)
+	at org.springframework.boot.test.context.SpringBootContextLoader$ContextLoaderHook.run(SpringBootContextLoader.java:600)
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:155)
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:114)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:247)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.lambda$loadContext$0(DefaultCacheAwareContextLoaderDelegate.java:167)
+	... 21 more
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/liquibase/autoconfigure/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1817)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:603)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:196)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:309)
+	... 36 more
+Caused by: liquibase.exception.LiquibaseException: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:289)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1864)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1813)
+	... 43 more
+Caused by: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
+	at liquibase.integration.spring.SpringLiquibase.lambda$afterPropertiesSet$0(SpringLiquibase.java:281)
+	at liquibase.Scope.lambda$child$0(Scope.java:241)
+	at liquibase.Scope.child(Scope.java:250)
+	at liquibase.Scope.child(Scope.java:240)
+	at liquibase.Scope.child(Scope.java:219)
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:272)
+	... 45 more
+Caused by: org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:385)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:57)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:290)
+	at org.postgresql.Driver.makeConnection(Driver.java:448)
+	at org.postgresql.Driver.connect(Driver.java:298)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:144)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:373)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:210)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:488)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:576)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:97)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111)
+	at liquibase.integration.spring.SpringLiquibase.lambda$afterPropertiesSet$0(SpringLiquibase.java:276)
+	... 50 more
+Caused by: java.net.UnknownHostException: postgres
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:569)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:284)
+	at java.base/java.net.Socket.connect(Socket.java:659)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:261)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:122)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:146)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:289)
+	... 62 more
+
+[INFO] Running com.leroy.hostelbackend.module.auth.security.JwtAuthenticationFilterTest
+[INFO] Running requests that must NOT be authenticated
+2026-07-13T18:40:42.525Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.a.s.JwtAuthenticationFilter      : Rejected request from deactivated account: 3ca00056-aee1-4c91-a267-9f1e0ccbf14b
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.145 s -- in requests that must NOT be authenticated
+[INFO] Running successful authentication
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.242 s -- in successful authentication
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.673 s -- in com.leroy.hostelbackend.module.auth.security.JwtAuthenticationFilterTest
+[INFO] Running com.leroy.hostelbackend.module.auth.security.JwtServiceTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.631 s -- in com.leroy.hostelbackend.module.auth.security.JwtServiceTest
+[INFO] Running com.leroy.hostelbackend.module.auth.security.JwtTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.leroy.hostelbackend.module.auth.security.JwtTest
+[INFO] Running com.leroy.hostelbackend.module.auth.service.AuthServiceTest
+[INFO] Running email verification flow
+2026-07-13T18:40:44.784Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Resend verification requested for non-existent email: nobody@ucc.edu.gh
+2026-07-13T18:40:44.808Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Resend verification requested for already active user ID: 8637ed3c-1c5a-4274-9562-b54f1dab1587
+2026-07-13T18:40:44.816Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : New verification email sent securely for user ID: a5595520-b0cd-42b7-a9c0-2e849e8d018f
+2026-07-13T18:40:44.833Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Email verified successfully for user ID: 7d17a744-799d-489a-b3fe-67e529e597b3
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.357 s -- in email verification flow
+[INFO] Running password reset flow
+2026-07-13T18:40:44.854Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password has been successfully recovered and reset for user ID: 60af7dc0-48ae-450f-a85e-ec8f8b5766b1
+2026-07-13T18:40:44.861Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password reset requested for non-existent email: nobody@ucc.edu.gh
+2026-07-13T18:40:44.868Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password has been successfully recovered and reset for user ID: fd5f8142-3fc7-4f88-b2b1-4289bd9e125f
+2026-07-13T18:40:44.884Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password has been successfully recovered and reset for user ID: d520d87d-a290-4b15-8a5c-cafde9f1f41a
+2026-07-13T18:40:44.891Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password reset token generated and emailed safely for user ID: 845ce81c-962d-4f3e-aaef-fabe09205d95
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s -- in password reset flow
+[INFO] Running setAuthCookie / clearAuthCookie attribute consistency
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s -- in setAuthCookie / clearAuthCookie attribute consistency
+[INFO] Running generateAndSaveToken
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in generateAndSaveToken
+[INFO] Running changePassword
+2026-07-13T18:40:45.009Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password changed securely via user settings for ID: 33c7d021-b507-49d7-9da8-02d79eed10cb
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in changePassword
+[INFO] Running getAuthenticatedUserDetails / getAuthenticatedUser
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in getAuthenticatedUserDetails / getAuthenticatedUser
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.568 s -- in com.leroy.hostelbackend.module.auth.service.AuthServiceTest
+[INFO] Running com.leroy.hostelbackend.module.booking.controller.BookingControllerTest
+2026-07-13T18:40:45.065Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:45.302Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest
+2026-07-13T18:40:45.305Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:45.321Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest
+[INFO] Running POST /api/bookings/{id}/payment
+2026-07-13T18:40:45.328Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$SubmitPayment]: SubmitPayment does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:45.349Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$SubmitPayment
+2026-07-13T18:40:45.352Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$SubmitPayment]: SubmitPayment does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:45.353Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:45.372Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$SubmitPayment
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.6)
+
+2026-07-13T18:40:45.487Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.c.BookingControllerTest$SubmitPayment : Starting BookingControllerTest.SubmitPayment using Java 25.0.1 with PID 28528 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
+2026-07-13T18:40:45.488Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.c.BookingControllerTest$SubmitPayment : The following 1 profile is active: "dev"
+=== Custom ObjectMapper Bean Created with ISO-8601 string format ===
+2026-07-13T18:40:48.153Z  INFO 28528 --- [HOSTELBOOKING] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-13T18:40:48.153Z  INFO 28528 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-13T18:40:48.156Z  INFO 28528 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 3 ms
+2026-07-13T18:40:48.260Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.c.BookingControllerTest$SubmitPayment : Started BookingControllerTest.SubmitPayment in 2.871 seconds (process running for 21.894)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.815 s -- in POST /api/bookings/{id}/payment
+[INFO] Running GET /api/bookings/{id}
+2026-07-13T18:40:49.143Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$GetBooking]: GetBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:49.168Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$GetBooking
+2026-07-13T18:40:49.169Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$GetBooking]: GetBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:49.170Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:49.181Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$GetBooking
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.234 s -- in GET /api/bookings/{id}
+[INFO] Running DELETE /api/bookings/{id}/cancel
+2026-07-13T18:40:49.380Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CancelBooking]: CancelBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:49.398Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CancelBooking
+2026-07-13T18:40:49.400Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CancelBooking]: CancelBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:49.401Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:49.417Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CancelBooking
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.239 s -- in DELETE /api/bookings/{id}/cancel
+[INFO] Running POST /api/manager/bookings/{id}/action
+2026-07-13T18:40:49.621Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$ActionBooking]: ActionBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:49.632Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$ActionBooking
+2026-07-13T18:40:49.633Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$ActionBooking]: ActionBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:49.633Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:49.649Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$ActionBooking
+2026-07-13T18:40:49.760Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+2026-07-13T18:40:49.806Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Illegal argument: A rejection reason is required.
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.407 s -- in POST /api/manager/bookings/{id}/action
+[INFO] Running POST /api/manager/bookings/{id}/checkin and /checkout
+2026-07-13T18:40:50.028Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CheckInOut]: CheckInOut does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:50.038Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CheckInOut
+2026-07-13T18:40:50.040Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CheckInOut]: CheckInOut does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:50.040Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:50.051Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CheckInOut
+2026-07-13T18:40:50.180Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.321 s -- in POST /api/manager/bookings/{id}/checkin and /checkout
+[INFO] Running POST /api/bookings
+2026-07-13T18:40:50.353Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CreateBooking]: CreateBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:50.361Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CreateBooking
+2026-07-13T18:40:50.362Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CreateBooking]: CreateBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:50.362Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:50.372Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CreateBooking
+2026-07-13T18:40:50.580Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.301 s -- in POST /api/bookings
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.615 s -- in com.leroy.hostelbackend.module.booking.controller.BookingControllerTest
+[INFO] Running com.leroy.hostelbackend.module.booking.service.BookingServiceTest
+[INFO] Running expireApprovedBooking
+2026-07-13T18:40:51.173Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : [SWEEPER] APPROVED booking expired: id=b4e9a5a5-c3e9-412e-bc09-32fa9246e994, student=65cdee8a-1a60-482a-a1ee-752dc16987fa, room=A-531
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.502 s -- in expireApprovedBooking
+[INFO] Running checkIn
+2026-07-13T18:40:51.186Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-in: bookingId=6d2530e0-0b05-418d-b330-cbd552e69163, managerId=72743b10-0043-4f5e-af3b-7506fc9264f6, room=A-897
+2026-07-13T18:40:51.193Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : [REMINDER] Student af4b47c1-1e9f-4bb6-a7c7-dfe6652a14c1 has 1 other active booking(s) after check-in
+2026-07-13T18:40:51.194Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-in: bookingId=36f4fa98-b8d1-418f-8533-fa07b9bf2dc6, managerId=ccbeecbf-39e7-4f2b-9bf2-742bc87a04bb, room=A-359
+2026-07-13T18:40:51.212Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-in: bookingId=b1de95ce-c4d0-4134-8b1a-18b0e7ba12c7, managerId=84a5357e-0fdd-4817-aeff-0bd77967aed6, room=A-151
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.053 s -- in checkIn
+[INFO] Running checkOut
+2026-07-13T18:40:51.239Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-out: bookingId=5f9284f6-6568-497a-9814-3fe8f04b6eb6, managerId=f40422d0-66e2-4288-8664-695c92b50057
+2026-07-13T18:40:51.247Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-out: bookingId=808bfe25-fbce-4bff-9726-b3d7195dce5b, managerId=e5368966-1be3-4dd5-b1c4-41459039ff25
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in checkOut
+[INFO] Running cancelBooking
+2026-07-13T18:40:51.263Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking cancelled by student: id=68c4d2a3-6508-4e20-9ef2-ef27886019ad, previousStatus=APPROVED
+2026-07-13T18:40:51.394Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking cancelled by student: id=8fad7997-9659-4d75-8934-8f4b66e2676c, previousStatus=PENDING
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.138 s -- in cancelBooking
+[INFO] Running actionBooking
+2026-07-13T18:40:51.412Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking approved by manager ebd91f94-d454-4947-a1b8-2fb16bebae98: id=6c6e0083-28b5-4bf3-b759-3e22ff23aff0
+2026-07-13T18:40:51.420Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking approved by manager 4b4addf0-9001-418c-b87b-f219469d8f08: id=b92fda00-67de-4fca-91d7-1db8d9c00665
+2026-07-13T18:40:51.428Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking rejected by manager bb581fdc-d7fa-44c0-ab8b-2077e0d03593: id=6023256f-5889-400c-b870-3d39c52896ff
+2026-07-13T18:40:51.452Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking approved by manager 9b017d5e-6541-4ee6-8761-3113cc2fd0e5: id=6a960adb-effe-41ae-ac5e-cff2773e6f98
+2026-07-13T18:40:51.522Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking approved by manager 14422d16-e636-440c-b80b-be7b08c118d7: id=9d52b5d2-4237-4b38-aa69-73e61f5892a6
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.122 s -- in actionBooking
+[INFO] Running getBookingById
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in getBookingById
+[INFO] Running createBooking
+2026-07-13T18:40:51.647Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking created: id=null, student=653ed1ee-29ca-438a-969a-2ae617e130e0, room=A-792 [2026/2027 SECOND]
+2026-07-13T18:40:51.656Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking created: id=null, student=1c743ee8-9f49-4ee8-925e-975f6f5f3730, room=A-982 [2026/2027 FIRST]
+2026-07-13T18:40:51.674Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking created: id=null, student=09597a42-0aee-4541-9dd3-4bf26445218c, room=A-295 [2026/2027 FIRST]
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.142 s -- in createBooking
+[INFO] Running expireWaitlistDraft
+2026-07-13T18:40:51.711Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : [SWEEPER] Waitlist draft expired: id=68fe44f6-2ddd-42d3-97d5-03cbb4402111, student=8d888184-f352-458b-9637-2847f7eaffc8, room=A-776
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in expireWaitlistDraft
+[INFO] Running submitPayment
+2026-07-13T18:40:51.729Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Payment reference submitted: bookingId=8f2a2556-9012-4bb6-9d2d-c016cc353142
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in submitPayment
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.081 s -- in com.leroy.hostelbackend.module.booking.service.BookingServiceTest
+[INFO] Running com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest
+2026-07-13T18:40:51.758Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:51.938Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest
+2026-07-13T18:40:51.940Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:51.957Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest
+[INFO] Running GET /api/hostels and /api/hostels/{id} — public reads
+2026-07-13T18:40:51.962Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$PublicReads]: PublicReads does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:51.979Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$PublicReads
+2026-07-13T18:40:51.981Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$PublicReads]: PublicReads does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:51.982Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:51.997Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$PublicReads
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.6)
+
+2026-07-13T18:40:52.069Z  INFO 28528 --- [HOSTELBOOKING] [           main] h.m.h.c.HostelControllerTest$PublicReads : Starting HostelControllerTest.PublicReads using Java 25.0.1 with PID 28528 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
+2026-07-13T18:40:52.069Z  INFO 28528 --- [HOSTELBOOKING] [           main] h.m.h.c.HostelControllerTest$PublicReads : The following 1 profile is active: "dev"
+2026-07-13T18:40:53.245Z  INFO 28528 --- [HOSTELBOOKING] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-13T18:40:53.245Z  INFO 28528 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-13T18:40:53.247Z  INFO 28528 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-07-13T18:40:53.277Z  INFO 28528 --- [HOSTELBOOKING] [           main] h.m.h.c.HostelControllerTest$PublicReads : Started HostelControllerTest.PublicReads in 1.263 seconds (process running for 26.91)
+2026-07-13T18:40:53.345Z  WARN 28528 --- [HOSTELBOOKING] [           main] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.435 s -- in GET /api/hostels and /api/hostels/{id} — public reads
+[INFO] Running POST /api/admin/hostels/{id}/manager
+2026-07-13T18:40:53.400Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$AssignManager]: AssignManager does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:53.417Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$AssignManager
+2026-07-13T18:40:53.419Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$AssignManager]: AssignManager does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:53.419Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:53.432Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$AssignManager
+2026-07-13T18:40:53.555Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.249 s -- in POST /api/admin/hostels/{id}/manager
+[INFO] Running PUT /api/manager/hostels/{id}
+2026-07-13T18:40:53.652Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$ManagerUpdateHostel]: ManagerUpdateHostel does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:53.668Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$ManagerUpdateHostel
+2026-07-13T18:40:53.669Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$ManagerUpdateHostel]: ManagerUpdateHostel does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:53.670Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:53.683Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$ManagerUpdateHostel
+2026-07-13T18:40:53.784Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.155 s -- in PUT /api/manager/hostels/{id}
+[INFO] Running POST /api/admin/hostels
+2026-07-13T18:40:53.807Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$CreateHostel]: CreateHostel does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:53.814Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$CreateHostel
+2026-07-13T18:40:53.815Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$CreateHostel]: CreateHostel does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:53.815Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:53.823Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$CreateHostel
+2026-07-13T18:40:54.002Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.297 s -- in POST /api/admin/hostels
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.359 s -- in com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest
+[INFO] Running com.leroy.hostelbackend.module.room.controller.RoomControllerTest
+2026-07-13T18:40:54.119Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:54.244Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest
+2026-07-13T18:40:54.245Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:54.254Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest
+[INFO] Running POST /api/manager/rooms/{id}/amenities
+2026-07-13T18:40:54.257Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$AddAmenity]: AddAmenity does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:54.265Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$AddAmenity
+2026-07-13T18:40:54.266Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$AddAmenity]: AddAmenity does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:54.267Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:54.276Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$AddAmenity
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.6)
+
+2026-07-13T18:40:54.344Z  INFO 28528 --- [HOSTELBOOKING] [           main] .l.h.m.r.c.RoomControllerTest$AddAmenity : Starting RoomControllerTest.AddAmenity using Java 25.0.1 with PID 28528 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
+2026-07-13T18:40:54.345Z  INFO 28528 --- [HOSTELBOOKING] [           main] .l.h.m.r.c.RoomControllerTest$AddAmenity : The following 1 profile is active: "dev"
+2026-07-13T18:40:55.523Z  INFO 28528 --- [HOSTELBOOKING] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-13T18:40:55.524Z  INFO 28528 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-13T18:40:55.526Z  INFO 28528 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-07-13T18:40:55.560Z  INFO 28528 --- [HOSTELBOOKING] [           main] .l.h.m.r.c.RoomControllerTest$AddAmenity : Started RoomControllerTest.AddAmenity in 1.269 seconds (process running for 29.195)
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.428 s -- in POST /api/manager/rooms/{id}/amenities
+[INFO] Running POST /api/manager/hostels/{hostelId}/rooms
+2026-07-13T18:40:55.689Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$CreateRoom]: CreateRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:55.705Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$CreateRoom
+2026-07-13T18:40:55.707Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$CreateRoom]: CreateRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:55.708Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:55.723Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$CreateRoom
+2026-07-13T18:40:55.891Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+2026-07-13T18:40:56.081Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.516 s -- in POST /api/manager/hostels/{hostelId}/rooms
+[INFO] Running PATCH /api/manager/rooms/{id}/status
+2026-07-13T18:40:56.207Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$UpdateStatus]: UpdateStatus does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:56.218Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$UpdateStatus
+2026-07-13T18:40:56.220Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$UpdateStatus]: UpdateStatus does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:56.220Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:56.230Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$UpdateStatus
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.130 s -- in PATCH /api/manager/rooms/{id}/status
+[INFO] Running DELETE /api/manager/rooms/{id}
+2026-07-13T18:40:56.338Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$DeleteRoom]: DeleteRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:56.349Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$DeleteRoom
+2026-07-13T18:40:56.351Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$DeleteRoom]: DeleteRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:56.352Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:56.363Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$DeleteRoom
+2026-07-13T18:40:56.415Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+2026-07-13T18:40:56.535Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.233 s -- in DELETE /api/manager/rooms/{id}
+[INFO] Running GET /api/rooms/{id}
+2026-07-13T18:40:56.574Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$GetRoom]: GetRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:56.587Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$GetRoom
+2026-07-13T18:40:56.589Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$GetRoom]: GetRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:56.589Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:56.603Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$GetRoom
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.213 s -- in GET /api/rooms/{id}
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.678 s -- in com.leroy.hostelbackend.module.room.controller.RoomControllerTest
+[INFO] Running com.leroy.hostelbackend.module.room.service.RoomServiceTest
+[INFO] Running updateRoomStatus and deleteRoom
+2026-07-13T18:40:57.063Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.module.room.service.RoomService    : Room deleted: id=eaf8501d-7125-46be-b7ad-5d07aa693678
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.267 s -- in updateRoomStatus and deleteRoom
+[INFO] Running recalculateRoomStatus
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in recalculateRoomStatus
+[INFO] Running amenity management
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in amenity management
+[INFO] Running updateRoom
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s -- in updateRoom
+[INFO] Running createRoom
+2026-07-13T18:40:57.170Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.module.room.service.RoomService    : Room created: id=null, number=A-101, hostel=9d34aaf5-202b-4d40-997a-9c881c173d96
+2026-07-13T18:40:57.177Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.module.room.service.RoomService    : Room created: id=null, number=A-101, hostel=17f58a0d-bc40-4b46-85e4-5bbe6fa9647e
+2026-07-13T18:40:57.187Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.module.room.service.RoomService    : Room created: id=null, number=A-101, hostel=f8e19494-c1a4-4e12-af53-b00475c63388
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in createRoom
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.394 s -- in com.leroy.hostelbackend.module.room.service.RoomServiceTest
+[INFO] Running com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest
+2026-07-13T18:40:57.197Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:57.309Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest
+2026-07-13T18:40:57.311Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:57.318Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest
+[INFO] Running GET /api/waitlists/status/{hostelId}
+2026-07-13T18:40:57.321Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetStatus]: GetStatus does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:57.330Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetStatus
+2026-07-13T18:40:57.331Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetStatus]: GetStatus does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:57.331Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:57.339Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetStatus
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.6)
+
+2026-07-13T18:40:57.402Z  INFO 28528 --- [HOSTELBOOKING] [           main] h.m.w.c.WaitlistControllerTest$GetStatus : Starting WaitlistControllerTest.GetStatus using Java 25.0.1 with PID 28528 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
+2026-07-13T18:40:57.402Z  INFO 28528 --- [HOSTELBOOKING] [           main] h.m.w.c.WaitlistControllerTest$GetStatus : The following 1 profile is active: "dev"
+=== Custom ObjectMapper Bean Created with ISO-8601 string format ===
+2026-07-13T18:40:58.209Z  INFO 28528 --- [HOSTELBOOKING] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-13T18:40:58.210Z  INFO 28528 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-13T18:40:58.211Z  INFO 28528 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-07-13T18:40:58.242Z  INFO 28528 --- [HOSTELBOOKING] [           main] h.m.w.c.WaitlistControllerTest$GetStatus : Started WaitlistControllerTest.GetStatus in 0.893 seconds (process running for 31.876)
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.011 s -- in GET /api/waitlists/status/{hostelId}
+[INFO] Running DELETE /api/waitlists/{hostelId}
+2026-07-13T18:40:58.334Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$LeaveWaitlist]: LeaveWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.343Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$LeaveWaitlist
+2026-07-13T18:40:58.344Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$LeaveWaitlist]: LeaveWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.344Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.351Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$LeaveWaitlist
+2026-07-13T18:40:58.443Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.137 s -- in DELETE /api/waitlists/{hostelId}
+[INFO] Running POST /api/waitlists
+2026-07-13T18:40:58.473Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$JoinWaitlist]: JoinWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.481Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$JoinWaitlist
+2026-07-13T18:40:58.482Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$JoinWaitlist]: JoinWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.483Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.490Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$JoinWaitlist
+2026-07-13T18:40:58.587Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.178 s -- in POST /api/waitlists
+[INFO] Running GET /api/hostels/{hostelId}/waitlist-periods
+2026-07-13T18:40:58.656Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetWaitlistPeriods]: GetWaitlistPeriods does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.665Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetWaitlistPeriods
+2026-07-13T18:40:58.667Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetWaitlistPeriods]: GetWaitlistPeriods does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.667Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.676Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetWaitlistPeriods
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.135 s -- in GET /api/hostels/{hostelId}/waitlist-periods
+[INFO] Running GET /api/manager/hostels/{hostelId}/waitlist
+2026-07-13T18:40:58.791Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$HostelWaitlist]: HostelWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.797Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$HostelWaitlist
+2026-07-13T18:40:58.798Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$HostelWaitlist]: HostelWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.799Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.805Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$HostelWaitlist
+2026-07-13T18:40:58.834Z  WARN 28528 --- [HOSTELBOOKING] [           main] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+2026-07-13T18:40:58.862Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.090 s -- in GET /api/manager/hostels/{hostelId}/waitlist
+[INFO] Running DELETE /api/manager/waitlists/{waitlistId}
+2026-07-13T18:40:58.883Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$ManagerRemove]: ManagerRemove does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.893Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$ManagerRemove
+2026-07-13T18:40:58.895Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$ManagerRemove]: ManagerRemove does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.895Z  INFO 28528 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-13T18:40:58.901Z  INFO 28528 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$ManagerRemove
+2026-07-13T18:40:58.952Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.089 s -- in DELETE /api/manager/waitlists/{waitlistId}
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.790 s -- in com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest
+[INFO] Running com.leroy.hostelbackend.module.waitlist.service.WaitlistServiceTest
+[INFO] Running joinWaitlist
+2026-07-13T18:40:59.211Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : Student 30787d49-642a-461c-bba6-7b569fd70f8a joined waitlist for hostel ce9425df-c9df-464b-a3f3-8d34c4759ae7 [SINGLE 2026/2027 FIRST] at position 4
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.230 s -- in joinWaitlist
+[INFO] Running leaveWaitlist
+2026-07-13T18:40:59.227Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : Student e42d1be4-ec14-4c94-86f9-96195cca5c9a left waitlist for hostel 6b2270b6-1a4d-4d75-ba32-692e0fbc3da3 [SINGLE 2026/2027 FIRST]
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in leaveWaitlist
+[INFO] Running getWaitlistPeriodsDropdown
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in getWaitlistPeriodsDropdown
+[INFO] Running promoteNextInLine
+2026-07-13T18:40:59.244Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Candidate 4a0d81bc-6160-47d3-872f-6c719f3059ba already holds a FIRST/SECOND booking for room A-392 in 2026/2027. Cannot draft FULL semester. Trying next candidate.
+2026-07-13T18:40:59.246Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student bd70f034-37d5-4b0c-8650-3401795c8994 ? draft booking null for room A-392 [SINGLE 2026/2027 FULL]
+2026-07-13T18:40:59.261Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student fbe8096a-91f8-4328-9ea5-64dd8427ca4c ? draft booking null for room A-271 [SINGLE 2026/2027 FIRST]
+2026-07-13T18:40:59.265Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promotion skipped — room A-184 is RESERVED and cannot accept a draft.
+2026-07-13T18:40:59.270Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student aa3b40a7-da68-44aa-b8f8-ce7839d2a25a ? draft booking null for room A-403 [SINGLE 2026/2027 FIRST]
+2026-07-13T18:40:59.274Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promotion skipped — room A-389 has no FIRST semester occupancy for 2026/2027; SECOND semester draft cannot be created.
+2026-07-13T18:40:59.279Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student 40c8d5bb-9a8c-4dfb-982d-a50a3c4a50ad ? draft booking null for room A-257 [SINGLE 2026/2027 FIRST]
+2026-07-13T18:40:59.285Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Candidate 8bf749af-c358-480c-8bb7-baf093f729ee already has an active booking for room A-434 [2026/2027 FIRST]. Removing entry and trying next candidate.
+2026-07-13T18:40:59.286Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student d21313d9-9dbe-4f72-bdab-b2b64ab77cfd ? draft booking null for room A-434 [SINGLE 2026/2027 FIRST]
+2026-07-13T18:40:59.291Z  WARN 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promotion skipped — room A-335 is UNDER_MAINTENANCE and cannot accept a draft.
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.053 s -- in promoteNextInLine
+[INFO] Running managerRemoveEntry
+2026-07-13T18:40:59.298Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [MANAGER] Waitlist entry 38ece154-0b19-475b-8a64-afad50f314ee removed
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in managerRemoveEntry
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.320 s -- in com.leroy.hostelbackend.module.waitlist.service.WaitlistServiceTest
+[INFO] Running com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest
+2026-07-13T18:40:59.323Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 1 expired APPROVED booking(s) to process.
+2026-07-13T18:40:59.323Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] APPROVED sweep complete — expired: 1, failed: 0
+2026-07-13T18:40:59.324Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 1 expired waitlist draft(s) to process.
+2026-07-13T18:40:59.324Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Waitlist draft sweep complete — expired: 1, failed: 0
+[INFO] Running sweepExpiredWaitlistDrafts (via sweep())
+2026-07-13T18:40:59.333Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 2 expired waitlist draft(s) to process.
+2026-07-13T18:40:59.334Z ERROR 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Failed to expire waitlist draft 472612d0-c100-45f5-a6c1-eecb34ae6190: simulated failure
+
+java.lang.IllegalStateException: simulated failure
+	at com.leroy.hostelbackend.module.booking.service.BookingService.expireWaitlistDraft(BookingService.java:527) ~[classes/:na]
+	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweepExpiredWaitlistDrafts(BookingExpiredSweeper.java:133) ~[classes/:na]
+	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweep(BookingExpiredSweeper.java:68) ~[classes/:na]
+	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest$SweepExpiredWaitlistDrafts.isolatesFailuresBetweenDrafts(BookingExpiredSweeperTest.java:164) ~[test-classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:701) ~[junit-platform-commons-6.0.3.jar:6.0.3]
+	at org.junit.platform.commons.support.ReflectionSupport.invokeMethod(ReflectionSupport.java:502) ~[junit-platform-commons-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.support.MethodReflectionUtils.invoke(MethodReflectionUtils.java:45) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:61) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:124) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:163) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:148) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:123) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:105) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:99) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:66) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:47) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:39) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:104) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:98) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invokeVoid(InterceptingExecutableInvoker.java:71) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$0(TestMethodTestDescriptor.java:219) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:215) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:157) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:70) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:176) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:36) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:52) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:58) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.executeEngine(EngineExecutionOrchestrator.java:246) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.failOrExecuteEngine(EngineExecutionOrchestrator.java:218) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:179) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:66) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:157) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:65) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:125) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$2(InterceptingLauncher.java:57) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:56) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.apache.maven.surefire.api.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:125) ~[surefire-api-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithCancellationToken(LauncherAdapter.java:68) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:54) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.5.5.jar:3.5.5]
+
+2026-07-13T18:40:59.336Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Waitlist draft sweep complete — expired: 1, failed: 1
+2026-07-13T18:40:59.339Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 2 expired waitlist draft(s) to process.
+2026-07-13T18:40:59.340Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Waitlist draft sweep complete — expired: 2, failed: 0
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in sweepExpiredWaitlistDrafts (via sweep())
+[INFO] Running sweepExpiredApprovedBookings (via sweep())
+2026-07-13T18:40:59.356Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 2 expired APPROVED booking(s) to process.
+2026-07-13T18:40:59.356Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] APPROVED sweep complete — expired: 2, failed: 0
+2026-07-13T18:40:59.360Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 3 expired APPROVED booking(s) to process.
+2026-07-13T18:40:59.376Z ERROR 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Failed to expire APPROVED booking 1fdc05e4-a8e8-42e0-b47b-e1ab66538695: 
+Strict stubbing argument mismatch. Please check:
+ - this invocation of 'expireApprovedBooking' method:
+    bookingService.expireApprovedBooking(
+    com.leroy.hostelbackend.module.booking.model.Booking@163c7925
+);
+    -> at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweepExpiredApprovedBookings(BookingExpiredSweeper.java:95)
+ - has following stubbing(s) with different arguments:
+    1. bookingService.expireApprovedBooking(
+    com.leroy.hostelbackend.module.booking.model.Booking@5eee0e2d
+);
+      -> at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest$SweepExpiredApprovedBookings.isolatesFailuresBetweenBookings(BookingExpiredSweeperTest.java:93)
+Typically, stubbing argument mismatch indicates user mistake when writing tests.
+Mockito fails early so that you can debug potential problem easily.
+However, there are legit scenarios when this exception generates false negative signal:
+  - stubbing the same method multiple times using 'given().will()' or 'when().then()' API
+    Please use 'will().given()' or 'doReturn().when()' API for stubbing.
+  - stubbed method is intentionally invoked with different arguments by code under test
+    Please use default or 'silent' JUnit Rule (equivalent of Strictness.LENIENT).
+For more information see javadoc for PotentialStubbingProblem class.
+
+org.mockito.exceptions.misusing.PotentialStubbingProblem: 
+Strict stubbing argument mismatch. Please check:
+ - this invocation of 'expireApprovedBooking' method:
+    bookingService.expireApprovedBooking(
+    com.leroy.hostelbackend.module.booking.model.Booking@163c7925
+);
+    -> at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweepExpiredApprovedBookings(BookingExpiredSweeper.java:95)
+ - has following stubbing(s) with different arguments:
+    1. bookingService.expireApprovedBooking(
+    com.leroy.hostelbackend.module.booking.model.Booking@5eee0e2d
+);
+      -> at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest$SweepExpiredApprovedBookings.isolatesFailuresBetweenBookings(BookingExpiredSweeperTest.java:93)
+Typically, stubbing argument mismatch indicates user mistake when writing tests.
+Mockito fails early so that you can debug potential problem easily.
+However, there are legit scenarios when this exception generates false negative signal:
+  - stubbing the same method multiple times using 'given().will()' or 'when().then()' API
+    Please use 'will().given()' or 'doReturn().when()' API for stubbing.
+  - stubbed method is intentionally invoked with different arguments by code under test
+    Please use default or 'silent' JUnit Rule (equivalent of Strictness.LENIENT).
+For more information see javadoc for PotentialStubbingProblem class.
+	at com.leroy.hostelbackend.module.booking.service.BookingService.expireApprovedBooking(BookingService.java:491) ~[classes/:na]
+	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweepExpiredApprovedBookings(BookingExpiredSweeper.java:95) ~[classes/:na]
+	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweep(BookingExpiredSweeper.java:67) ~[classes/:na]
+	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest$SweepExpiredApprovedBookings.isolatesFailuresBetweenBookings(BookingExpiredSweeperTest.java:95) ~[test-classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:701) ~[junit-platform-commons-6.0.3.jar:6.0.3]
+	at org.junit.platform.commons.support.ReflectionSupport.invokeMethod(ReflectionSupport.java:502) ~[junit-platform-commons-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.support.MethodReflectionUtils.invoke(MethodReflectionUtils.java:45) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:61) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:124) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:163) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:148) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:123) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:105) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:99) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:66) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:47) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:39) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:104) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:98) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invokeVoid(InterceptingExecutableInvoker.java:71) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$0(TestMethodTestDescriptor.java:219) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:215) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:157) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:70) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:176) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:36) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:52) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:58) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.executeEngine(EngineExecutionOrchestrator.java:246) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.failOrExecuteEngine(EngineExecutionOrchestrator.java:218) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:179) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:66) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:157) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:65) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:125) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$2(InterceptingLauncher.java:57) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:56) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.apache.maven.surefire.api.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:125) ~[surefire-api-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithCancellationToken(LauncherAdapter.java:68) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:54) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.5.5.jar:3.5.5]
+
+2026-07-13T18:40:59.378Z ERROR 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Failed to expire APPROVED booking 16a25f83-6b10-4b9a-bae1-7529ed13e8b2: simulated DB failure
+
+java.lang.RuntimeException: simulated DB failure
+	at com.leroy.hostelbackend.module.booking.service.BookingService.expireApprovedBooking(BookingService.java:491) ~[classes/:na]
+	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweepExpiredApprovedBookings(BookingExpiredSweeper.java:95) ~[classes/:na]
+	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweep(BookingExpiredSweeper.java:67) ~[classes/:na]
+	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest$SweepExpiredApprovedBookings.isolatesFailuresBetweenBookings(BookingExpiredSweeperTest.java:95) ~[test-classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:701) ~[junit-platform-commons-6.0.3.jar:6.0.3]
+	at org.junit.platform.commons.support.ReflectionSupport.invokeMethod(ReflectionSupport.java:502) ~[junit-platform-commons-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.support.MethodReflectionUtils.invoke(MethodReflectionUtils.java:45) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:61) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:124) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:163) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:148) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:123) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:105) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:99) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:66) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:47) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:39) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:104) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:98) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invokeVoid(InterceptingExecutableInvoker.java:71) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$0(TestMethodTestDescriptor.java:219) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:215) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:157) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:70) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:176) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:36) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:52) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:58) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.executeEngine(EngineExecutionOrchestrator.java:246) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.failOrExecuteEngine(EngineExecutionOrchestrator.java:218) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:179) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:66) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:157) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:65) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:125) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$2(InterceptingLauncher.java:57) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:56) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[na:na]
+	at org.apache.maven.surefire.api.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:125) ~[surefire-api-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithCancellationToken(LauncherAdapter.java:68) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:54) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.5.5.jar:3.5.5]
+
+2026-07-13T18:40:59.379Z  INFO 28528 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] APPROVED sweep complete — expired: 1, failed: 2
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.036 s -- in sweepExpiredApprovedBookings (via sweep())
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.061 s -- in com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Errors: 
+[ERROR]   HostelBackendApplicationTests.contextLoads » IllegalState Failed to load ApplicationContext for [WebMergedContextConfiguration@4ce18cec testClass = com.leroy.hostelbackend.HostelBackendApplicationTests, locations = [], classes = [com.leroy.hostelbackend.HostelBackendApplication], contextInitializerClasses = [], activeProfiles = [], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [org.springframework.boot.test.context.PropertyMappingContextCustomizer@0, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@73386d72, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@2f19f2aa, org.springframework.boot.test.autoconfigure.OnFailureConditionReportContextCustomizerFactory$OnFailureConditionReportContextCustomizer@79c5636f, org.springframework.test.context.support.DynamicPropertiesContextCustomizer@0, org.springframework.boot.webmvc.test.autoconfigure.WebDriverContextCustomizer@64d43929, org.springframework.boot.web.server.context.SpringBootTestRandomPortContextCustomizer@41c89d2f, org.springframework.boot.test.context.SpringBootTestAnnotation@6420d90], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+[INFO] 
+[ERROR] Tests run: 233, Failures: 0, Errors: 1, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:02 min
+[INFO] Finished at: 2026-07-13T18:40:59Z
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.5:test (default-test) on project hostel-backend: 
+[ERROR] 
+[ERROR] See C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

@@ -6,24 +6,35 @@ import org.springframework.boot.test.context.SpringBootTest;
 /**
  * Bare "does the application context wire up" smoke test.
  *
- * <p>The persistence layer (DataSource, Hibernate, Liquibase) is
- * deliberately excluded here. This project's schema is Liquibase-managed
- * against a real PostgreSQL + PostGIS instance with
- * {@code hibernate.ddl-auto=validate}, so any test that lets that layer
- * initialize needs an actual running database — which CI runners and
- * local sandboxes don't always have. Excluding it keeps this test focused
- * on what it's actually meant to check (bean wiring, security config,
- * MVC setup) without turning it into a de-facto integration test.
+ * <p><strong>Requires a real, reachable PostgreSQL + PostGIS instance</strong>
+ * matching {@code application.yaml}'s datasource configuration. This is not
+ * optional: {@code SecurityConfig} — needed by essentially every bean in the
+ * app — requires {@code CustomUserDetailsService}, which requires the
+ * {@code UserRepository} Spring Data JPA repository, which can only be
+ * created once the persistence layer (DataSource -> Hibernate -> the
+ * Liquibase-managed schema, since {@code hibernate.ddl-auto=validate})
+ * has successfully initialized.
  *
- * <p>For tests that genuinely need the database, prefer a Testcontainers-backed
- * {@code @SpringBootTest} rather than re-enabling these autoconfigurations here.
+ * <p>An earlier version of this test tried excluding
+ * {@code DataSourceAutoConfiguration}/{@code HibernateJpaAutoConfiguration}/
+ * {@code LiquibaseAutoConfiguration} to avoid needing a database at all. That
+ * doesn't work: excluding {@code DataSourceAutoConfiguration} also prevents
+ * Spring Data JPA from creating <em>any</em> repository bean, so the app
+ * fails to start with a much more confusing
+ * {@code NoSuchBeanDefinitionException} for {@code UserRepository} — worse
+ * than the original, honest "can't reach the database" failure this project
+ * will show without one running. There's no reasonable subset of beans to
+ * exclude here without excluding half the app, so this test just states its
+ * real requirement instead.
+ *
+ * <p>If you're running {@code mvn test} outside the environment where your
+ * database is normally reachable (e.g. bare on a host machine when Postgres
+ * is otherwise only reachable via a Docker Compose network hostname), either
+ * point the datasource at a reachable host for local runs, or skip this
+ * specific test (e.g. {@code -Dtest='!HostelBackendApplicationTests'}) until
+ * a Testcontainers-backed version replaces it.
  */
-@SpringBootTest(properties = {
-        "spring.autoconfigure.exclude="
-                + "org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration,"
-                + "org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration,"
-                + "org.springframework.boot.liquibase.autoconfigure.LiquibaseAutoConfiguration"
-})
+@SpringBootTest
 class HostelBackendApplicationTests {
 
     @Test
