@@ -1,4 +1,4 @@
-# Leroy Hostels (HostelLife+)
+# HostelLife+
 
 A full-stack hostel/accommodation booking and management platform built for the University of Cape Coast (UCC), developed as the practical component of **Final Year Project**.
 
