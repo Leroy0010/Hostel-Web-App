@@ -1,6 +1,6 @@
 # HostelLife+
 
-A full-stack hostel/accommodation booking and management platform built for the University of Cape Coast (UCC), developed as the practical component of **Final Year Project**.
+A full-stack hostel/accommodation booking and management platform built for the University of Cape Coast (UCC), developed as the practical component of **CSC 499 - Final Year Project Work**.
 
 The system digitizes the entire hostel accommodation lifecycle — discovery, booking, approval, waitlisting, complaints, reviews, and administration — for three roles: **Student**, **Manager**, and **Admin**.
 
@@ -326,7 +326,7 @@ http://localhost:8080/swagger-ui.html
 
 ## Academic Context
 
-This project was developed by **Leroy**, a Computer Science student at the **University of Cape Coast (UCC)**, as the practical submission for **Final Year Project** under **Mr. Paul Arhin**. Architectural and coding conventions for ongoing development are documented in [`Agent.md`](./Agent.md) (system-wide architecture) and [`agent2.md`](./agent2.md) (frontend guidelines).
+This project was developed by **Leroy**, a Computer Science student at the **University of Cape Coast (UCC)**, as the practical submission for **CSC 499 - Final Year Project** under **Mr. Paul Arhin**. Architectural and coding conventions for ongoing development are documented in [`Agent.md`](./Agent.md) (system-wide architecture) and [`agent2.md`](./agent2.md) (frontend guidelines).
 
 ---
 

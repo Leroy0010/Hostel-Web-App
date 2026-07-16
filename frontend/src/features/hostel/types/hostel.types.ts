@@ -102,7 +102,17 @@ export interface HostelSummaryDto {
     imageUrl: string;
     isActive: boolean;
     longitude: number;
-    latitude: number
+    latitude: number;
+}
+
+/**
+ * Aggregate rating card for a hostel.
+ * Mirrors {@code HostelRatingDto}.
+ */
+export interface HostelRatingDto {
+    /** null when no reviews have been submitted yet */
+    averageRating: number | null;
+    totalReviews: number;
 }
 
 /**
@@ -123,7 +133,9 @@ export interface HostelDetailsResponseDto {
      * Spring {@code Page<RoomDisplayDto>} unwrapped by the Axios interceptor
      * as a plain object (not the Java Page class).
      */
-    rooms: PageResponse<RoomDisplayDto>
+    rooms: PageResponse<RoomDisplayDto>;
+
+    rating: HostelRatingDto;
 }
 
 /**
@@ -308,7 +320,7 @@ export interface AssignManagerPayload {
 /** Pagination + filter params for paginated hostel list endpoints. */
 export interface HostelPageParams extends PaginationParams {
     search?: string;
-    genderPolicy?: GenderPolicy | 'ALL'
+    genderPolicy?: GenderPolicy | 'ALL';
 }
 
 /**

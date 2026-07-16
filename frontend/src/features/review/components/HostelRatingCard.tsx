@@ -1,7 +1,7 @@
 import { Star } from 'lucide-react';
 import { StarDisplay } from './StarRating';
 import { formatAvgRating } from '../utils/review.utils';
-import type { HostelRatingDto } from '../types/review.types';
+import type { HostelRatingDto } from '@/features/hostel/types/hostel.types';
 
 interface HostelRatingCardProps {
     rating: HostelRatingDto;

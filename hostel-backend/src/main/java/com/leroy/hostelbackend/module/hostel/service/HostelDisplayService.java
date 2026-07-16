@@ -3,10 +3,12 @@ package com.leroy.hostelbackend.module.hostel.service;
 import com.leroy.hostelbackend.module.booking.dto.AvailablePeriodDto;
 import com.leroy.hostelbackend.module.hostel.dto.HostelDetailsResponseDto;
 import com.leroy.hostelbackend.module.hostel.dto.HostelDto;
+import com.leroy.hostelbackend.module.hostel.dto.HostelRatingDto;
 import com.leroy.hostelbackend.module.hostel.dto.HostelSectionDto;
 import com.leroy.hostelbackend.module.hostel.projection.HostelDetailFlatProjection;
 import com.leroy.hostelbackend.module.hostel.projection.HostelRoomFlatProjection;
 import com.leroy.hostelbackend.module.hostel.repository.HostelRepository;
+import com.leroy.hostelbackend.module.review.service.ReviewService;
 import com.leroy.hostelbackend.module.room.dto.RoomDisplayDto;
 import com.leroy.hostelbackend.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ import java.util.*;
 public class HostelDisplayService {
 
     private final HostelRepository hostelRepository;
+    private final ReviewService reviewService;
 
     @Transactional(readOnly = true)
     public Page<HostelSectionDto> getHostelHorizontalSections(
@@ -157,7 +160,11 @@ public class HostelDisplayService {
 
         Page<RoomDisplayDto> roomPage = new PageImpl<>(structuredRooms, pageable, totalRooms);
 
-        return new HostelDetailsResponseDto(hostelDto, roomPage);
+        var rating = reviewService.getHostelRating(hostelId);
+
+
+        HostelRatingDto hostelRatingDto = new HostelRatingDto(rating.averageRating(), rating.totalReviews());
+        return new HostelDetailsResponseDto(hostelDto, roomPage, hostelRatingDto);
     }
 
     private List<HostelSectionDto> transformFlatRowsToDto(List<HostelRoomFlatProjection> rows) {

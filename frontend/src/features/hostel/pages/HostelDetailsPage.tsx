@@ -38,16 +38,16 @@ import {
     ReviewCard,
     ReviewCardSkeleton,
 } from '@/features/review/components/ReviewCard';
-import {
-    useHostelRating,
-    useHostelReviews,
-} from '@/features/review/hooks/review.hooks';
+import { useHostelReviews } from '@/features/review/hooks/review.hooks';
 // Map feature integration
 import { NearbyLandmarksPanel } from '@/features/map/components/NearbyLandmarksPanel';
 import { transition } from '@/features/auth/utils/transition';
 import { useAuthStore } from '@/features/auth/store/useAuthStore';
 import { JoinWaitlistDialog } from '@/features/waitlist/components/JoinWaitlistDialog';
 import { ZoomableImage } from '@/components/ui/ZoomableImage';
+import type { HostelRatingDto } from '../types/hostel.types';
+import { formatAvgRating } from '@/features/review/utils/review.utils';
+import { useInView } from 'react-intersection-observer';
 
 // =============================================================================
 // Animation variants
@@ -267,13 +267,39 @@ export default function HostelDetailPage() {
                         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
                             {hostel.name}
                         </h1>
-                        <p className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
-                            <MapPin
-                                className="h-4 w-4 shrink-0"
-                                aria-hidden="true"
-                            />
-                            {hostel.address}
-                        </p>
+
+                        <div className="flex flex-wrap items-center gap-3 text-sm">
+                            {/* NEW: Elevated Star Rating */}
+                            {isLoading ? (
+                                <div className="h-5 w-24 animate-pulse rounded bg-gray-200 dark:bg-gray-800" />
+                            ) : detail.rating ? (
+                                <div className="flex items-center gap-1 font-medium text-gray-900 dark:text-gray-100">
+                                    <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400 dark:fill-amber-300 dark:text-amber-300" />
+                                    <span>
+                                        {detail.rating.averageRating
+                                            ? formatAvgRating(
+                                                  detail.rating.averageRating
+                                              )
+                                            : '—'}
+                                    </span>
+                                    <span className="text-gray-500 underline decoration-gray-300 underline-offset-2">
+                                        ({detail.rating.totalReviews} reviews)
+                                    </span>
+                                </div>
+                            ) : null}
+
+                            <span className="text-gray-300 dark:text-gray-700">
+                                •
+                            </span>
+
+                            <p className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
+                                <MapPin
+                                    className="h-4 w-4 shrink-0"
+                                    aria-hidden="true"
+                                />
+                                {hostel.address}
+                            </p>
+                        </div>
                     </div>
                     <GenderPolicyBadge policy={hostel.genderPolicy} />
                 </motion.div>
@@ -326,74 +352,6 @@ export default function HostelDetailPage() {
                     </motion.div>
                 )}
             </motion.div>
-
-            {/* ── Rating + Reviews section ──────────────────────────────── */}
-            {/*
-             * Reviews are lazy-loaded in a separate section below the main
-             * hostel info. This keeps the critical paint path fast — the hero,
-             * info panel, and room list are all served from a single API call
-             * while reviews come in separately.
-             */}
-            <ReviewsSection hostelId={hostel.id} />
-
-            {/* ── Nearby landmarks (map panel) ──────────────────────────── */}
-            {/*
-             * Only rendered when the hostel has coordinates stored in PostGIS.
-             * If latitude/longitude are null, the panel is hidden entirely rather
-             * than showing an error — the feature simply isn't available for this hostel.
-             */}
-            {/* ── Nearby landmarks (map panel) ──────────────────────────── */}
-            {hasCoordinates && (
-                <div className="space-y-3">
-                    {/* The Toggle Button */}
-                    <Button
-                        variant="outline"
-                        onClick={() => setIsMapOpen(!isMapOpen)}
-                        className="w-full justify-between border-gray-200 bg-white py-5 hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-900"
-                    >
-                        <div className="flex items-center gap-2">
-                            <Map
-                                className="h-4 w-4 text-gray-500 dark:text-gray-400"
-                                aria-hidden="true"
-                            />
-                            <span className="font-medium text-gray-900 dark:text-gray-100">
-                                Location & Nearby Landmarks
-                            </span>
-                        </div>
-                        <motion.div
-                            animate={{ rotate: isMapOpen ? 180 : 0 }}
-                            transition={{ duration: 0.2, ease: 'easeInOut' }}
-                        >
-                            <ChevronDown
-                                className="h-4 w-4 text-gray-500 dark:text-gray-400"
-                                aria-hidden="true"
-                            />
-                        </motion.div>
-                    </Button>
-
-                    {/* The Smooth Accordion Content */}
-                    <AnimatePresence initial={false}>
-                        {isMapOpen && (
-                            <motion.div
-                                key="nearby-landmarks"
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{
-                                    duration: 0.3,
-                                    ease: [0.04, 0.62, 0.23, 0.98], // A very smooth, spring-like easing curve
-                                }}
-                                className="overflow-hidden"
-                            >
-                                <NearbyLandmarksPanel
-                                    hostelId={hostel.id}
-                                    radiusMetres={1000}
-                                />
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-            )}
 
             {/* ── Room list section ─────────────────────────────────────── */}
             <div className="space-y-4">
@@ -506,6 +464,76 @@ export default function HostelDetailPage() {
                 )}
             </div>
 
+            {/* ── Nearby landmarks (map panel) ──────────────────────────── */}
+            {/*
+             * Only rendered when the hostel has coordinates stored in PostGIS.
+             * If latitude/longitude are null, the panel is hidden entirely rather
+             * than showing an error — the feature simply isn't available for this hostel.
+             */}
+            {/* ── Nearby landmarks (map panel) ──────────────────────────── */}
+            {hasCoordinates && (
+                <div className="space-y-3">
+                    {/* The Toggle Button */}
+                    <Button
+                        variant="outline"
+                        onClick={() => setIsMapOpen(!isMapOpen)}
+                        className="w-full justify-between border-gray-200 bg-white py-5 hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-900"
+                    >
+                        <div className="flex items-center gap-2">
+                            <Map
+                                className="h-4 w-4 text-gray-500 dark:text-gray-400"
+                                aria-hidden="true"
+                            />
+                            <span className="font-medium text-gray-900 dark:text-gray-100">
+                                Location & Nearby Landmarks
+                            </span>
+                        </div>
+                        <motion.div
+                            animate={{ rotate: isMapOpen ? 180 : 0 }}
+                            transition={{ duration: 0.2, ease: 'easeInOut' }}
+                        >
+                            <ChevronDown
+                                className="h-4 w-4 text-gray-500 dark:text-gray-400"
+                                aria-hidden="true"
+                            />
+                        </motion.div>
+                    </Button>
+
+                    {/* The Smooth Accordion Content */}
+                    <AnimatePresence initial={false}>
+                        {isMapOpen && (
+                            <motion.div
+                                key="nearby-landmarks"
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{
+                                    duration: 0.3,
+                                    ease: [0.04, 0.62, 0.23, 0.98], // A very smooth, spring-like easing curve
+                                }}
+                                className="overflow-hidden"
+                            >
+                                <NearbyLandmarksPanel
+                                    hostelId={hostel.id}
+                                    radiusMetres={1000}
+                                />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            )}
+
+            {/* ── Rating + Reviews section ──────────────────────────────── */}
+            {/*
+             * Reviews are lazy-loaded in a separate section below the main
+             * hostel info. This keeps the critical paint path fast — the hero,
+             * info panel, and room list are all served from a single API call
+             * while reviews come in separately.
+             */}
+            <div className="border-t border-gray-200 pt-4 dark:border-gray-800">
+                <ReviewsSection hostelId={hostel.id} rating={detail.rating} />
+            </div>
+
             <JoinWaitlistDialog
                 hostelId={hostelId!}
                 onOpenChange={setWaitlistOpen}
@@ -539,22 +567,34 @@ export default function HostelDetailPage() {
  *     authenticated students and relies on the backend to reject ineligible requests).
  *
  * @param hostelId - UUID of the hostel whose reviews to display.
+ * @param rating - Optional aggregate rating for the hostel.
  */
-function ReviewsSection({ hostelId }: { hostelId: string }) {
+function ReviewsSection({
+    hostelId,
+    rating,
+}: {
+    hostelId: string;
+    rating?: HostelRatingDto;
+}) {
+    const { ref, inView } = useInView({
+        triggerOnce: true, // Only trigger the first time it comes into view
+        rootMargin: '400px 0px', // Start fetching when they are 400px away from the section
+    });
     const [reviewPage, setReviewPage] = useState(0);
     const REVIEW_PAGE_SIZE = 5;
-
-    const { data: rating, isLoading: isLoadingRating } =
-        useHostelRating(hostelId);
 
     const {
         data: reviewFeed,
         isLoading: isLoadingReviews,
         isFetching: isFetchingReviews,
-    } = useHostelReviews(hostelId, {
-        page: reviewPage,
-        size: REVIEW_PAGE_SIZE,
-    });
+    } = useHostelReviews(
+        hostelId,
+        {
+            page: reviewPage,
+            size: REVIEW_PAGE_SIZE,
+        },
+        !!inView // <-- React Query will wait until this is true!
+    );
 
     const reviews = reviewFeed?.content ?? [];
 
@@ -564,6 +604,7 @@ function ReviewsSection({ hostelId }: { hostelId: string }) {
             initial="hidden"
             animate="visible"
             className="space-y-4"
+            ref={ref} // Attach the ref to the container
         >
             {/* Section header */}
             <motion.div
@@ -581,11 +622,7 @@ function ReviewsSection({ hostelId }: { hostelId: string }) {
 
             {/* Aggregate rating card */}
             <motion.div variants={sectionItemVariants}>
-                {isLoadingRating ? (
-                    <HostelRatingCardSkeleton />
-                ) : rating ? (
-                    <HostelRatingCard rating={rating} />
-                ) : null}
+                {rating ? <HostelRatingCard rating={rating} /> : null}
             </motion.div>
 
             {/* Review feed */}
@@ -700,7 +737,7 @@ const ManagerActionBar = forwardRef<HTMLDivElement, { hostelId: string }>(
 /**
  * Full-page loading skeleton shown during the initial data fetch.
  *
- * Structurally mirrors the final page layout (hero → info → rating → rooms)
+ * Structurally mirrors the final page layout (hero → info → rooms -> reviews)
  * so there is no layout shift when the real content arrives.
  */
 function HostelDetailSkeleton() {
@@ -724,15 +761,15 @@ function HostelDetailSkeleton() {
                 <div className="h-16 w-full animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800" />
             </div>
 
-            {/* Rating skeleton */}
-            <HostelRatingCardSkeleton />
-
             {/* Room cards skeleton */}
             <div className="space-y-3">
                 {Array.from({ length: 3 }).map((_, i) => (
                     <DetailedRoomCardSkeleton key={i} />
                 ))}
             </div>
+
+            {/* Rating skeleton */}
+            <HostelRatingCardSkeleton />
         </div>
     );
 }

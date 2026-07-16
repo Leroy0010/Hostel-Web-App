@@ -5,5 +5,6 @@ import org.springframework.data.domain.Page;
 
 public record HostelDetailsResponseDto(
         HostelDto hostel,
-        Page<RoomDisplayDto> rooms
+        Page<RoomDisplayDto> rooms,
+        HostelRatingDto rating
 ) {}

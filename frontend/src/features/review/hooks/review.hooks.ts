@@ -48,12 +48,13 @@ export function useReviewDetail(id: string | null | undefined) {
  */
 export function useHostelReviews(
     hostelId: string | null | undefined,
-    params: PaginationParams = {}
+    params: PaginationParams = {},
+    enabled: boolean = false
 ) {
     return useQuery({
         queryKey: reviewKeys.hostelFeed(hostelId ?? '', params),
         queryFn: () => fetchHostelReviews(hostelId!, params),
-        enabled: Boolean(hostelId),
+        enabled: Boolean(hostelId && enabled),
         staleTime: 2 * 60 * 1000,
         placeholderData: (prev) => prev,
     });

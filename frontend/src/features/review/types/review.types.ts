@@ -54,8 +54,6 @@ export interface HostelRatingDto {
     totalReviews: number;
 }
 
-
-
 // =============================================================================
 // Zod schemas
 // =============================================================================
@@ -67,8 +65,8 @@ export interface HostelRatingDto {
  * The {@code bookingId} is the proof-of-stay anchor validated server-side.
  */
 export const createReviewSchema = z.object({
-    hostelId: z.string().uuid('Invalid hostel ID'),
-    bookingId: z.string().uuid('A qualifying booking is required'),
+    hostelId: z.uuid('Invalid hostel ID'),
+    bookingId: z.uuid('A qualifying booking is required'),
     rating: z
         .number({ error: 'Rating is required' })
         .int()
