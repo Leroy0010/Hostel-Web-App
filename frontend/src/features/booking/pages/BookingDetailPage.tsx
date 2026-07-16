@@ -1,17 +1,23 @@
-import {  useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Building2,
     CalendarCheck,
+    Check,
+    CheckCircle,
     Clock,
     CreditCard,
     DoorOpen,
+    Info,
     ListOrdered,
     LogIn,
     LogOut,
+    Phone,
     Star,
     User,
+    Users,
+    Wallet,
     XCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -45,6 +51,7 @@ import { CreateReviewForm } from '@/features/review/components/CreateReviewForm'
 import { transition } from '@/features/auth/utils/transition';
 import { BookingDetailSkeleton } from '../components/BookingDetailSkeleton';
 import { BackButton } from '@/components/ui/BackButton';
+import type { BookingDto } from '../types/booking.types';
 
 // =============================================================================
 // Types
@@ -55,13 +62,7 @@ import { BackButton } from '@/components/ui/BackButton';
  * Only one dialog is ever open at a time.
  */
 type ActiveDialog =
-    | 'cancel'
-    | 'checkin'
-    | 'checkout'
-    | 'payment'
-    | 'review'
-    | 'action'
-    | null;
+    'cancel' | 'checkin' | 'checkout' | 'payment' | 'review' | 'action' | null;
 
 // =============================================================================
 // Animation
@@ -167,6 +168,11 @@ export default function BookingDetailPage() {
         );
     }
 
+    // ── Financials Calculation ────────────────────────────────────────────────
+    const roomPrice = booking.room.price ?? 0;
+    const amountPaid = booking.amountPaid ? parseFloat(booking.amountPaid) : 0;
+    const balanceDue = Math.max(0, roomPrice - amountPaid);
+
     // ── CTA logic ─────────────────────────────────────────────────────────────
     const isTerminal = isTerminalStatus(booking.status);
 
@@ -267,8 +273,6 @@ export default function BookingDetailPage() {
                         {booking.isWaitlistDraft && (
                             <motion.div
                                 variants={itemVariants}
-                                initial="hidden"
-                                animate="visible"
                                 className="mt-3 flex items-center gap-1.5"
                             >
                                 <ListOrdered
@@ -282,7 +286,7 @@ export default function BookingDetailPage() {
                         )}
                     </div>
 
-                    {/* Payment deadline countdown — APPROVED with deadline */}
+                    {/* Payment deadline countdown */}
                     <AnimatePresence>
                         {paymentDeadlineActive && (
                             <motion.div
@@ -302,7 +306,7 @@ export default function BookingDetailPage() {
                         )}
                     </AnimatePresence>
 
-                    {/* Pending-draft deadline countdown — waitlist draft awaiting manager action */}
+                    {/* Pending-draft deadline countdown */}
                     <AnimatePresence>
                         {pendingDeadlineActive && (
                             <motion.div
@@ -342,13 +346,13 @@ export default function BookingDetailPage() {
 
                 {/* ── Detail grid ───────────────────────────────────────── */}
                 <div className="divide-y divide-gray-100 overflow-hidden rounded-xl border border-gray-200 bg-white dark:divide-gray-800 dark:border-gray-800 dark:bg-gray-950">
-                    {/* Student info — visible to managers/admins */}
+                    {/* A. Student info — visible to managers/admins with Phone added */}
                     {isManagerOrAdmin && (
                         <DetailRow
                             icon={<User className="h-4 w-4" />}
                             label="Student"
                             value={`${booking.student.firstName} ${booking.student.lastName}`}
-                            subValue={booking.student.email}
+                            subValue={`${booking.student.email} • ${booking.student.phone || 'No phone provided'}`}
                         />
                     )}
 
@@ -358,41 +362,16 @@ export default function BookingDetailPage() {
                         value={booking.room.roomType}
                     />
 
-                    <DetailRow
-                        icon={<Clock className="h-4 w-4" />}
-                        label="Requested at"
-                        value={formatDateTime(booking.requestedAt)}
-                    />
-
-                    {booking.approvedAt && (
+                    {/* A. Occupancy / Roommates */}
+                    {booking.room.capacity > 1 && (
                         <DetailRow
-                            icon={<Clock className="h-4 w-4" />}
-                            label={
-                                booking.status === 'REJECTED'
-                                    ? 'Rejected at'
-                                    : 'Approved at'
-                            }
-                            value={formatDateTime(booking.approvedAt)}
+                            icon={<Users className="h-4 w-4" />}
+                            label="Occupancy"
+                            value={`${booking.room.currentOccupancy || 0} of ${booking.room.capacity} beds occupied`}
                         />
                     )}
 
-                    {booking.approvedBy && (
-                        <DetailRow
-                            icon={<User className="h-4 w-4" />}
-                            label="Actioned by"
-                            value={`${booking.approvedBy.firstName} ${booking.approvedBy.lastName}`}
-                        />
-                    )}
-
-                    {booking.rejectedReason && (
-                        <DetailRow
-                            icon={<XCircle className="h-4 w-4 text-red-400" />}
-                            label="Rejection reason"
-                            value={booking.rejectedReason}
-                            valueClass="text-red-600 dark:text-red-400"
-                        />
-                    )}
-
+                    {/* B. Financials (Total Cost & Balance) */}
                     {booking.paymentRef && (
                         <>
                             <DetailRow
@@ -401,35 +380,101 @@ export default function BookingDetailPage() {
                                 value={booking.paymentRef}
                                 mono
                             />
-                            {booking.amountPaid && (
-                                <DetailRow
-                                    icon={<CreditCard className="h-4 w-4" />}
-                                    label="Amount paid"
-                                    value={`₵${parseFloat(booking.amountPaid).toLocaleString('en-GH', { minimumFractionDigits: 2 })}`}
-                                />
-                            )}
+                            <DetailRow
+                                icon={<Wallet className="h-4 w-4" />}
+                                label="Total Room Price"
+                                value={`₵${roomPrice.toLocaleString('en-GH', { minimumFractionDigits: 2 })}`}
+                            />
+                            <DetailRow
+                                icon={<CheckCircle className="h-4 w-4" />}
+                                label="Amount paid"
+                                value={`₵${amountPaid.toLocaleString('en-GH', { minimumFractionDigits: 2 })}`}
+                            />
+                            <DetailRow
+                                icon={<Wallet className="h-4 w-4" />}
+                                label="Balance Due"
+                                value={`₵${balanceDue.toLocaleString('en-GH', { minimumFractionDigits: 2 })}`}
+                                valueClass={
+                                    balanceDue > 0
+                                        ? 'text-red-600 dark:text-red-400 font-medium'
+                                        : 'text-green-600 dark:text-green-500 font-medium'
+                                }
+                                subValue={
+                                    balanceDue <= 0 ? 'Fully Paid' : undefined
+                                }
+                            />
                         </>
-                    )}
-
-                    {booking.checkedInAt && (
-                        <DetailRow
-                            icon={<LogIn className="h-4 w-4 text-green-500" />}
-                            label="Checked in"
-                            value={formatDateTime(booking.checkedInAt)}
-                        />
-                    )}
-
-                    {booking.checkedOutAt && (
-                        <DetailRow
-                            icon={<LogOut className="h-4 w-4 text-gray-400" />}
-                            label="Checked out"
-                            value={formatDateTime(booking.checkedOutAt)}
-                        />
                     )}
                 </div>
 
-                {/* ── Action panel ──────────────────────────────────────── */}
+                {/* E. Visual Status Timeline */}
+                <BookingTimeline booking={booking} />
+
+                {/* ── Action panel & Banners ────────────────────────────── */}
                 <AnimatePresence>
+                    {/* C. Payment Instructions & Contact Info (For Students) */}
+                    {canSubmitPayment && (
+                        <motion.div
+                            variants={itemVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit={{ opacity: 0 }}
+                            className="flex items-start gap-2 rounded-xl border border-blue-200 bg-blue-50/60 px-4 py-4 dark:border-blue-800/50 dark:bg-blue-950/20"
+                        >
+                            <Info
+                                className="mt-0.5 h-4 w-4 shrink-0 text-blue-500 dark:text-blue-400"
+                                aria-hidden="true"
+                            />
+                            <div className="space-y-1">
+                                <p className="text-sm font-semibold text-blue-800 dark:text-blue-300">
+                                    Payment Instructions
+                                </p>
+                                <p className="text-xs text-blue-700/90 dark:text-blue-400/90">
+                                    Contact manager for payment details (for
+                                    now). Once you have made the payment, submit
+                                    your reference below.
+                                </p>
+                                {booking.managerPhone && (
+                                    <a
+                                        href={`tel:${booking.managerPhone}`}
+                                        className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-blue-100 px-2.5 py-1.5 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-200 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-800/50"
+                                    >
+                                        <Phone className="h-3 w-3" />
+                                        Call Manager: {booking.managerPhone}
+                                    </a>
+                                )}
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {/* Payment already submitted but awaiting check-in — status hint */}
+                    {isStudent &&
+                        booking.status === 'APPROVED' &&
+                        booking.paymentRef && (
+                            <motion.div
+                                variants={itemVariants}
+                                initial="hidden"
+                                animate="visible"
+                                className="flex items-start gap-2 rounded-xl border border-green-200 bg-green-50/60 px-4 py-3 dark:border-green-900/30 dark:bg-green-950/20"
+                            >
+                                <CheckCircle
+                                    className="mt-0.5 h-4 w-4 shrink-0 text-green-500 dark:text-green-400"
+                                    aria-hidden="true"
+                                />
+                                <div className="space-y-0.5">
+                                    <p className="text-xs font-semibold text-green-700 dark:text-green-300">
+                                        Payment submitted
+                                    </p>
+                                    <p className="text-xs text-green-600/80 dark:text-green-400/80">
+                                        Your payment reference has been
+                                        received. The manager will verify and
+                                        check you in.
+                                    </p>
+                                </div>
+                            </motion.div>
+                        )}
+
+                    {/* Actions Row */}
                     {hasAnyAction && !isTerminal && (
                         <motion.div
                             key="actions"
@@ -437,7 +482,7 @@ export default function BookingDetailPage() {
                             initial="hidden"
                             animate="visible"
                             exit={{ opacity: 0 }}
-                            className="flex flex-wrap gap-2"
+                            className="flex flex-wrap gap-2 pt-2"
                         >
                             {/* STUDENT: submit payment */}
                             {canSubmitPayment && (
@@ -513,38 +558,11 @@ export default function BookingDetailPage() {
                         </motion.div>
                     )}
                 </AnimatePresence>
-
-                {/* Payment already submitted but awaiting check-in — status hint */}
-                {isStudent &&
-                    booking.status === 'APPROVED' &&
-                    booking.paymentRef && (
-                        <motion.div
-                            variants={itemVariants}
-                            initial="hidden"
-                            animate="visible"
-                            className="flex items-start gap-2 rounded-xl border border-blue-200 bg-blue-50/60 px-4 py-3 dark:border-blue-800/50 dark:bg-blue-950/20"
-                        >
-                            <CreditCard
-                                className="mt-0.5 h-4 w-4 shrink-0 text-blue-500 dark:text-blue-400"
-                                aria-hidden="true"
-                            />
-                            <div className="space-y-0.5">
-                                <p className="text-xs font-semibold text-blue-700 dark:text-blue-300">
-                                    Payment submitted
-                                </p>
-                                <p className="text-xs text-blue-600/80 dark:text-blue-400/80">
-                                    Your payment reference has been received.
-                                    The manager will verify and check you in.
-                                </p>
-                            </div>
-                        </motion.div>
-                    )}
             </motion.div>
 
             {/* ================================================================
                 Dialogs — one active at a time via ActiveDialog union
             ================================================================ */}
-
             {/* Submit payment */}
             <Dialog
                 open={activeDialog === 'payment'}
@@ -573,9 +591,7 @@ export default function BookingDetailPage() {
                 confirmLabel="Cancel Booking"
                 variant="destructive"
                 isPending={isCancelling}
-                onConfirm={() => {
-                    cancel(booking.id, { onSuccess: closeDialog });
-                }}
+                onConfirm={() => cancel(booking.id, { onSuccess: closeDialog })}
             />
 
             {/* Manager: approve / reject */}
@@ -611,9 +627,7 @@ export default function BookingDetailPage() {
                 description={`Confirm you have verified the payment reference (${booking.paymentRef ?? '—'}). ${booking.student.firstName} ${booking.student.lastName} will be marked as a resident.`}
                 confirmLabel="Check In"
                 isPending={isCheckingIn}
-                onConfirm={() => {
-                    checkIn(undefined, { onSuccess: closeDialog });
-                }}
+                onConfirm={() => checkIn(undefined, { onSuccess: closeDialog })}
             />
 
             {/* Check out */}
@@ -624,9 +638,9 @@ export default function BookingDetailPage() {
                 description={`${booking.student.firstName} ${booking.student.lastName} will be marked as checked out, their bed will be freed, and the waitlist will be automatically promoted if anyone is queued.`}
                 confirmLabel="Check Out"
                 isPending={isCheckingOut}
-                onConfirm={() => {
-                    checkOut(undefined, { onSuccess: closeDialog });
-                }}
+                onConfirm={() =>
+                    checkOut(undefined, { onSuccess: closeDialog })
+                }
             />
 
             {/* Leave review */}
@@ -651,13 +665,8 @@ export default function BookingDetailPage() {
 // Internal sub-components
 // =============================================================================
 
-
 /**
  * A single key-value row in the detail grid.
- *
- * @param mono       - Renders value in monospace (payment references, IDs).
- * @param subValue   - Secondary line under the main value (e.g. email under name).
- * @param valueClass - Additional Tailwind overrides for the value text.
  */
 function DetailRow({
     icon,
@@ -698,4 +707,158 @@ function DetailRow({
     );
 }
 
+interface Step {
+    id: string;
+    label: string;
+    date: string | null;
+    isActive: boolean;
+    isError: boolean;
+    description?: string | null;
+}
 
+/**
+ * Visual Status Timeline component
+ */
+function BookingTimeline({ booking }: { booking: BookingDto }) {
+    // Generate logical steps based on dates/status
+    const steps: Step[] = [
+        {
+            id: 'requested',
+            label: 'Requested',
+            date: booking.requestedAt,
+            isActive: !!booking.requestedAt,
+            isError: false,
+            description: '',
+        },
+    ];
+
+    // Branching for Approval/Rejection/Cancellation
+    if (booking.status === 'CANCELLED') {
+        steps.push({
+            id: 'cancelled',
+            label: 'Cancelled',
+            date: booking.updatedAt,
+            isActive: true,
+            isError: true,
+            description: 'Booking was cancelled by the student.',
+        });
+    } else if (booking.status === 'REJECTED') {
+        steps.push({
+            id: 'rejected',
+            label: 'Rejected',
+            date: booking.approvedAt || booking.updatedAt,
+            isActive: true,
+            isError: true,
+            description: booking.rejectedReason,
+        });
+    } else {
+        steps.push({
+            id: 'approved',
+            label: 'Approved',
+            date: booking.approvedAt,
+            isActive: !!booking.approvedAt,
+            isError: false,
+        });
+    }
+
+    // Continuing regular flow if not cancelled/rejected
+    if (booking.status !== 'CANCELLED' && booking.status !== 'REJECTED') {
+        steps.push({
+            id: 'paid',
+            label: 'Payment Verified',
+            // Ideally, you'd use a specific `paidAt` timestamp. Fallback to updatedAt if necessary.
+            date: booking.paymentRef ? booking.updatedAt : null,
+            isActive: !!booking.paymentRef,
+            isError: false,
+        });
+        steps.push({
+            id: 'checked_in',
+            label: 'Checked In',
+            date: booking.checkedInAt,
+            isActive: !!booking.checkedInAt,
+            isError: false,
+        });
+        steps.push({
+            id: 'checked_out',
+            label: 'Checked Out',
+            date: booking.checkedOutAt,
+            isActive: !!booking.checkedOutAt,
+            isError: false,
+        });
+    }
+
+    return (
+        <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-950">
+            <h3 className="mb-4 text-xs font-semibold tracking-wide text-gray-500 uppercase">
+                Timeline
+            </h3>
+            <div className="space-y-4">
+                {steps.map((step, index) => {
+                    const isLast = index === steps.length - 1;
+                    return (
+                        <div
+                            key={step.id}
+                            className="relative flex items-start gap-4"
+                        >
+                            {/* Connecting Line */}
+                            {!isLast && (
+                                <div
+                                    className={`absolute top-7 -bottom-4 left-3 w-0.5 ${
+                                        step.isActive
+                                            ? 'bg-gray-200 dark:bg-gray-800'
+                                            : 'bg-gray-100 dark:bg-gray-900'
+                                    }`}
+                                />
+                            )}
+
+                            {/* Circle Indicator */}
+                            <div className="relative flex shrink-0 items-center justify-center pt-1">
+                                <div
+                                    className={`flex h-6 w-6 items-center justify-center rounded-full border-2 ${
+                                        step.isActive
+                                            ? step.isError
+                                                ? 'border-red-500 bg-red-50 text-red-500 dark:bg-red-950/30'
+                                                : 'border-blue-500 bg-blue-50 text-blue-500 dark:bg-blue-900/30'
+                                            : 'border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900'
+                                    }`}
+                                >
+                                    {step.isActive && !step.isError && (
+                                        <Check className="h-3 w-3 stroke-3" />
+                                    )}
+                                    {step.isActive && step.isError && (
+                                        <XCircle className="h-3 w-3" />
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Label & Date */}
+                            <div className="flex-1 pb-2">
+                                <p
+                                    className={`text-sm font-medium ${
+                                        step.isActive
+                                            ? step.isError
+                                                ? 'text-red-700 dark:text-red-400'
+                                                : 'text-gray-900 dark:text-gray-100'
+                                            : 'text-gray-400 dark:text-gray-600'
+                                    }`}
+                                >
+                                    {step.label}
+                                </p>
+                                {step.date && (
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                        {formatDateTime(step.date)}
+                                    </p>
+                                )}
+                                {step.description && (
+                                    <p className="mt-1 text-xs text-red-600/80 dark:text-red-400/80">
+                                        {step.description}
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}

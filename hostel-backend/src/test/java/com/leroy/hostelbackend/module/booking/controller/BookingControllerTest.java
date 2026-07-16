@@ -481,14 +481,14 @@ class BookingControllerTest {
     private static BookingDto minimalBookingDto() {
         return new BookingDto(
                 BOOKING_ID,
-                new BookingDto.StudentSummary(UUID.randomUUID(), "Lexa", "Doe", "lexa.doe@ucc.edu.gh"),
-                new BookingDto.RoomSummary(ROOM_ID, "A12", "DOUBLE", UUID.randomUUID(), "Leroy Hostel"),
+                new BookingDto.StudentSummary(UUID.randomUUID(), "Lexa", "Doe", "lexa.doe@ucc.edu.gh", "0594000000"),
+                new BookingDto.RoomSummary(ROOM_ID, "A12", "DOUBLE", BigDecimal.valueOf(5000), 4, 1, UUID.randomUUID(), "Leroy Hostel"),
                 "PENDING",
                 "2025/2026",
                 "FIRST",
                 false,
                 LocalDateTime.now(),
-                null, null, null, null, null, null, null, null, null, null,
+                null, null, "0540000000", null, null, null, null, null, null, null, null,
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );

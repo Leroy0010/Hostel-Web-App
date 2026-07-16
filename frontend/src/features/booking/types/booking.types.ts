@@ -45,6 +45,7 @@ export interface BookingStudentSummary {
     firstName: string;
     lastName: string;
     email: string;
+    phone: string | null;
 }
 
 /**
@@ -55,6 +56,9 @@ export interface BookingRoomSummary {
     id: string;
     roomNumber: string;
     roomType: string;
+    price: number;
+    capacity: number;
+    currentOccupancy: number;
     hostelId: string;
     hostelName: string;
 }
@@ -87,6 +91,7 @@ export interface BookingDto {
     requestedAt: string;
     approvedAt: string | null;
     approvedBy: BookingApprovedBySummary | null;
+    managerPhone: string | null;
     /** ISO string deadline for payment submission after approval. Null when not yet approved. */
     paymentExpiresAt: string | null;
     /** ISO string deadline for a waitlist-promoted PENDING booking. Non-null only for waitlist drafts. */
@@ -122,8 +127,6 @@ export interface BookingSummaryDto {
     paymentExpiresAt: string | null;
 }
 
-
-
 // =============================================================================
 // Zod validation schemas
 // =============================================================================
@@ -144,7 +147,7 @@ export const createBookingSchema = z.object({
         error: 'Semester must be FIRST, SECOND, or FULL',
     }),
     // Virtual field just to track the dropdown selection UI
-  selectedPeriodKey: z.string().min(1, "Please select a period"),
+    selectedPeriodKey: z.string().min(1, 'Please select a period'),
 });
 
 export type CreateBookingFormValues = z.infer<typeof createBookingSchema>;

@@ -55,7 +55,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
     const { isCollapsed, toggleSidebar } = useSidebarStore();
 
     // Theme context
-    const { theme, setTheme } = useTheme();
+    const { setTheme, resolvedTheme } = useTheme();
 
     // Desktop Sidebar Width Configurations
     const SIDEBAR_WIDTH_EXPANDED = 256; // 16rem (w-64)
@@ -154,11 +154,13 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
                         variant="ghost"
                         size="icon"
                         onClick={() =>
-                            setTheme(theme === 'dark' ? 'light' : 'dark')
+                            setTheme(
+                                resolvedTheme === 'dark' ? 'light' : 'dark'
+                            )
                         }
                         aria-label="theme-toggle"
                     >
-                        {theme === 'dark' ? (
+                        {resolvedTheme === 'dark' ? (
                             <Sun size={24} />
                         ) : (
                             <Moon size={24} />

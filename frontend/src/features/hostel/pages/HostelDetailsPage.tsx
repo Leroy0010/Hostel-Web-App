@@ -274,7 +274,7 @@ export default function HostelDetailPage() {
                                 <div className="h-5 w-24 animate-pulse rounded bg-gray-200 dark:bg-gray-800" />
                             ) : detail.rating ? (
                                 <div className="flex items-center gap-1 font-medium text-gray-900 dark:text-gray-100">
-                                    <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400 dark:fill-amber-300 dark:text-amber-300" />
+                                    <Star className="h-4 w-4 fill-amber-400 text-amber-400 dark:fill-amber-300 dark:text-amber-300" />
                                     <span>
                                         {detail.rating.averageRating
                                             ? formatAvgRating(
@@ -282,8 +282,11 @@ export default function HostelDetailPage() {
                                               )
                                             : '—'}
                                     </span>
-                                    <span className="text-gray-500 underline decoration-gray-300 underline-offset-2">
-                                        ({detail.rating.totalReviews} reviews)
+                                    <span className="text-gray-500 dark:text-gray-400">
+                                        {detail.rating.totalReviews
+                                            ? `${detail.rating.totalReviews} review${detail.rating.totalReviews !== 1 ? 's' : ''}`
+                                            : 'No reviews yet'}{' '}
+                                        reviews
                                     </span>
                                 </div>
                             ) : null}

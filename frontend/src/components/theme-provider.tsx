@@ -1,230 +1,249 @@
 /* eslint-disable react-refresh/only-export-components */
-import * as React from "react"
+import * as React from 'react';
 
-type Theme = "dark" | "light" | "system"
-type ResolvedTheme = "dark" | "light"
+type Theme = 'dark' | 'light' | 'system';
+type ResolvedTheme = 'dark' | 'light';
 
 type ThemeProviderProps = {
-  children: React.ReactNode
-  defaultTheme?: Theme
-  storageKey?: string
-  disableTransitionOnChange?: boolean
-}
+    children: React.ReactNode;
+    defaultTheme?: Theme;
+    storageKey?: string;
+    disableTransitionOnChange?: boolean;
+};
 
 type ThemeProviderState = {
-  theme: Theme
-  setTheme: (theme: Theme) => void
-}
+    theme: Theme;
+    resolvedTheme: ResolvedTheme; // <-- Added this
+    setTheme: (theme: Theme) => void;
+};
 
-const COLOR_SCHEME_QUERY = "(prefers-color-scheme: dark)"
-const THEME_VALUES: Theme[] = ["dark", "light", "system"]
+const COLOR_SCHEME_QUERY = '(prefers-color-scheme: dark)';
+const THEME_VALUES: Theme[] = ['dark', 'light', 'system'];
 
 const ThemeProviderContext = React.createContext<
-  ThemeProviderState | undefined
->(undefined)
+    ThemeProviderState | undefined
+>(undefined);
 
 function isTheme(value: string | null): value is Theme {
-  if (value === null) {
-    return false
-  }
+    if (value === null) {
+        return false;
+    }
 
-  return THEME_VALUES.includes(value as Theme)
+    return THEME_VALUES.includes(value as Theme);
 }
 
 function getSystemTheme(): ResolvedTheme {
-  if (window.matchMedia(COLOR_SCHEME_QUERY).matches) {
-    return "dark"
-  }
+    if (typeof window === 'undefined') return 'light';
+    if (window.matchMedia(COLOR_SCHEME_QUERY).matches) {
+        return 'dark';
+    }
 
-  return "light"
+    return 'light';
 }
 
 function disableTransitionsTemporarily() {
-  const style = document.createElement("style")
-  style.appendChild(
-    document.createTextNode(
-      "*,*::before,*::after{-webkit-transition:none!important;transition:none!important}"
-    )
-  )
-  document.head.appendChild(style)
+    const style = document.createElement('style');
+    style.appendChild(
+        document.createTextNode(
+            '*,*::before,*::after{-webkit-transition:none!important;transition:none!important}'
+        )
+    );
+    document.head.appendChild(style);
 
-  return () => {
-    window.getComputedStyle(document.body)
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        style.remove()
-      })
-    })
-  }
+    return () => {
+        window.getComputedStyle(document.body);
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                style.remove();
+            });
+        });
+    };
 }
 
 function isEditableTarget(target: EventTarget | null) {
-  if (!(target instanceof HTMLElement)) {
-    return false
-  }
+    if (!(target instanceof HTMLElement)) {
+        return false;
+    }
 
-  if (target.isContentEditable) {
-    return true
-  }
+    if (target.isContentEditable) {
+        return true;
+    }
 
-  const editableParent = target.closest(
-    "input, textarea, select, [contenteditable='true']"
-  )
-  if (editableParent) {
-    return true
-  }
+    const editableParent = target.closest(
+        "input, textarea, select, [contenteditable='true']"
+    );
+    if (editableParent) {
+        return true;
+    }
 
-  return false
+    return false;
 }
 
 export function ThemeProvider({
-  children,
-  defaultTheme = "system",
-  storageKey = "hostel-management-system:theme",
-  disableTransitionOnChange = true,
-  ...props
+    children,
+    defaultTheme = 'system',
+    storageKey = 'hostel-management-system:theme',
+    disableTransitionOnChange = true,
+    ...props
 }: ThemeProviderProps) {
-  const [theme, setThemeState] = React.useState<Theme>(() => {
-    const storedTheme = localStorage.getItem(storageKey)
-    if (isTheme(storedTheme)) {
-      return storedTheme
-    }
+    const [theme, setThemeState] = React.useState<Theme>(() => {
+        const storedTheme = localStorage.getItem(storageKey);
+        if (isTheme(storedTheme)) {
+            return storedTheme;
+        }
 
-    return defaultTheme
-  })
+        return defaultTheme;
+    });
 
-  const setTheme = React.useCallback(
-    (nextTheme: Theme) => {
-      localStorage.setItem(storageKey, nextTheme)
-      setThemeState(nextTheme)
-    },
-    [storageKey]
-  )
+    // State to track what is actively applied, resolving "system" to "light" or "dark"
+    const [resolvedTheme, setResolvedTheme] = React.useState<ResolvedTheme>(
+        () => {
+            const storedTheme = localStorage.getItem(storageKey);
+            const activeTheme = isTheme(storedTheme)
+                ? storedTheme
+                : defaultTheme;
+            return activeTheme === 'system' ? getSystemTheme() : activeTheme;
+        }
+    );
 
-  const applyTheme = React.useCallback(
-    (nextTheme: Theme) => {
-      const root = document.documentElement
-      const resolvedTheme =
-        nextTheme === "system" ? getSystemTheme() : nextTheme
-      const restoreTransitions = disableTransitionOnChange
-        ? disableTransitionsTemporarily()
-        : null
+    const setTheme = React.useCallback(
+        (nextTheme: Theme) => {
+            localStorage.setItem(storageKey, nextTheme);
+            setThemeState(nextTheme);
+        },
+        [storageKey]
+    );
 
-      root.classList.remove("light", "dark")
-      root.classList.add(resolvedTheme)
+    const applyTheme = React.useCallback(
+        (nextTheme: Theme) => {
+            const root = document.documentElement;
+            const resolved =
+                nextTheme === 'system' ? getSystemTheme() : nextTheme;
+            const restoreTransitions = disableTransitionOnChange
+                ? disableTransitionsTemporarily()
+                : null;
 
-      if (restoreTransitions) {
-        restoreTransitions()
-      }
-    },
-    [disableTransitionOnChange]
-  )
+            root.classList.remove('light', 'dark');
+            root.classList.add(resolved);
 
-  React.useEffect(() => {
-    applyTheme(theme)
+            if (restoreTransitions) {
+                restoreTransitions();
+            }
+        },
+        [disableTransitionOnChange]
+    );
 
-    if (theme !== "system") {
-      return undefined
-    }
+    React.useEffect(() => {
+        applyTheme(theme);
 
-    const mediaQuery = window.matchMedia(COLOR_SCHEME_QUERY)
-    const handleChange = () => {
-      applyTheme("system")
-    }
+        // Update resolvedTheme whenever theme changes
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setResolvedTheme(theme === 'system' ? getSystemTheme() : theme);
 
-    mediaQuery.addEventListener("change", handleChange)
+        if (theme !== 'system') {
+            return undefined;
+        }
 
-    return () => {
-      mediaQuery.removeEventListener("change", handleChange)
-    }
-  }, [theme, applyTheme])
+        const mediaQuery = window.matchMedia(COLOR_SCHEME_QUERY);
+        const handleChange = () => {
+            applyTheme('system');
+            setResolvedTheme(getSystemTheme()); // Also update if user changes OS preference
+        };
 
-  React.useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.repeat) {
-        return
-      }
+        mediaQuery.addEventListener('change', handleChange);
 
-      if (event.metaKey || event.ctrlKey || event.altKey) {
-        return
-      }
+        return () => {
+            mediaQuery.removeEventListener('change', handleChange);
+        };
+    }, [theme, applyTheme]);
 
-      if (isEditableTarget(event.target)) {
-        return
-      }
+    React.useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.repeat) {
+                return;
+            }
 
-      if (event.key.toLowerCase() !== "d") {
-        return
-      }
+            if (event.metaKey || event.ctrlKey || event.altKey) {
+                return;
+            }
 
-      setThemeState((currentTheme) => {
-        const nextTheme =
-          currentTheme === "dark"
-            ? "light"
-            : currentTheme === "light"
-              ? "dark"
-              : getSystemTheme() === "dark"
-                ? "light"
-                : "dark"
+            if (isEditableTarget(event.target)) {
+                return;
+            }
 
-        localStorage.setItem(storageKey, nextTheme)
-        return nextTheme
-      })
-    }
+            if (event.key.toLowerCase() !== 'd') {
+                return;
+            }
 
-    window.addEventListener("keydown", handleKeyDown)
+            setThemeState((currentTheme) => {
+                const nextTheme =
+                    currentTheme === 'dark'
+                        ? 'light'
+                        : currentTheme === 'light'
+                          ? 'dark'
+                          : getSystemTheme() === 'dark'
+                            ? 'light'
+                            : 'dark';
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown)
-    }
-  }, [storageKey])
+                localStorage.setItem(storageKey, nextTheme);
+                return nextTheme;
+            });
+        };
 
-  React.useEffect(() => {
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.storageArea !== localStorage) {
-        return
-      }
+        window.addEventListener('keydown', handleKeyDown);
 
-      if (event.key !== storageKey) {
-        return
-      }
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [storageKey]);
 
-      if (isTheme(event.newValue)) {
-        setThemeState(event.newValue)
-        return
-      }
+    React.useEffect(() => {
+        const handleStorageChange = (event: StorageEvent) => {
+            if (event.storageArea !== localStorage) {
+                return;
+            }
 
-      setThemeState(defaultTheme)
-    }
+            if (event.key !== storageKey) {
+                return;
+            }
 
-    window.addEventListener("storage", handleStorageChange)
+            if (isTheme(event.newValue)) {
+                setThemeState(event.newValue);
+                return;
+            }
 
-    return () => {
-      window.removeEventListener("storage", handleStorageChange)
-    }
-  }, [defaultTheme, storageKey])
+            setThemeState(defaultTheme);
+        };
 
-  const value = React.useMemo(
-    () => ({
-      theme,
-      setTheme,
-    }),
-    [theme, setTheme]
-  )
+        window.addEventListener('storage', handleStorageChange);
 
-  return (
-    <ThemeProviderContext.Provider {...props} value={value}>
-      {children}
-    </ThemeProviderContext.Provider>
-  )
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, [defaultTheme, storageKey]);
+
+    const value = React.useMemo(
+        () => ({
+            theme,
+            resolvedTheme, // <-- Exposing resolvedTheme to the hook
+            setTheme,
+        }),
+        [theme, resolvedTheme, setTheme]
+    );
+
+    return (
+        <ThemeProviderContext.Provider {...props} value={value}>
+            {children}
+        </ThemeProviderContext.Provider>
+    );
 }
 
 export const useTheme = () => {
-  const context = React.useContext(ThemeProviderContext)
+    const context = React.useContext(ThemeProviderContext);
 
-  if (context === undefined) {
-    throw new Error("useTheme must be used within a ThemeProvider")
-  }
+    if (context === undefined) {
+        throw new Error('useTheme must be used within a ThemeProvider');
+    }
 
-  return context
-}
+    return context;
+};

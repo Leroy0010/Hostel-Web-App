@@ -19,6 +19,7 @@ public record BookingDto(
         LocalDateTime requestedAt,
         LocalDateTime approvedAt,
         ApprovedBySummary approvedBy,
+        String managerPhone,
         LocalDateTime paymentExpiresAt,     // null for PENDING/REJECTED/CANCELLED
         LocalDateTime pendingExpiresAt,     // non-null only for waitlist auto-drafts
         LocalDateTime rejectedAt,
@@ -30,8 +31,8 @@ public record BookingDto(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public record StudentSummary(UUID id, String firstName, String lastName, String email) {}
-    public record RoomSummary(UUID id, String roomNumber, String roomType, UUID hostelId, String hostelName) {}
+    public record StudentSummary(UUID id, String firstName, String lastName, String email, String phone) {}
+    public record RoomSummary(UUID id, String roomNumber, String roomType, BigDecimal price, Integer capacity, Integer currentOccupancy, UUID hostelId, String hostelName) {}
     public record ApprovedBySummary(UUID id, String firstName, String lastName) {}
 }
 

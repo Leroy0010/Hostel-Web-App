@@ -16,19 +16,24 @@ public interface BookingMapper {
     @Mapping(target = "room",       source = "booking")
     @Mapping(target = "approvedBy", source = "approvedBy")
     @Mapping(target = "status",     expression = "java(booking.getStatus().name())")
+    @Mapping(target = "managerPhone", source = "room.hostel.manager.phone")
     BookingDto toDto(Booking booking);
 
     @Mapping(target = "id",        source = "id")
     @Mapping(target = "firstName", source = "firstName")
     @Mapping(target = "lastName",  source = "lastName")
     @Mapping(target = "email",     source = "email")
+    @Mapping(target = "phone", source = "phone")
     BookingDto.StudentSummary toStudentSummary(User student);
 
-    @Mapping(target = "id",         source = "booking.room.id")
-    @Mapping(target = "roomNumber", source = "booking.room.roomNumber")
+    @Mapping(target = "id",         source = "room.id")
+    @Mapping(target = "roomNumber", source = "room.roomNumber")
     @Mapping(target = "roomType",   expression = "java(booking.getRoom().getRoomType().name())")
     @Mapping(target = "hostelId",   source = "room.hostel.id")
     @Mapping(target = "hostelName", source = "room.hostel.name")
+    @Mapping(target = "price", source = "room.pricePerSemester")
+    @Mapping(target = "capacity", source = "room.capacity")
+    @Mapping(target = "currentOccupancy", source = "room.currentOccupancy")
     BookingDto.RoomSummary toRoomSummary(Booking booking);
 
     @Mapping(target = "id",        source = "id")
@@ -37,7 +42,7 @@ public interface BookingMapper {
     BookingDto.ApprovedBySummary toApprovedBySummary(User approvedBy);
 
     @Mapping(target = "studentId",   source = "student.id")
-    @Mapping(target = "studentName", expression = "java(booking.getStudent().getFirstName() + ' ' + booking.getStudent().getLastName())")
+    @Mapping(target = "studentName", expression = "java(booking.getStudent().getName())")
     @Mapping(target = "roomId",      source = "room.id")
     @Mapping(target = "roomNumber",  source = "room.roomNumber")
     @Mapping(target = "hostelName",  source = "room.hostel.name")
