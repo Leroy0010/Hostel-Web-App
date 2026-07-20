@@ -25,6 +25,7 @@ import {
     type UpdateRoomStatusFormValues,
     type UpdateRoomPayload,
     type RoomStatus,
+    type UpdateRoomFormInput,
 } from '../types/room.types';
 import type { ApiError } from '@/types/api';
 import { FieldError } from '@/components/ui/FieldError';
@@ -122,7 +123,7 @@ export function UpdateRoomForm({
         setError,
         reset,
         formState: { errors },
-    } = useForm<UpdateRoomFormValues>({
+    } = useForm<UpdateRoomFormInput>({
         resolver: zodResolver(updateRoomSchema),
         defaultValues: {
             roomNumber: room.roomNumber,
@@ -156,7 +157,7 @@ export function UpdateRoomForm({
         defaultValues: { status: room.status },
     });
 
-    const onSubmitDetails = (data: UpdateRoomFormValues) => {
+    const onSubmitDetails = (data: UpdateRoomFormInput) => {
         // Only include fields that actually changed
         const payload: UpdateRoomPayload = {};
         if (data.roomNumber && data.roomNumber !== room.roomNumber)
@@ -169,7 +170,7 @@ export function UpdateRoomForm({
             data.pricePerSemester &&
             Number(data.pricePerSemester) !== Number(room.pricePerSemester)
         )
-            payload.pricePerSemester = data.pricePerSemester;
+            payload.pricePerSemester = Number(data.pricePerSemester);
         if (data.imageUrl && data.imageUrl !== room.imageUrl)
             payload.imageUrl = data.imageUrl;
         if (data.floorNumber !== room.floorNumber)

@@ -15,10 +15,7 @@ export type RoomType = 'SINGLE' | 'DOUBLE' | 'TRIPLE' | 'QUAD';
  * Mirrors {@code com.leroy.hostelbackend.module.room.model.RoomStatus}.
  */
 export type RoomStatus =
-    | 'AVAILABLE'
-    | 'FULLY_OCCUPIED'
-    | 'UNDER_MAINTENANCE'
-    | 'RESERVED';
+    'AVAILABLE' | 'FULLY_OCCUPIED' | 'UNDER_MAINTENANCE' | 'RESERVED';
 
 // =============================================================================
 // Response shapes
@@ -50,7 +47,7 @@ export interface RoomDto {
     currentOccupancy: number;
     /** Computed server-side: capacity - currentOccupancy */
     bedsAvailable: number;
-    pricePerSemester: string; // BigDecimal serializes as string
+    pricePerSemester: number;
     status: RoomStatus;
     floorNumber: number | null;
     imageUrl: string;
@@ -70,7 +67,7 @@ export interface RoomSummaryDto {
     capacity: number;
     currentOccupancy: number;
     bedsAvailable: number;
-    pricePerSemester: string;
+    pricePerSemester: number;
     status: RoomStatus;
     floorNumber: number | null;
     imageUrl: string;
@@ -135,10 +132,14 @@ export const createRoomSchema = z.object({
         .min(1, 'Capacity must be at least 1')
         .max(20, 'Capacity cannot exceed 20'),
     pricePerSemester: z
-        .string()
-        .min(1, 'Price is required')
-        .refine((v) => !isNaN(parseFloat(v)) && parseFloat(v) > 0, {
-            message: 'Price must be greater than 0',
+        .union([z.string(), z.number()]) // Input allows string or number
+        .transform((val) => {
+            const num = Number(val);
+            return isNaN(num) ? 0 : num;
+        })
+        .refine((val) => val > 0, { message: 'Price must be greater than 0' })
+        .refine((val) => /^-?\d+(\.\d{1,2})?$/.test(val.toString()), {
+            error: 'Price can have at most two decimal places.',
         }),
     imageUrl: z.string().min(1, 'Please upload a room image'),
     floorNumber: z
@@ -151,6 +152,7 @@ export const createRoomSchema = z.object({
 });
 
 export type CreateRoomFormValues = z.infer<typeof createRoomSchema>;
+export type CreateRoomFormInput = z.input<typeof createRoomSchema>;
 
 /**
  * Zod schema for updating a room (patch semantics — all fields optional).
@@ -165,9 +167,14 @@ export const updateRoomSchema = z.object({
     roomType: z.enum(['SINGLE', 'DOUBLE', 'TRIPLE', 'QUAD']).optional(),
     capacity: z.number().int().min(1).max(20).optional(),
     pricePerSemester: z
-        .string()
-        .refine((v) => !v || (!isNaN(parseFloat(v)) && parseFloat(v) > 0), {
-            message: 'Price must be greater than 0',
+        .union([z.string(), z.number()]) // Input allows string or number
+        .transform((val) => {
+            const num = Number(val);
+            return isNaN(num) ? 0 : num;
+        })
+        .refine((val) => val > 0, { message: 'Price must be greater than 0' })
+        .refine((val) => /^-?\d+(\.\d{1,2})?$/.test(val.toString()), {
+            error: 'Price can have at most two decimal places.',
         })
         .optional(),
     imageUrl: z.string().optional(),
@@ -175,6 +182,7 @@ export const updateRoomSchema = z.object({
 });
 
 export type UpdateRoomFormValues = z.infer<typeof updateRoomSchema>;
+export type UpdateRoomFormInput = z.input<typeof updateRoomSchema>;
 
 /**
  * Zod schema for updating room status.
@@ -200,7 +208,7 @@ export interface CreateRoomPayload {
     roomNumber: string;
     roomType: RoomType;
     capacity: number;
-    pricePerSemester: string;
+    pricePerSemester: number;
     imageUrl: string;
     floorNumber?: number | null;
     amenities?: { amenity: string; imageUrl?: string }[];
@@ -211,7 +219,7 @@ export interface UpdateRoomPayload {
     roomNumber?: string;
     roomType?: RoomType;
     capacity?: number;
-    pricePerSemester?: string;
+    pricePerSemester?: number;
     imageUrl?: string;
     floorNumber?: number | null;
 }

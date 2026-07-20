@@ -18,6 +18,7 @@ import {
 import { useCreateRoom } from '../hooks/room.hooks';
 import {
     createRoomSchema,
+    type CreateRoomFormInput,
     type CreateRoomFormValues,
     type CreateRoomPayload,
 } from '../types/room.types';
@@ -115,11 +116,11 @@ export function CreateRoomForm({
         setValue,
         setError,
         formState: { errors },
-    } = useForm<CreateRoomFormValues>({
+    } = useForm<CreateRoomFormInput>({
         resolver: zodResolver(createRoomSchema),
         defaultValues: {
             roomNumber: '',
-            pricePerSemester: '',
+            pricePerSemester: undefined,
             imageUrl: '',
             floorNumber: null,
             amenities: [],
@@ -132,12 +133,12 @@ export function CreateRoomForm({
         name: 'amenities',
     });
 
-    const onSubmit = (data: CreateRoomFormValues) => {
+    const onSubmit = (data: CreateRoomFormInput) => {
         const payload: CreateRoomPayload = {
             roomNumber: data.roomNumber,
             roomType: data.roomType,
             capacity: data.capacity,
-            pricePerSemester: data.pricePerSemester,
+            pricePerSemester: Number(data.pricePerSemester),
             imageUrl: data.imageUrl,
             ...(data.floorNumber !== null &&
                 data.floorNumber !== undefined && {

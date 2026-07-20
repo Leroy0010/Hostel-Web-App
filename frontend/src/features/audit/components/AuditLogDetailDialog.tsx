@@ -27,7 +27,7 @@ export function AuditLogDetailDialog({
 }: AuditLogDetailDialogProps) {
     return (
         <Dialog open={log !== null} onOpenChange={(open) => !open && onClose()}>
-            <DialogContent className="scrollbar-none sm:max-w-2xl">
+            <DialogContent className="scrollbar-none sm:max-w-3xl">
                 {log && (
                     <>
                         <DialogHeader>
@@ -94,7 +94,7 @@ function SnapshotBlock({
     return (
         <div className="space-y-1">
             <p className="text-xs font-medium text-muted-foreground">{label}</p>
-            <pre className="max-h-64 overflow-auto rounded-md border border-gray-200 bg-gray-50 p-2 text-[11px] text-gray-900 dark:border-gray-800 dark:bg-gray-900/60 dark:text-gray-100">
+            <pre className="max-h-64 scrollbar-none overflow-auto rounded-md border border-gray-200 bg-gray-50 p-2 text-[11px] text-gray-900 dark:border-gray-800 dark:bg-gray-900/60 dark:text-gray-100">
                 {json ? prettyPrint(json) : '—'}
             </pre>
         </div>
