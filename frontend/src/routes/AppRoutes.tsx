@@ -34,6 +34,7 @@ import {
     StudentWaitlist,
     StudentPreferencePage,
     UserManamentPage,
+    AuditLog,
 } from './lazyLoadedPages';
 import { AppLayout } from '@/components/layout/AppLayout';
 
@@ -133,6 +134,8 @@ export function AppRoutes() {
                                 path="users"
                                 element={<UserManamentPage />}
                             />
+
+                            <Route path="audit-logs" element={<AuditLog />} />
                         </Route>
 
                         {/* Manager routes */}

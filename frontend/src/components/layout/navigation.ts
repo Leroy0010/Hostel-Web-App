@@ -10,6 +10,7 @@ import {
     MapPinPlus,
     MessageSquareWarning,
     NotebookTabs,
+    ScrollText,
     Star,
     UserCog,
     Users,
@@ -79,7 +80,18 @@ export const navigation = (isAuthenticated: boolean): NavItem[] => [
     },
 
     { name: 'Users', href: '/admin/users', icon: Users, roles: ['ADMIN'] },
-    { name: 'Landmarks', href: '/admin/landmarks', icon: MapPinPlus, roles: ['ADMIN'] },
+    {
+        name: 'Landmarks',
+        href: '/admin/landmarks',
+        icon: MapPinPlus,
+        roles: ['ADMIN'],
+    },
+    {
+        name: 'Audit Log',
+        href: '/admin/audit-logs',
+        icon: ScrollText,
+        roles: ['ADMIN'],
+    },
     { name: 'Hostels', href: '/hostels', icon: Building },
     { name: 'Campus Map', href: '/map', icon: MapPin },
 ];

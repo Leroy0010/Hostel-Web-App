@@ -45,6 +45,10 @@ export const AdminHostels = lazy(
     () => import('@/features/hostel/pages/AdminHostelsPage')
 );
 
+export const AuditLog = lazy(
+    () => import('@/features/audit/pages/AuditLogPage')
+);
+
 export const HostelsDetailsPage = lazy(
     () => import('@/features/hostel/pages/HostelDetailsPage')
 );
@@ -96,7 +100,6 @@ export const ManagerHostelComplaintsPage = lazy(
 export const AdminLandmarks = lazy(
     () => import('@/features/map/pages/AdminLandmarksPage')
 );
-
 
 export const CampusMap = lazy(() => import('@/features/map/pages/CampusMap'));
 

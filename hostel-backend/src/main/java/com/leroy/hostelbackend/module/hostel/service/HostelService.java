@@ -1,5 +1,7 @@
 package com.leroy.hostelbackend.module.hostel.service;
 
+import com.leroy.hostelbackend.module.audit.annotation.Audited;
+import com.leroy.hostelbackend.module.audit.context.AuditContext;
 import com.leroy.hostelbackend.module.booking.repository.BookingRepository;
 import com.leroy.hostelbackend.module.hostel.dto.*;
 import com.leroy.hostelbackend.module.hostel.mapper.HostelMapper;
@@ -118,6 +120,7 @@ public class HostelService {
      * @throws IllegalArgumentException if the name is already in use
      */
     @Transactional
+    @Audited(action = "HOSTEL_CREATED", targetType = "Hostel", detail = "Hostel created")
     public HostelDto createHostel(CreateHostelRequest request) {
         if (hostelRepository.existsByNameIgnoreCase(request.name())) {
             throw new IllegalArgumentException("A hostel with the name '" + request.name() + "' already exists.");
@@ -151,6 +154,7 @@ public class HostelService {
      * @return updated {@link HostelDto}
      */
     @Transactional
+    @Audited(action = "HOSTEL_UPDATED", targetType = "Hostel", detail = "Updated hostel {0}")
     public HostelDto updateHostel(UUID hostelId, UpdateHostelRequest request) {
         var hostel = requireHostel(hostelId);
 
@@ -175,11 +179,13 @@ public class HostelService {
      * @return updated {@link HostelDto}
      * @throws IllegalArgumentException if the target user is not a MANAGER
      */
+    @Audited(action = "HOSTEL_MANAGER_ASSIGNED", targetType = "Hostel", detail = "Assigned manager to hostel {0}")
     @Transactional
     public HostelDto assignManager(UUID hostelId, AssignManagerRequest request) {
         var hostel  = requireHostel(hostelId);
         var manager = requireManager(request.managerId());
 
+        AuditContext.captureOld(buildHostelDto(hostel)); // snapshot BEFORE reassignment
         hostel.setManager(manager);
         log.info("Manager {} assigned to hostel {}", manager.getId(), hostelId);
         return buildHostelDto(hostelRepository.save(hostel));
@@ -188,9 +194,11 @@ public class HostelService {
     /**
      * Removes the manager assignment from a hostel (sets manager to null). Admin only.
      */
+    @Audited(action = "HOSTEL_MANAGER_UNASSIGNED", targetType = "Hostel", detail = "Unassigned manager from hostel {0}")
     @Transactional
     public HostelDto unassignManager(UUID hostelId) {
         var hostel = requireHostel(hostelId);
+        AuditContext.captureOld(buildHostelDto(hostel)); // snapshot BEFORE unassignment
         hostel.setManager(null);
         log.info("Manager unassigned from hostel {}", hostelId);
         return buildHostelDto(hostelRepository.save(hostel));
@@ -199,9 +207,11 @@ public class HostelService {
     /**
      * Soft-deletes (deactivates) a hostel. Admin only.
      */
+    @Audited(action = "HOSTEL_DEACTIVATED", targetType = "Hostel", detail = "Deactivated hostel {0}")
     @Transactional
     public void deactivateHostel(UUID hostelId) {
         var hostel = requireHostel(hostelId);
+        AuditContext.captureOld(buildHostelDto(hostel)); // snapshot BEFORE deactivation
         hostel.setIsActive(false);
         hostelRepository.save(hostel);
         log.info("Hostel deactivated: id={}", hostelId);
@@ -230,6 +240,7 @@ public class HostelService {
      * @param managerId the requesting manager's UUID (from security context)
      */
     @Transactional
+    @Audited(action = "HOSTEL_UPDATED", targetType = "Hostel", detail = "Hostel {0} updated")
     public HostelDto managerUpdateHostel(UUID hostelId, UpdateHostelRequest request, UUID managerId) {
         assertManagerOwns(hostelId, managerId);
         return updateHostel(hostelId, request);
