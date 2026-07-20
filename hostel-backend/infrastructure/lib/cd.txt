@@ -3,3 +3,5 @@ aws ssm start-session --target "i-0979ae821d6fa508c" --document-name AWS-StartPo
 
 cp ../../downloads/leroy-hostels-frontend-tests-batch3/src/features/room/components/AvailablePeriodsBadge.test.tsx frontend/src/features/room/components/AvailablePeriodsBadge.test.
 tsx
+
+9qGXX,^8zs,Rilz_rQXC3OBTkOKRyN

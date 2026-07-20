@@ -125,10 +125,14 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 // Rate limiting runs before authentication so abusive clients are
                 // rejected cheaply, before a DB lookup or JWT parse ever happens.
+                // Must come AFTER jwtAuthenticationFilter is registered above —
+                // addFilterBefore(X, Y.class) requires Y's position to already be
+                // known to the chain, and JwtAuthenticationFilter is a custom filter
+                // class with no built-in order until it's explicitly registered.
                 .addFilterBefore(new RateLimitingFilter(), JwtAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(c -> c
                         // Return 401 JSON (not a redirect to a login page) for missing/invalid tokens
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))

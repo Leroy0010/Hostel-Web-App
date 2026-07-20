@@ -167,7 +167,7 @@ export function UpdateRoomForm({
             payload.capacity = data.capacity;
         if (
             data.pricePerSemester &&
-            data.pricePerSemester !== room.pricePerSemester
+            Number(data.pricePerSemester) !== Number(room.pricePerSemester)
         )
             payload.pricePerSemester = data.pricePerSemester;
         if (data.imageUrl && data.imageUrl !== room.imageUrl)
@@ -355,7 +355,9 @@ export function UpdateRoomForm({
                                 min="0"
                                 step="0.01"
                                 className={`pl-7 ${INPUT_CLS}`}
-                                {...register('pricePerSemester')}
+                                {...register('pricePerSemester', {
+                                    valueAsNumber: true,
+                                })}
                             />
                         </div>
                         {errors.pricePerSemester && (
