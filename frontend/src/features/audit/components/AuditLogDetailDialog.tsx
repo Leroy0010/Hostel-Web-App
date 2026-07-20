@@ -27,7 +27,7 @@ export function AuditLogDetailDialog({
 }: AuditLogDetailDialogProps) {
     return (
         <Dialog open={log !== null} onOpenChange={(open) => !open && onClose()}>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="scrollbar-none sm:max-w-2xl">
                 {log && (
                     <>
                         <DialogHeader>

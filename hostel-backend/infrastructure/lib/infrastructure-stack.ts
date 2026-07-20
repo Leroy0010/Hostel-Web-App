@@ -65,7 +65,7 @@ export class InfrastructureStack extends cdk.Stack {
       // 7 days is a reasonable floor for a student-project deployment —
       // enough to recover from an accidental bad migration or bulk-delete
       // without materially increasing cost on a free/low-tier instance.
-      backupRetention: cdk.Duration.days(7),
+      backupRetention: cdk.Duration.days(1),
       // Off-peak UTC window (Ghana is UTC+0, so this is ~3-4am local too).
       preferredBackupWindow: "03:00-04:00",
       // Keep automated backups if the instance itself is ever deleted

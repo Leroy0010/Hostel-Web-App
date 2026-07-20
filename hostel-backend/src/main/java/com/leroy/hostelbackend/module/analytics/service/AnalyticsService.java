@@ -313,14 +313,20 @@ public class AnalyticsService {
                 ORDER BY bed_count DESC
                 """;
 
-        return jdbc.query(sql, (rs, _) -> new RoomTypeBreakdownDto(
-                rs.getObject("room_type", RoomType.class),
-                rs.getLong("room_count"),
-                rs.getLong("bed_count"),
-                rs.getLong("occupied_beds")
-        ));
+        return jdbc.query(sql, (rs, _) -> {
+            String roomTypeStr = rs.getString("room_type");
+            RoomType roomType = roomTypeStr != null ? RoomType.valueOf(roomTypeStr) : null;
+
+            return new RoomTypeBreakdownDto(
+                    roomType,
+                    rs.getLong("room_count"),
+                    rs.getLong("bed_count"),
+                    rs.getLong("occupied_beds")
+            );
+        });
     }
 
+    
     // -------------------------------------------------------------------------
     // Internal helpers
     // -------------------------------------------------------------------------

@@ -467,7 +467,7 @@ export default function AdminHostelsPage() {
                 open={activeDialog?.kind === 'create'}
                 onOpenChange={(open) => !open && closeDialog()}
             >
-                <DialogContent className="max-h-[90vh] w-screen max-w-2xl scrollbar-none overflow-y-auto border-gray-200 bg-white sm:max-w-lg dark:border-gray-800 dark:bg-gray-950">
+                <DialogContent className="max-h-[90vh] w-screen scrollbar-none overflow-y-auto border-gray-200 bg-white sm:max-w-lg dark:border-gray-800 dark:bg-gray-950">
                     <DialogHeader>
                         <DialogTitle className="text-gray-900 dark:text-gray-100">
                             Create Hostel
