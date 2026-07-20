@@ -58,6 +58,27 @@ export class InfrastructureStack extends cdk.Stack {
       databaseName: "hostelbookingdb",
       publiclyAccessible: false, // Security best practice: keep the DB isolated
       removalPolicy: cdk.RemovalPolicy.SNAPSHOT, // Don't lose data if stack is destroyed
+      // ── Automated backups / point-in-time recovery ────────────────────────
+      // RDS automated backups ARE the PITR mechanism: enabling them with a
+      // retention window lets us restore to any point within that window
+      // (down to ~5 min granularity), not just to the nightly snapshot time.
+      // 7 days is a reasonable floor for a student-project deployment —
+      // enough to recover from an accidental bad migration or bulk-delete
+      // without materially increasing cost on a free/low-tier instance.
+      backupRetention: cdk.Duration.days(7),
+      // Off-peak UTC window (Ghana is UTC+0, so this is ~3-4am local too).
+      preferredBackupWindow: "03:00-04:00",
+      // Keep automated backups if the instance itself is ever deleted
+      // outside of a full stack teardown, matching the SNAPSHOT removal policy.
+      deleteAutomatedBackups: false,
+      copyTagsToSnapshot: true,
+      // NOTE: storageEncrypted intentionally left as-is. Toggling encryption
+      // on an already-provisioned, unencrypted RDS instance cannot be done
+      // in place — AWS requires creating a new instance from an encrypted
+      // snapshot. Doing this via a plain CDK diff on a live database risks
+      // an unwanted replacement. If encryption-at-rest is required, do it as
+      // a deliberate, separate migration (snapshot → copy with encryption →
+      // restore) rather than folding it into this change.
     });
 
     // Create a small, secure Bastion Host in the public subnet
@@ -196,8 +217,8 @@ export class InfrastructureStack extends cdk.Stack {
         "HostelFargateService",
         {
           cluster,
-          cpu: 1024, // 1 vCPU
-          memoryLimitMiB: 3072, // 3 GB RAM (perfect for Spring Boot with optimized JVM memory)
+          cpu: 2048, // 2 vCPU
+          memoryLimitMiB: 4096, // 3 GB RAM (perfect for Spring Boot with optimized JVM memory)
           desiredCount: 1,
           publicLoadBalancer: true, // Exposed to the public internet
           circuitBreaker: { rollback: true },
