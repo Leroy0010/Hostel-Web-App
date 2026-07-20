@@ -355,9 +355,7 @@ export function UpdateRoomForm({
                                 min="0"
                                 step="0.01"
                                 className={`pl-7 ${INPUT_CLS}`}
-                                {...register('pricePerSemester', {
-                                    valueAsNumber: true,
-                                })}
+                                {...register('pricePerSemester')}
                             />
                         </div>
                         {errors.pricePerSemester && (
