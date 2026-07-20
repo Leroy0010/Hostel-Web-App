@@ -62,7 +62,7 @@ export class InfrastructureStack extends cdk.Stack {
       // RDS automated backups ARE the PITR mechanism: enabling them with a
       // retention window lets us restore to any point within that window
       // (down to ~5 min granularity), not just to the nightly snapshot time.
-      // 7 days is a reasonable floor for a student-project deployment —
+      // 1 days is a reasonable floor for a student-project deployment —
       // enough to recover from an accidental bad migration or bulk-delete
       // without materially increasing cost on a free/low-tier instance.
       backupRetention: cdk.Duration.days(1),
@@ -72,13 +72,7 @@ export class InfrastructureStack extends cdk.Stack {
       // outside of a full stack teardown, matching the SNAPSHOT removal policy.
       deleteAutomatedBackups: false,
       copyTagsToSnapshot: true,
-      // NOTE: storageEncrypted intentionally left as-is. Toggling encryption
-      // on an already-provisioned, unencrypted RDS instance cannot be done
-      // in place — AWS requires creating a new instance from an encrypted
-      // snapshot. Doing this via a plain CDK diff on a live database risks
-      // an unwanted replacement. If encryption-at-rest is required, do it as
-      // a deliberate, separate migration (snapshot → copy with encryption →
-      // restore) rather than folding it into this change.
+      storageEncrypted: true
     });
 
     // Create a small, secure Bastion Host in the public subnet
