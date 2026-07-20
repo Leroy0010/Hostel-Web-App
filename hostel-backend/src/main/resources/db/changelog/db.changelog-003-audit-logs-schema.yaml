@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-audit-logs
+      author: Leroy
+      changes:
+        - createTable:
+            tableName: audit_logs
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: actor_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: actor_role
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: action
+                  type: varchar(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: target_type
+                  type: varchar(100)
+              - column:
+                  name: target_id
+                  type: varchar(100)
+              - column:
+                  name: detail
+                  type: text
+              - column:
+                  name: old_data
+                  type: text
+              - column:
+                  name: new_data
+                  type: text
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_audit_logs_actor_id
+            tableName: audit_logs
+            columns:
+              - column:
+                  name: actor_id
+        - createIndex:
+            indexName: idx_audit_logs_created_at
+            tableName: audit_logs
+            columns:
+              - column:
+                  name: created_at

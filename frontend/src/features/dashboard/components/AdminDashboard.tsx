@@ -9,6 +9,7 @@ import {
     DoorOpen,
     ListOrdered,
     Users,
+    Wallet,
     XCircle,
 } from 'lucide-react';
 
@@ -136,6 +137,42 @@ export function AdminDashboard({ data, isLoading }: AdminDashboardProps) {
                 />
             </motion.div>
 
+            {/* ── Row 3: Revenue summary (declared payments only) ────────── */}
+            <motion.div variants={itemVariants} className="space-y-3">
+                <SectionHeading>Revenue (Declared Payments)</SectionHeading>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    <StatCard
+                        icon={<Wallet className="h-5 w-5" />}
+                        label="Total Declared"
+                        value={`GH₵${data.revenueSummary.totalDeclared.toLocaleString()}`}
+                    />
+                    <StatCard
+                        icon={<Wallet className="h-5 w-5" />}
+                        label="Current Period"
+                        value={`GH₵${data.revenueSummary.currentSemester.toLocaleString()}`}
+                    />
+                    <StatCard
+                        icon={<CheckCircle2 className="h-5 w-5" />}
+                        label="Paid Bookings"
+                        value={data.revenueSummary.paidBookings}
+                    />
+                    <StatCard
+                        icon={<Clock className="h-5 w-5" />}
+                        label="Unpaid (Approved)"
+                        value={data.revenueSummary.unpaidApproved}
+                        accent={
+                            data.revenueSummary.unpaidApproved > 0
+                                ? 'amber'
+                                : 'green'
+                        }
+                    />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                    No real payment is processed — these figures reflect
+                    submitted payment references only.
+                </p>
+            </motion.div>
+
             {/* ── Hostel occupancy table ─────────────────────────────────── */}
             <motion.div variants={itemVariants} className="space-y-3">
                 <SectionHeading>Hostel Occupancy</SectionHeading>
@@ -174,6 +211,44 @@ export function AdminDashboard({ data, isLoading }: AdminDashboardProps) {
                         </Table>
                     </div>
                 </Card>
+            </motion.div>
+
+            {/* ── Room type distribution ────────────────────────────────── */}
+            <motion.div variants={itemVariants} className="space-y-3">
+                <SectionHeading>Room Type Distribution</SectionHeading>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+                    {data.roomTypeBreakdown.length === 0 ? (
+                        <p className="col-span-full text-xs text-muted-foreground">
+                            No rooms on the system yet.
+                        </p>
+                    ) : (
+                        data.roomTypeBreakdown.map((rt) => {
+                            const pct =
+                                rt.bedCount > 0
+                                    ? Math.round(
+                                          (rt.occupiedBeds / rt.bedCount) * 100
+                                      )
+                                    : 0;
+                            return (
+                                <Card key={rt.roomType} className="p-3">
+                                    <p className="text-xs font-medium text-muted-foreground capitalize">
+                                        {rt.roomType.toLowerCase()}
+                                    </p>
+                                    <p className="mt-1 text-lg font-bold text-foreground tabular-nums">
+                                        {rt.roomCount}{' '}
+                                        <span className="text-xs font-normal text-muted-foreground">
+                                            rooms
+                                        </span>
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">
+                                        {rt.occupiedBeds}/{rt.bedCount} beds (
+                                        {pct}%)
+                                    </p>
+                                </Card>
+                            );
+                        })
+                    )}
+                </div>
             </motion.div>
 
             {/* ── Bottom row: Funnel + Complaints ───────────────────────── */}

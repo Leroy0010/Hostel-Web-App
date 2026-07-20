@@ -1,5 +1,7 @@
 package com.leroy.hostelbackend.module.user.service;
 
+import com.leroy.hostelbackend.module.audit.annotation.Audited;
+import com.leroy.hostelbackend.module.audit.context.AuditContext;
 import com.leroy.hostelbackend.module.auth.model.AuthTokenType;
 import com.leroy.hostelbackend.module.auth.service.AuthService;
 import com.leroy.hostelbackend.module.email.service.EmailService;
@@ -86,6 +88,8 @@ public class UserManagementService {
      * @throws IllegalArgumentException if the email is already in use or
      *                                  the caller attempts to create a STUDENT
      */
+    @Audited(action = "STAFF_CREATED", targetType = "User",
+            detail = "Created staff account: {0}")
     @Transactional
     public UserDto createStaff(CreateStaffRequest request) {
         if (request.getRole() == UserRole.STUDENT) {
@@ -132,9 +136,11 @@ public class UserManagementService {
      * @return updated {@link UserDto}
      * @throws ResourceNotFoundException if the user does not exist
      */
+    @Audited(action = "USER_DEACTIVATED", targetType = "User", detail = "Deactivated user {0}")
     @Transactional
     public UserDto deactivateUser(UUID userId) {
         var user = requireUser(userId);
+        AuditContext.captureOld(userMapper.toDto(user)); // snapshot BEFORE mutation
         user.setIsActive(false);
         var saved = userRepository.save(user);
         log.info("User deactivated: id={}, email={}", userId, user.getEmail());
@@ -148,9 +154,11 @@ public class UserManagementService {
      * @return updated {@link UserDto}
      * @throws ResourceNotFoundException if the user does not exist
      */
+    @Audited(action = "USER_ACTIVATED", targetType = "User", detail = "Activated user {0}")
     @Transactional
     public UserDto activateUser(UUID userId) {
         var user = requireUser(userId);
+        AuditContext.captureOld(userMapper.toDto(user)); // snapshot BEFORE mutation
         user.setIsActive(true);
         var saved = userRepository.save(user);
         log.info("User activated: id={}, email={}", userId, user.getEmail());

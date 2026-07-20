@@ -1,8 +1,9 @@
 package com.leroy.hostelbackend.module.room.service;
 
+import com.leroy.hostelbackend.module.audit.annotation.Audited;
+import com.leroy.hostelbackend.module.audit.context.AuditContext;
 import com.leroy.hostelbackend.module.booking.dto.AvailablePeriodDto;
 import com.leroy.hostelbackend.module.booking.repository.BookingRepository;
-import com.leroy.hostelbackend.module.hostel.dto.HostelSummaryDto;
 import com.leroy.hostelbackend.module.hostel.repository.HostelRepository;
 import com.leroy.hostelbackend.module.hostel.service.HostelService;
 import com.leroy.hostelbackend.module.room.dto.*;
@@ -130,6 +131,7 @@ public class RoomService {
      * @param request   validated creation payload
      * @param actorId   the creating user's UUID (from security context)
      */
+    @Audited(action = "ROOM_CREATED", targetType = "Room", detail = "Created room in hostel {0}")
     @Transactional
     public RoomDto createRoom(UUID hostelId, CreateRoomRequest request, UUID actorId) {
         hostelService.assertManagerOwns(hostelId, actorId);
@@ -160,11 +162,13 @@ public class RoomService {
      * Updates room details. MANAGER only their hostel's rooms.
      * Patch semantics — null fields are ignored.
      */
+    @Audited(action = "ROOM_UPDATED", targetType = "Room", detail = "Updated room {0}")
     @Transactional
     public RoomDto updateRoom(UUID roomId, UpdateRoomRequest request, UUID actorId) {
         var room = requireRoom(roomId);
 
         hostelService.assertManagerOwns(room.getHostel().getId(), actorId);
+        AuditContext.captureOld(roomMapper.toDtoWithComputed(room, roomMapper.toAmenityDtos(amenityRepository.findByRoomId(roomId))));
 
         if (request.roomNumber() != null) {
             // Check for duplicate only if number is actually changing
@@ -201,10 +205,12 @@ public class RoomService {
      *
      * @throws IllegalArgumentException if the status string is not a valid {@link RoomStatus}
      */
+    @Audited(action = "ROOM_STATUS_CHANGED", targetType = "Room", detail = "Changed status of room {0}")
     @Transactional
     public RoomDto updateRoomStatus(UUID roomId, RoomStatus statusValue, UUID actorId) {
         var room = requireRoom(roomId);
         hostelService.assertManagerOwns(room.getHostel().getId(), actorId);
+        AuditContext.captureOld(roomMapper.toDtoWithComputed(room, roomMapper.toAmenityDtos(amenityRepository.findByRoomId(roomId))));
 
 
         room.setStatus(statusValue);
@@ -218,9 +224,11 @@ public class RoomService {
      *
      * @throws IllegalStateException if the room has active bookings (enforced at DB level)
      */
+    @Audited(action = "ROOM_DELETED", targetType = "Room", detail = "Deleted room {0}")
     @Transactional
     public void deleteRoom(UUID roomId) {
         var room = requireRoom(roomId);
+        AuditContext.captureOld(roomMapper.toDtoWithComputed(room, roomMapper.toAmenityDtos(amenityRepository.findByRoomId(roomId))));
         roomRepository.delete(room);
         log.info("Room deleted: id={}", roomId);
     }

@@ -112,10 +112,19 @@ public class DashboardService {
         long totalWaitlisted = count("SELECT COUNT(*) FROM waitlists");
 
         // ── Delegate to AnalyticsService for complex aggregations ─────────────
-        var hostelOccupancy   = analyticsService.getHostelOccupancyBreakdown();
-        var bookingFunnel     = analyticsService.getBookingFunnel();
-        var complaintSummary  = analyticsService.getComplaintSummary();
-        var waitlistDepth     = analyticsService.getWaitlistDepth();
+        var hostelOccupancy    = analyticsService.getHostelOccupancyBreakdown();
+        var bookingFunnel      = analyticsService.getBookingFunnel();
+        var complaintSummary   = analyticsService.getComplaintSummary();
+        var waitlistDepth      = analyticsService.getWaitlistDepth();
+        var roomTypeBreakdown  = analyticsService.getRoomTypeBreakdown();
+
+        // ── Revenue summary for the most recently active academic period ──────
+        // The revenue endpoint needs an (academicYear, semester) pair; rather
+        // than defaulting to a hardcoded placeholder period, we derive "current"
+        // from the most recent booking request so the dashboard card always
+        // reflects real, live data instead of a stale fixed period.
+        String[] currentPeriod = resolveCurrentPeriod();
+        var revenueSummary = analyticsService.getRevenueSummary(currentPeriod[0], currentPeriod[1]);
 
         log.debug("[DASHBOARD] Admin dashboard assembled");
 
@@ -125,8 +134,29 @@ public class DashboardService {
                 totalHostels, activeHostels,
                 totalRooms, totalBeds, occupiedBeds, availableBeds, occupancyPct,
                 pendingBookings, openComplaints, totalWaitlisted,
-                hostelOccupancy, bookingFunnel, complaintSummary, waitlistDepth
+                hostelOccupancy, bookingFunnel, complaintSummary, waitlistDepth,
+                roomTypeBreakdown, revenueSummary
         );
+    }
+
+    /**
+     * Resolves the (academicYear, semester) pair of the most recently
+     * requested booking, used as the "current period" for the admin revenue
+     * card. Falls back to a sensible placeholder when no bookings exist yet.
+     */
+    private String[] resolveCurrentPeriod() {
+        List<String[]> rows = jdbc.query("""
+                SELECT academic_year, semester
+                FROM bookings
+                ORDER BY requested_at DESC
+                LIMIT 1
+                """,
+                (rs, _) -> new String[]{ rs.getString("academic_year"), rs.getString("semester") });
+
+        if (rows.isEmpty()) {
+            return new String[]{ "2024/2025", "FIRST" };
+        }
+        return rows.getFirst();
     }
 
     // =========================================================================

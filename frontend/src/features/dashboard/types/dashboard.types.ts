@@ -12,6 +12,8 @@
  * ```
  */
 
+import type { RoomType } from '@/features/room/types/room.types';
+
 // =============================================================================
 // Shared / embedded types
 // =============================================================================
@@ -65,6 +67,20 @@ export interface ComplaintSummaryDto {
     }>;
 }
 
+export interface RoomTypeBreakdown {
+    roomType: RoomType;
+    roomCount: number;
+    bedCount: number;
+    occupiedBeds: number;
+}
+
+export interface RevenueSummary {
+    totalDeclared: number;
+    currentSemester: number;
+    paidBookings: number;
+    unpaidApproved: number;
+}
+
 // =============================================================================
 // ADMIN dashboard
 // =============================================================================
@@ -96,6 +112,8 @@ export interface AdminDashboard {
     bookingFunnel: BookingFunnelDto;
     complaintSummary: ComplaintSummaryDto;
     waitlistDepth: WaitlistDepthDto[];
+    roomTypeBreakdown: RoomTypeBreakdown[];
+    revenueSummary: RevenueSummary;
 }
 
 // =============================================================================
@@ -190,6 +208,4 @@ export interface StudentDashboard {
  * Narrow using the {@code role} field.
  */
 export type DashboardData =
-    | AdminDashboard
-    | ManagerDashboard
-    | StudentDashboard;
+    AdminDashboard | ManagerDashboard | StudentDashboard;

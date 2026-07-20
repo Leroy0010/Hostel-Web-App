@@ -2,10 +2,7 @@ package com.leroy.hostelbackend.module.dashboard.dto;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.leroy.hostelbackend.module.analytics.dto.BookingFunnelDto;
-import com.leroy.hostelbackend.module.analytics.dto.ComplaintSummaryDto;
-import com.leroy.hostelbackend.module.analytics.dto.HostelOccupancyDto;
-import com.leroy.hostelbackend.module.analytics.dto.WaitlistDepthDto;
+import com.leroy.hostelbackend.module.analytics.dto.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -84,7 +81,9 @@ public sealed interface DashboardDto
             List<HostelOccupancyDto> hostelOccupancy,
             BookingFunnelDto     bookingFunnel,
             ComplaintSummaryDto  complaintSummary,
-            List<WaitlistDepthDto> waitlistDepth
+            List<WaitlistDepthDto> waitlistDepth,
+            List<RoomTypeBreakdownDto> roomTypeBreakdown,
+            RevenueSummaryDto revenueSummary
     ) implements DashboardDto {}
 
     // =========================================================================

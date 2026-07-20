@@ -1,5 +1,6 @@
 package com.leroy.hostelbackend.config;
 
+import com.leroy.hostelbackend.config.ratelimit.RateLimitingFilter;
 import com.leroy.hostelbackend.module.auth.security.JwtAuthenticationFilter;
 import com.leroy.hostelbackend.module.user.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -124,6 +125,9 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
+                // Rate limiting runs before authentication so abusive clients are
+                // rejected cheaply, before a DB lookup or JWT parse ever happens.
+                .addFilterBefore(new RateLimitingFilter(), JwtAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(c -> c
                         // Return 401 JSON (not a redirect to a login page) for missing/invalid tokens
