@@ -320,7 +320,7 @@ http://localhost:8080/swagger-ui.html
 
 - **Liquibase changelog gap:** additional migration scripts beyond `002` should be added and registered under `db.changelog-master.yaml` as the schema evolves — anything left unregistered will not run, including under Testcontainers-based repository tests.
 - **`JwtService` token parsing:** parsing an empty token string should be hardened to fail gracefully alongside the existing `JwtException` handling.
-- Preliminary academic report sections (Declaration, Dedication, Acknowledgements, Table of Contents, diagrams, UI screenshots, appendices) are tracked separately as part of the CSC 406 submission and are not part of the application codebase.
+- Preliminary academic report sections (Declaration, Dedication, Acknowledgements, Table of Contents, diagrams, UI screenshots, appendices) are tracked separately as part of the CSC 499 submission and are not part of the application codebase.
 
 ---
 
