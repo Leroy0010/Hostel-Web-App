@@ -8,6 +8,8 @@ import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as path from "path";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
+
 
 export class InfrastructureStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -45,39 +47,33 @@ export class InfrastructureStack extends cdk.Stack {
             version: rds.PostgresEngineVersion.VER_18, // Stable LTS with robust PostGIS support
         });
 
-        const database = new rds.DatabaseInstance(this, "HostelDatabase", {
-            engine: dbEngine,
-            vpc,
-            vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
-            instanceType: ec2.InstanceType.of(
-                ec2.InstanceClass.T4G,
-                ec2.InstanceSize.MICRO,
-            ), // Cost-friendly burstable tier
-            allocatedStorage: 20,
-            maxAllocatedStorage: 100,
-            databaseName: "hostelbookingdb",
-            publiclyAccessible: false, // Security best practice: keep the DB isolated
-            removalPolicy: cdk.RemovalPolicy.SNAPSHOT, // Don't lose data if stack is destroyed
-            // ── Automated backups / point-in-time recovery ────────────────────────
-            // RDS automated backups ARE the PITR mechanism: enabling them with a
-            // retention window lets us restore to any point within that window
-            // (down to ~5 min granularity), not just to the nightly snapshot time.
-            // 1 days is a reasonable floor for a student-project deployment —
-            // enough to recover from an accidental bad migration or bulk-delete
-            // without materially increasing cost on a free/low-tier instance.
-            backupRetention: cdk.Duration.days(1),
-            // Off-peak UTC window (Ghana is UTC+0, so this is ~3-4am local too).
-            preferredBackupWindow: "03:00-04:00",
-            // Keep automated backups if the instance itself is ever deleted
-            // outside of a full stack teardown, matching the SNAPSHOT removal policy.
-            deleteAutomatedBackups: false,
-            copyTagsToSnapshot: true,
-            storageEncrypted: true,
-        });
+        // 1. Reference the existing Database Security Group
+        const dbSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
+            this,
+            "HostelDbSecurityGroup",
+            "sg-06388864d6273b93f", // 👈 Replace with your actual DB Security Group ID from the console
+        );
 
-        // 👇 ADD THIS LINE DIRECTLY UNDER YOUR DATABASE CONSTRUCT
-        (database.node.defaultChild as rds.CfnDBInstance).dbInstanceIdentifier =
-            "hostelbookingdb";
+        // 2. Look up the manually restored encrypted instance
+        const database = rds.DatabaseInstance.fromDatabaseInstanceAttributes(
+            this,
+            "HostelDatabase",
+            {
+                instanceIdentifier: "hostelbookingdb",
+                instanceEndpointAddress: "hostelbookingdb.c5qy0y2020zs.eu-north-1.rds.amazonaws.com", // 👈 Replace with your active DB Endpoint string
+                port: 5432,
+                securityGroups: [dbSecurityGroup],
+            },
+        );
+
+        // 3. 👇 MANUALLY FETCH THE EXISTING DB SECRET FROM SECRETS MANAGER
+        const dbSecret = secretsmanager.Secret.fromSecretNameV2(
+            this,
+            "HostelDbSecretLookup",
+            "rds!db-18303e02-2e82-4456-aaec-4606538f4080", // 👈 Replace with the exact Name of your secret in the AWS Secrets Manager console
+        );
+
+        
 
         // Create a small, secure Bastion Host in the public subnet
         const bastion = new ec2.BastionHostLinux(this, "HostelBastion", {
@@ -288,12 +284,12 @@ export class InfrastructureStack extends cdk.Stack {
                             // Automatically injects the auto-generated RDS password
                             SPRING_DATASOURCE_PASSWORD:
                                 ecs.Secret.fromSecretsManager(
-                                    database.secret!,
+                                    dbSecret,
                                     "password",
                                 ),
                             SPRING_DATASOURCE_USERNAME:
                                 ecs.Secret.fromSecretsManager(
-                                    database.secret!,
+                                    dbSecret,
                                     "username",
                                 ),
                         },
