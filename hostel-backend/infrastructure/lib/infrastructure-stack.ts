@@ -10,295 +10,312 @@ import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 
 export class InfrastructureStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+        super(scope, id, props);
 
-    // =========================================================================
-    // 1. Networking (VPC)
-    // =========================================================================
-    const vpc = new ec2.Vpc(this, "HostelVpc", {
-      maxAzs: 2, // Deploy across 2 Availability Zones for high availability
-      natGateways: 1, // 1 NAT Gateway keeps costs down for production starts
-      subnetConfiguration: [
-        {
-          cidrMask: 24,
-          name: "Public",
-          subnetType: ec2.SubnetType.PUBLIC, // For Load Balancers
-        },
-        {
-          cidrMask: 24,
-          name: "Private",
-          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS, // For Spring Boot Container
-        },
-        {
-          cidrMask: 24,
-          name: "Isolated",
-          subnetType: ec2.SubnetType.PRIVATE_ISOLATED, // For the Database
-        },
-      ],
-    });
+        // =========================================================================
+        // 1. Networking (VPC)
+        // =========================================================================
+        const vpc = new ec2.Vpc(this, "HostelVpc", {
+            maxAzs: 2, // Deploy across 2 Availability Zones for high availability
+            natGateways: 1, // 1 NAT Gateway keeps costs down for production starts
+            subnetConfiguration: [
+                {
+                    cidrMask: 24,
+                    name: "Public",
+                    subnetType: ec2.SubnetType.PUBLIC, // For Load Balancers
+                },
+                {
+                    cidrMask: 24,
+                    name: "Private",
+                    subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS, // For Spring Boot Container
+                },
+                {
+                    cidrMask: 24,
+                    name: "Isolated",
+                    subnetType: ec2.SubnetType.PRIVATE_ISOLATED, // For the Database
+                },
+            ],
+        });
 
-    // =========================================================================
-    // 2. Managed PostgreSQL Database (RDS)
-    // =========================================================================
-    const dbEngine = rds.DatabaseInstanceEngine.postgres({
-      version: rds.PostgresEngineVersion.VER_18, // Stable LTS with robust PostGIS support
-    });
+        // =========================================================================
+        // 2. Managed PostgreSQL Database (RDS)
+        // =========================================================================
+        const dbEngine = rds.DatabaseInstanceEngine.postgres({
+            version: rds.PostgresEngineVersion.VER_18, // Stable LTS with robust PostGIS support
+        });
 
-    const database = new rds.DatabaseInstance(this, "HostelDatabase", {
-      engine: dbEngine,
-      vpc,
-      vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
-      instanceType: ec2.InstanceType.of(
-        ec2.InstanceClass.T4G,
-        ec2.InstanceSize.MICRO,
-      ), // Cost-friendly burstable tier
-      allocatedStorage: 20,
-      maxAllocatedStorage: 100,
-      databaseName: "hostelbookingdb",
-      publiclyAccessible: false, // Security best practice: keep the DB isolated
-      removalPolicy: cdk.RemovalPolicy.SNAPSHOT, // Don't lose data if stack is destroyed
-      // ── Automated backups / point-in-time recovery ────────────────────────
-      // RDS automated backups ARE the PITR mechanism: enabling them with a
-      // retention window lets us restore to any point within that window
-      // (down to ~5 min granularity), not just to the nightly snapshot time.
-      // 1 days is a reasonable floor for a student-project deployment —
-      // enough to recover from an accidental bad migration or bulk-delete
-      // without materially increasing cost on a free/low-tier instance.
-      backupRetention: cdk.Duration.days(1),
-      // Off-peak UTC window (Ghana is UTC+0, so this is ~3-4am local too).
-      preferredBackupWindow: "03:00-04:00",
-      // Keep automated backups if the instance itself is ever deleted
-      // outside of a full stack teardown, matching the SNAPSHOT removal policy.
-      deleteAutomatedBackups: false,
-      copyTagsToSnapshot: true,
-      storageEncrypted: true
-    });
+        const database = new rds.DatabaseInstance(this, "HostelDatabase", {
+            engine: dbEngine,
+            vpc,
+            vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
+            instanceType: ec2.InstanceType.of(
+                ec2.InstanceClass.T4G,
+                ec2.InstanceSize.MICRO,
+            ), // Cost-friendly burstable tier
+            allocatedStorage: 20,
+            maxAllocatedStorage: 100,
+            databaseName: "hostelbookingdb",
+            publiclyAccessible: false, // Security best practice: keep the DB isolated
+            removalPolicy: cdk.RemovalPolicy.SNAPSHOT, // Don't lose data if stack is destroyed
+            // ── Automated backups / point-in-time recovery ────────────────────────
+            // RDS automated backups ARE the PITR mechanism: enabling them with a
+            // retention window lets us restore to any point within that window
+            // (down to ~5 min granularity), not just to the nightly snapshot time.
+            // 1 days is a reasonable floor for a student-project deployment —
+            // enough to recover from an accidental bad migration or bulk-delete
+            // without materially increasing cost on a free/low-tier instance.
+            backupRetention: cdk.Duration.days(1),
+            // Off-peak UTC window (Ghana is UTC+0, so this is ~3-4am local too).
+            preferredBackupWindow: "03:00-04:00",
+            // Keep automated backups if the instance itself is ever deleted
+            // outside of a full stack teardown, matching the SNAPSHOT removal policy.
+            deleteAutomatedBackups: false,
+            copyTagsToSnapshot: true,
+            storageEncrypted: true,
+        });
 
-    // Create a small, secure Bastion Host in the public subnet
-    const bastion = new ec2.BastionHostLinux(this, "HostelBastion", {
-      vpc,
-      subnetSelection: { subnetType: ec2.SubnetType.PUBLIC },
-      // Explicitly set to the official Free Tier instance for eu-north-1
-      instanceType: ec2.InstanceType.of(
-        ec2.InstanceClass.T3, 
-        ec2.InstanceSize.MICRO
-      ),
-    });
+        // 👇 ADD THIS LINE DIRECTLY UNDER YOUR DATABASE CONSTRUCT
+        (database.node.defaultChild as rds.CfnDBInstance).dbInstanceIdentifier =
+            "hostelbookingdb";
 
-    // Allow the Bastion Host to talk to the Database
-    database.connections.allowFrom(
-      bastion,
-      ec2.Port.tcp(5432),
-      "Allow Bastion to access DB",
-    );
-
-    // =========================================================================
-    // 3. Secrets Injection from SSM Parameter Store
-    // =========================================================================
-
-    // SECRETS (Keep these as SecureString in AWS, update the code here)
-    const jwtSecret = ssm.StringParameter.fromSecureStringParameterAttributes(
-      this,
-      "JwtSecret",
-      { parameterName: "/hostel/JWT_SECRET", version: 1 },
-    );
-
-    const vapidPrivateKey =
-      ssm.StringParameter.fromSecureStringParameterAttributes(
-        this,
-        "VapidPrivKey",
-        { parameterName: "/hostel/VAPID_PRIVATE_KEY", version: 1 },
-      );
-
-    const cloudinarySecret =
-      ssm.StringParameter.fromSecureStringParameterAttributes(
-        this,
-        "CloudinarySecret",
-        { parameterName: "/hostel/CLOUDINARY_API_SECRET", version: 1 },
-      );
-
-    const mailPassword =
-      ssm.StringParameter.fromSecureStringParameterAttributes(
-        this,
-        "MailPassword",
-        { parameterName: "/hostel/MAIL_PASSWORD", version: 1 },
-      );
-
-    // PLAIN STRINGS (Change these to 'String' in the AWS Console, keep code mostly the same)
-    const mailUsername =
-      ssm.StringParameter.fromSecureStringParameterAttributes(
-        this,
-        "MailUsername",
-        { parameterName: "/hostel/MAIL_USERNAME", version: 1 },
-      );
-
-    const frontendUrl = ssm.StringParameter.fromSecureStringParameterAttributes(
-      this,
-      "FrontendUrl",
-      { parameterName: "/hostel/FRONTEND_BASE_URL", version: 1 },
-    );
-
-    const vapidSubject =
-      ssm.StringParameter.fromSecureStringParameterAttributes(
-        this,
-        "VapidSubject",
-        { parameterName: "/hostel/VAPID_SUBJECT", version: 1 },
-      );
-
-    // For non-sensitive configurations, you can fetch the raw string value directly to use in plain environment text
-
-    const vapidPublicKey = ssm.StringParameter.valueForStringParameter(
-      this,
-      "/hostel/VAPID_PUBLIC_KEY",
-    );
-
-    const cloudinaryName = ssm.StringParameter.valueForStringParameter(
-      this,
-      "/hostel/CLOUDINARY_CLOUD_NAME",
-    );
-    const cloudinaryKey = ssm.StringParameter.valueForStringParameter(
-      this,
-      "/hostel/CLOUDINARY_API_KEY",
-    );
-    const sweeperRate = ssm.StringParameter.valueForStringParameter(
-      this,
-      "/hostel/HOSTEL_SWEEPER_RATE",
-    );
-
-    const jwtExpiration = ssm.StringParameter.valueForStringParameter(
-      this,
-      "/hostel/JWT_EXPIRATION",
-    );
-
-    const jwtRefreshExpiration = ssm.StringParameter.valueForStringParameter(
-      this,
-      "/hostel/JWT_REFRESH_EXPIRATION",
-    );
-
-    const jwtCookeSecure = ssm.StringParameter.valueForStringParameter(
-      this,
-      "/hostel/JWT_COOKIE_SECURE",
-    );
-    const jwtCookedDomain = ssm.StringParameter.valueForStringParameter(
-      this,
-      "/hostel/JWT_COOKIE_DOMAIN",
-    );
-    const jwtCookeSameSite = ssm.StringParameter.valueForStringParameter(
-      this,
-      "/hostel/JWT_COOKIE_SAME_SITE",
-    );
-
-    // =========================================================================
-    // 4. Container Execution & Load Balancing (ECS Fargate)
-    // =========================================================================
-    const cluster = new ecs.Cluster(this, "HostelCluster", { vpc });
-
-    // NEW: Dynamically provision a brand new Wildcard Certificate
-    const wildcardCertificate = new acm.Certificate(
-      this,
-      "HostelWildcardCertificate",
-      {
-        domainName: "hostellifeplus.com",
-        subjectAlternativeNames: ["*.hostellifeplus.com"], // Protects api., www., etc.
-        validation: acm.CertificateValidation.fromDns(), // Automatically pauses for external DNS registration
-      },
-    );
-
-    const fargateService =
-      new ecsPatterns.ApplicationLoadBalancedFargateService(
-        this,
-        "HostelFargateService",
-        {
-          cluster,
-          cpu: 2048, // 2 vCPU
-          memoryLimitMiB: 4096, // 3 GB RAM (perfect for Spring Boot with optimized JVM memory)
-          desiredCount: 1,
-          publicLoadBalancer: true, // Exposed to the public internet
-          circuitBreaker: { rollback: true },
-          taskSubnets: {
-            subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
-          },
-          healthCheckGracePeriod: cdk.Duration.seconds(180),
-
-          protocol: elbv2.ApplicationProtocol.HTTPS,
-          certificate: wildcardCertificate, // Attach our brand-new wildcard cert here
-          redirectHTTP: true,
-          taskImageOptions: {
-            // Points directly to your production multi-stage dockerfile
-            image: ecs.ContainerImage.fromAsset(
-              path.join(__dirname, "../../"),
-              {
-                file: "Dockerfile.prod",
-                exclude: [
-                  "infrastructure", // Prevents the infinite recursive loop!
-                  "node_modules", // Keeps the upload size small
-                  "target", // Ignores old local builds
-                  ".git",
-                ],
-              },
+        // Create a small, secure Bastion Host in the public subnet
+        const bastion = new ec2.BastionHostLinux(this, "HostelBastion", {
+            vpc,
+            subnetSelection: { subnetType: ec2.SubnetType.PUBLIC },
+            // Explicitly set to the official Free Tier instance for eu-north-1
+            instanceType: ec2.InstanceType.of(
+                ec2.InstanceClass.T3,
+                ec2.InstanceSize.MICRO,
             ),
-            containerPort: 8080,
-            environment: {
-              SPRING_PROFILES_ACTIVE: "prod",
-              SERVER_PORT: "8080",
-              SPRING_DATASOURCE_URL: `jdbc:postgresql://${database.dbInstanceEndpointAddress}:${database.dbInstanceEndpointPort}/hostelbookingdb?stringtype=unspecified`,
+        });
 
-              // Add plain text environments here:
+        // Allow the Bastion Host to talk to the Database
+        database.connections.allowFrom(
+            bastion,
+            ec2.Port.tcp(5432),
+            "Allow Bastion to access DB",
+        );
 
-              FRONTEND_PASSWORD_SETUP_URL: `/setup-password`,
-              FRONTEND_EMAIL_VERIFICATION_URL: `/verify-email`,
-              VAPID_PUBLIC_KEY: vapidPublicKey,
+        // =========================================================================
+        // 3. Secrets Injection from SSM Parameter Store
+        // =========================================================================
 
-              CLOUDINARY_CLOUD_NAME: cloudinaryName,
-              CLOUDINARY_API_KEY: cloudinaryKey,
-              HOSTEL_SWEEPER_RATE: sweeperRate,
-              MAIL_HOST: "smtp.gmail.com",
-              MAIL_PORT: "465",
+        // SECRETS (Keep these as SecureString in AWS, update the code here)
+        const jwtSecret =
+            ssm.StringParameter.fromSecureStringParameterAttributes(
+                this,
+                "JwtSecret",
+                { parameterName: "/hostel/JWT_SECRET", version: 1 },
+            );
 
-              JWT_REFRESH_EXPIRATION: jwtRefreshExpiration,
-              JWT_EXPIRATION: jwtExpiration,
-              JWT_COOKIE_SAME_SITE: jwtCookeSameSite,
-              JWT_COOKIE_SECURE: jwtCookeSecure,
-              JWT_COOKIE_DOMAIN: jwtCookedDomain,
+        const vapidPrivateKey =
+            ssm.StringParameter.fromSecureStringParameterAttributes(
+                this,
+                "VapidPrivKey",
+                { parameterName: "/hostel/VAPID_PRIVATE_KEY", version: 1 },
+            );
+
+        const cloudinarySecret =
+            ssm.StringParameter.fromSecureStringParameterAttributes(
+                this,
+                "CloudinarySecret",
+                { parameterName: "/hostel/CLOUDINARY_API_SECRET", version: 1 },
+            );
+
+        const mailPassword =
+            ssm.StringParameter.fromSecureStringParameterAttributes(
+                this,
+                "MailPassword",
+                { parameterName: "/hostel/MAIL_PASSWORD", version: 1 },
+            );
+
+        // PLAIN STRINGS (Change these to 'String' in the AWS Console, keep code mostly the same)
+        const mailUsername =
+            ssm.StringParameter.fromSecureStringParameterAttributes(
+                this,
+                "MailUsername",
+                { parameterName: "/hostel/MAIL_USERNAME", version: 1 },
+            );
+
+        const frontendUrl =
+            ssm.StringParameter.fromSecureStringParameterAttributes(
+                this,
+                "FrontendUrl",
+                { parameterName: "/hostel/FRONTEND_BASE_URL", version: 1 },
+            );
+
+        const vapidSubject =
+            ssm.StringParameter.fromSecureStringParameterAttributes(
+                this,
+                "VapidSubject",
+                { parameterName: "/hostel/VAPID_SUBJECT", version: 1 },
+            );
+
+        // For non-sensitive configurations, you can fetch the raw string value directly to use in plain environment text
+
+        const vapidPublicKey = ssm.StringParameter.valueForStringParameter(
+            this,
+            "/hostel/VAPID_PUBLIC_KEY",
+        );
+
+        const cloudinaryName = ssm.StringParameter.valueForStringParameter(
+            this,
+            "/hostel/CLOUDINARY_CLOUD_NAME",
+        );
+        const cloudinaryKey = ssm.StringParameter.valueForStringParameter(
+            this,
+            "/hostel/CLOUDINARY_API_KEY",
+        );
+        const sweeperRate = ssm.StringParameter.valueForStringParameter(
+            this,
+            "/hostel/HOSTEL_SWEEPER_RATE",
+        );
+
+        const jwtExpiration = ssm.StringParameter.valueForStringParameter(
+            this,
+            "/hostel/JWT_EXPIRATION",
+        );
+
+        const jwtRefreshExpiration =
+            ssm.StringParameter.valueForStringParameter(
+                this,
+                "/hostel/JWT_REFRESH_EXPIRATION",
+            );
+
+        const jwtCookeSecure = ssm.StringParameter.valueForStringParameter(
+            this,
+            "/hostel/JWT_COOKIE_SECURE",
+        );
+        const jwtCookedDomain = ssm.StringParameter.valueForStringParameter(
+            this,
+            "/hostel/JWT_COOKIE_DOMAIN",
+        );
+        const jwtCookeSameSite = ssm.StringParameter.valueForStringParameter(
+            this,
+            "/hostel/JWT_COOKIE_SAME_SITE",
+        );
+
+        // =========================================================================
+        // 4. Container Execution & Load Balancing (ECS Fargate)
+        // =========================================================================
+        const cluster = new ecs.Cluster(this, "HostelCluster", { vpc });
+
+        // NEW: Dynamically provision a brand new Wildcard Certificate
+        const wildcardCertificate = new acm.Certificate(
+            this,
+            "HostelWildcardCertificate",
+            {
+                domainName: "hostellifeplus.com",
+                subjectAlternativeNames: ["*.hostellifeplus.com"], // Protects api., www., etc.
+                validation: acm.CertificateValidation.fromDns(), // Automatically pauses for external DNS registration
             },
-            secrets: {
-              JWT_SECRET: ecs.Secret.fromSsmParameter(jwtSecret),
-              // Add secure secrets here:
-              VAPID_PRIVATE_KEY: ecs.Secret.fromSsmParameter(vapidPrivateKey),
-              CLOUDINARY_API_SECRET:
-                ecs.Secret.fromSsmParameter(cloudinarySecret),
-              FRONTEND_BASE_URL: ecs.Secret.fromSsmParameter(frontendUrl),
-              MAIL_USERNAME: ecs.Secret.fromSsmParameter(mailUsername),
-              MAIL_PASSWORD: ecs.Secret.fromSsmParameter(mailPassword),
+        );
 
-              VAPID_SUBJECT: ecs.Secret.fromSsmParameter(vapidSubject),
-              // Automatically injects the auto-generated RDS password
-              SPRING_DATASOURCE_PASSWORD: ecs.Secret.fromSecretsManager(
-                database.secret!,
-                "password",
-              ),
-              SPRING_DATASOURCE_USERNAME: ecs.Secret.fromSecretsManager(
-                database.secret!,
-                "username",
-              ),
-            },
-          },
-        },
-      );
+        const fargateService =
+            new ecsPatterns.ApplicationLoadBalancedFargateService(
+                this,
+                "HostelFargateService",
+                {
+                    cluster,
+                    cpu: 2048, // 2 vCPU
+                    memoryLimitMiB: 4096, // 3 GB RAM (perfect for Spring Boot with optimized JVM memory)
+                    desiredCount: 1,
+                    publicLoadBalancer: true, // Exposed to the public internet
+                    circuitBreaker: { rollback: true },
+                    taskSubnets: {
+                        subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
+                    },
+                    healthCheckGracePeriod: cdk.Duration.seconds(180),
 
-    // Automatically allow traffic from the Spring Boot container to your RDS instance
-    database.connections.allowFrom(fargateService.service, ec2.Port.tcp(5432));
+                    protocol: elbv2.ApplicationProtocol.HTTPS,
+                    certificate: wildcardCertificate, // Attach our brand-new wildcard cert here
+                    redirectHTTP: true,
+                    taskImageOptions: {
+                        // Points directly to your production multi-stage dockerfile
+                        image: ecs.ContainerImage.fromAsset(
+                            path.join(__dirname, "../../"),
+                            {
+                                file: "Dockerfile.prod",
+                                exclude: [
+                                    "infrastructure", // Prevents the infinite recursive loop!
+                                    "node_modules", // Keeps the upload size small
+                                    "target", // Ignores old local builds
+                                    ".git",
+                                ],
+                            },
+                        ),
+                        containerPort: 8080,
+                        environment: {
+                            SPRING_PROFILES_ACTIVE: "prod",
+                            SERVER_PORT: "8080",
+                            SPRING_DATASOURCE_URL: `jdbc:postgresql://${database.dbInstanceEndpointAddress}:${database.dbInstanceEndpointPort}/hostelbookingdb?stringtype=unspecified`,
 
-    // Configure health checks so the load balancer knows when Spring Boot has warmed up
-    fargateService.targetGroup.configureHealthCheck({
-      path: "/actuator/health", // Ensure spring-boot-starter-actuator is in your pom.xml
-      port: "8080",
-      healthyHttpCodes: "200",
-      interval: cdk.Duration.seconds(45),
-      timeout: cdk.Duration.seconds(20),
-      healthyThresholdCount: 2,
-      unhealthyThresholdCount: 5,
-    });
-  }
+                            // Add plain text environments here:
+
+                            FRONTEND_PASSWORD_SETUP_URL: `/setup-password`,
+                            FRONTEND_EMAIL_VERIFICATION_URL: `/verify-email`,
+                            VAPID_PUBLIC_KEY: vapidPublicKey,
+
+                            CLOUDINARY_CLOUD_NAME: cloudinaryName,
+                            CLOUDINARY_API_KEY: cloudinaryKey,
+                            HOSTEL_SWEEPER_RATE: sweeperRate,
+                            MAIL_HOST: "smtp.gmail.com",
+                            MAIL_PORT: "465",
+
+                            JWT_REFRESH_EXPIRATION: jwtRefreshExpiration,
+                            JWT_EXPIRATION: jwtExpiration,
+                            JWT_COOKIE_SAME_SITE: jwtCookeSameSite,
+                            JWT_COOKIE_SECURE: jwtCookeSecure,
+                            JWT_COOKIE_DOMAIN: jwtCookedDomain,
+                        },
+                        secrets: {
+                            JWT_SECRET: ecs.Secret.fromSsmParameter(jwtSecret),
+                            // Add secure secrets here:
+                            VAPID_PRIVATE_KEY:
+                                ecs.Secret.fromSsmParameter(vapidPrivateKey),
+                            CLOUDINARY_API_SECRET:
+                                ecs.Secret.fromSsmParameter(cloudinarySecret),
+                            FRONTEND_BASE_URL:
+                                ecs.Secret.fromSsmParameter(frontendUrl),
+                            MAIL_USERNAME:
+                                ecs.Secret.fromSsmParameter(mailUsername),
+                            MAIL_PASSWORD:
+                                ecs.Secret.fromSsmParameter(mailPassword),
+
+                            VAPID_SUBJECT:
+                                ecs.Secret.fromSsmParameter(vapidSubject),
+                            // Automatically injects the auto-generated RDS password
+                            SPRING_DATASOURCE_PASSWORD:
+                                ecs.Secret.fromSecretsManager(
+                                    database.secret!,
+                                    "password",
+                                ),
+                            SPRING_DATASOURCE_USERNAME:
+                                ecs.Secret.fromSecretsManager(
+                                    database.secret!,
+                                    "username",
+                                ),
+                        },
+                    },
+                },
+            );
+
+        // Automatically allow traffic from the Spring Boot container to your RDS instance
+        database.connections.allowFrom(
+            fargateService.service,
+            ec2.Port.tcp(5432),
+        );
+
+        // Configure health checks so the load balancer knows when Spring Boot has warmed up
+        fargateService.targetGroup.configureHealthCheck({
+            path: "/actuator/health", // Ensure spring-boot-starter-actuator is in your pom.xml
+            port: "8080",
+            healthyHttpCodes: "200",
+            interval: cdk.Duration.seconds(45),
+            timeout: cdk.Duration.seconds(20),
+            healthyThresholdCount: 2,
+            unhealthyThresholdCount: 5,
+        });
+    }
 }
