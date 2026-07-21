@@ -30,7 +30,7 @@ const baseRoom: RoomDto = {
     capacity: 2,
     currentOccupancy: 1,
     bedsAvailable: 1,
-    pricePerSemester: '1500.00',
+    pricePerSemester: 1500.0,
     status: 'AVAILABLE',
     floorNumber: 3,
     imageUrl: 'https://example.com/existing.jpg',
