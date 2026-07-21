@@ -8,8 +8,7 @@ import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as path from "path";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
-import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
-
+import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 
 export class InfrastructureStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -60,7 +59,8 @@ export class InfrastructureStack extends cdk.Stack {
             "HostelDatabase",
             {
                 instanceIdentifier: "hostelbookingdb",
-                instanceEndpointAddress: "hostelbookingdb.c5qy0y2020zs.eu-north-1.rds.amazonaws.com", // 👈 Replace with your active DB Endpoint string
+                instanceEndpointAddress:
+                    "hostelbookingdb.c5qy0y2020zs.eu-north-1.rds.amazonaws.com", // 👈 Replace with your active DB Endpoint string
                 port: 5432,
                 securityGroups: [dbSecurityGroup],
             },
@@ -72,8 +72,6 @@ export class InfrastructureStack extends cdk.Stack {
             "HostelDbSecretLookup",
             "rds!db-18303e02-2e82-4456-aaec-4606538f4080", // 👈 Replace with the exact Name of your secret in the AWS Secrets Manager console
         );
-
-        
 
         // Create a small, secure Bastion Host in the public subnet
         const bastion = new ec2.BastionHostLinux(this, "HostelBastion", {
