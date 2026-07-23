@@ -166,22 +166,19 @@ public class BookingServiceTest {
         }
 
         @Test
-        @DisplayName("rejects SECOND semester when FIRST has no CHECKED_IN/CHECKED_OUT occupancy")
-        void rejectsSecondSemesterWithoutFirstOccupancy() {
-            when(bookingRepository.hasFirstSemesterOccupancy(room.getId(), currentAcademicYear))
-                    .thenReturn(false);
+        @DisplayName("allows SECOND semester even when the room has no prior FIRST semester occupancy")
+        void allowsSecondSemesterWithoutFirstOccupancy() {
+            // No system-level gate on this anymore — the manager decides at approval time.
             var secondRequest = new CreateBookingRequest(room.getId(), currentAcademicYear, "SECOND");
 
-            assertThatThrownBy(() -> bookingService.createBooking(student.getId(), secondRequest))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("SECOND semester");
+            bookingService.createBooking(student.getId(), secondRequest);
+
+            verify(bookingRepository).save(any(Booking.class));
         }
 
         @Test
-        @DisplayName("allows SECOND semester once FIRST has CHECKED_IN/CHECKED_OUT occupancy")
+        @DisplayName("allows SECOND semester when FIRST has CHECKED_IN/CHECKED_OUT occupancy")
         void allowsSecondSemesterWithFirstOccupancy() {
-            when(bookingRepository.hasFirstSemesterOccupancy(room.getId(), currentAcademicYear))
-                    .thenReturn(true);
             var secondRequest = new CreateBookingRequest(room.getId(), currentAcademicYear, "SECOND");
 
             bookingService.createBooking(student.getId(), secondRequest);

@@ -129,26 +129,23 @@ export default function ComplaintDetailPage() {
                 </div>
 
                 {/* Reaction bar */}
-                {
-                    user?.role === 'STUDENT' &&<div className="mt-4 border-t border-gray-100 pt-4 dark:border-gray-800">
-                    <ReactionBar
-                        complaintId={complaint.id}
-                        upvotes={complaint.upvotes}
-                        downvotes={complaint.downvotes}
-                        netScore={complaint.netScore}
-                        currentUserVote={complaint.currentUserVote}
-                        disabled={isAuthor}
-                    />
-                    {isAuthor && (
-                        <p className="mt-1.5 text-xs text-gray-400 dark:text-gray-600">
-                            You cannot vote on your own complaint.
-                        </p>
-                    )}
-                </div>
-                }
-
-                
-                
+                {user?.role === 'STUDENT' && (
+                    <div className="mt-4 border-t border-gray-100 pt-4 dark:border-gray-800">
+                        <ReactionBar
+                            complaintId={complaint.id}
+                            upvotes={complaint.upvotes}
+                            downvotes={complaint.downvotes}
+                            netScore={complaint.netScore}
+                            currentUserVote={complaint.currentUserVote}
+                            disabled={isAuthor}
+                        />
+                        {isAuthor && (
+                            <p className="mt-1.5 text-xs text-gray-400 dark:text-gray-600">
+                                You cannot vote on your own complaint.
+                            </p>
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* ── Detail grid ──────────────────────────────────────────── */}
@@ -199,7 +196,8 @@ export default function ComplaintDetailPage() {
                 <AttachmentManager
                     complaintId={complaint.id}
                     attachments={complaint.attachments}
-                    canManage={canManageAttachments}
+                    canAdd={canManageAttachments}
+                    currentUserId={user?.id}
                 />
             </div>
 

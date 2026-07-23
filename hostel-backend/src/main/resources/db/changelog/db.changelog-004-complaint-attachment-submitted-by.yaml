@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-complaint-attachment-submitted-by
+      author: Leroy
+      changes:
+        - addColumn:
+            tableName: complaint_attachments
+            columns:
+              - column:
+                  name: submitted_by
+                  type: uuid
+        - addForeignKeyConstraint:
+            baseTableName: complaint_attachments
+            baseColumnNames: submitted_by
+            constraintName: fk_complaint_attachments_submitted_by
+            referencedTableName: users
+            referencedColumnNames: id
+        - sql:
+            comment: >
+              Backfill existing rows (if any) to the complaint's author, since
+              historically only the author could add an attachment. New rows
+              always populate this from the authenticated actor going forward.
+            sql: >
+              UPDATE complaint_attachments ca
+              SET submitted_by = c.author_id
+              FROM complaints c
+              WHERE ca.complaint_id = c.id
+                AND ca.submitted_by IS NULL
+        - addNotNullConstraint:
+            tableName: complaint_attachments
+            columnName: submitted_by
+            columnDataType: uuid

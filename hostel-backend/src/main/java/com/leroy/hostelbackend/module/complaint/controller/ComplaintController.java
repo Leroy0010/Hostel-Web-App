@@ -4,7 +4,6 @@ import com.leroy.hostelbackend.module.complaint.dto.*;
 import com.leroy.hostelbackend.module.complaint.model.ComplaintStatus;
 import com.leroy.hostelbackend.module.complaint.service.ComplaintService;
 import com.leroy.hostelbackend.module.user.model.CustomUserDetails;
-import com.leroy.hostelbackend.module.user.model.UserRole;
 import com.leroy.hostelbackend.shared.response.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -19,7 +18,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -105,13 +103,15 @@ public class ComplaintController {
     }
 
     @PostMapping("/complaints/{id}/attachments")
+    @PreAuthorize("hasAnyRole('STUDENT', 'MANAGER', 'ADMIN')")
     public ResponseEntity<ApiResponse<AttachmentDto>> addAttachment(
             @PathVariable UUID id,
             @Valid @RequestBody AddAttachmentRequest request,
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("Attachment added.", complaintService.addAttachment(id, customUserDetails.getUserId(), request)));
+                .body(ApiResponse.success("Attachment added.", complaintService.addAttachment(
+                        id, customUserDetails.getUserId(), customUserDetails.getRole(), request)));
     }
 
     @DeleteMapping("/complaints/attachments/{attachmentId}")
@@ -119,8 +119,7 @@ public class ComplaintController {
             @PathVariable UUID attachmentId,
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
-        boolean privileged =  Objects.equals(customUserDetails.getRole(), UserRole.MANAGER) || Objects.equals(customUserDetails.getRole(), UserRole.ADMIN);
-        complaintService.deleteAttachment(attachmentId, customUserDetails.getUserId(), privileged);
+        complaintService.deleteAttachment(attachmentId, customUserDetails.getUserId());
         return ResponseEntity.ok(ApiResponse.success("Attachment removed."));
     }
 }

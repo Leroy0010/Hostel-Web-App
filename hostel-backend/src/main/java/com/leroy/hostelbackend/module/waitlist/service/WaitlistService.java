@@ -347,9 +347,6 @@ public class WaitlistService {
      *   <li><strong>Room availability</strong> (mirrors BookingService check #3) —
      *       room must not be UNDER_MAINTENANCE or RESERVED. Skips the entire
      *       promotion (room constraint, not student).</li>
-     *   <li><strong>SECOND semester linearity</strong> (mirrors BookingService
-     *       SECOND gate) — FIRST semester must be CHECKED_IN/CHECKED_OUT for this
-     *       room+year. Room-level constraint; skips the entire promotion.</li>
      *   <li><strong>Duplicate active booking</strong> (mirrors BookingService
      *       check #4) — candidate must not already hold an active booking for this
      *       exact (room, academicYear, semester). Skips the candidate and recurses
@@ -380,23 +377,6 @@ public class WaitlistService {
             return;
         }
 
-        // ── Guard 2: SECOND semester linearity (room-level) ───────────────────
-        // Mirrors BookingService.validateSemesterLinearity() SECOND gate.
-        // FIRST semester must have been CHECKED_IN or CHECKED_OUT on this room
-        // before a SECOND semester draft can be created.
-        // Defensive: in practice SECOND-semester waitlist entries only exist where
-        // SECOND was already fully booked, which itself required FIRST to be
-        // occupied. Guard retained for correctness under unexpected data states.
-        // Room-level constraint — skips the entire promotion, not just the candidate.
-        if ("SECOND".equals(semester)
-                && !bookingRepository.hasFirstSemesterOccupancy(
-                freedRoom.getId(), academicYear)) {
-            log.warn("[WAITLIST] Promotion skipped — room {} has no FIRST semester occupancy " +
-                            "for {}; SECOND semester draft cannot be created.",
-                    freedRoom.getRoomNumber(), academicYear);
-            return;
-        }
-
         RoomType roomType = freedRoom.getRoomType();
 
         Optional<Waitlist> nextOpt = waitlistRepository
@@ -411,7 +391,7 @@ public class WaitlistService {
         Waitlist entry    = nextOpt.get();
         UUID     studentId = entry.getStudent().getId();
 
-        // ── Guard 3: Duplicate active booking (student-level) ─────────────────
+        // ── Guard 2: Duplicate active booking (student-level) ─────────────────
         // Mirrors BookingService.createBooking() check #4 (hasActiveBookingForRoom).
         // The candidate may already hold an active booking for this exact
         // (room, academicYear, semester). Scenario: student booked another room in
@@ -431,7 +411,7 @@ public class WaitlistService {
             return;
         }
 
-        // ── Guard 4: FULL semester self-conflict (student-level) ──────────────
+        // ── Guard 3: FULL semester self-conflict (student-level) ──────────────
         // Mirrors BookingService.validateSemesterLinearity() FULL gate.
         // If the freed period is FULL and the candidate already holds an active
         // FIRST or SECOND booking for the same room in the same academic year,
@@ -492,7 +472,7 @@ public class WaitlistService {
     /**
      * Removes an ineligible waitlist candidate and recurses to the next student.
      *
-     * <p>Called when a student-level guard fires (Guard 3 or Guard 4). The
+     * <p>Called when a student-level guard fires (Guard 2 or Guard 3). The
      * candidate's entry is deleted and queue positions are compacted before
      * recursing, so the queue remains consistent regardless of how many consecutive
      * candidates are skipped.

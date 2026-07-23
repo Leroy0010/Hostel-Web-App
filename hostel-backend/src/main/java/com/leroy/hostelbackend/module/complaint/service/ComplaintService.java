@@ -6,9 +6,11 @@ import com.leroy.hostelbackend.module.complaint.mapper.ComplaintMapper;
 import com.leroy.hostelbackend.module.complaint.model.*;
 import com.leroy.hostelbackend.module.complaint.repository.*;
 import com.leroy.hostelbackend.module.hostel.repository.HostelRepository;
+import com.leroy.hostelbackend.module.hostel.service.HostelService;
 import com.leroy.hostelbackend.module.notification.model.NotificationType;
 import com.leroy.hostelbackend.module.notification.service.NotificationService;
 import com.leroy.hostelbackend.module.room.repository.RoomRepository;
+import com.leroy.hostelbackend.module.user.model.UserRole;
 import com.leroy.hostelbackend.module.user.repository.UserRepository;
 import com.leroy.hostelbackend.shared.exception.HostelAccessDeniedException;
 import com.leroy.hostelbackend.shared.exception.ResourceNotFoundException;
@@ -52,6 +54,7 @@ public class ComplaintService {
     private final ComplaintMapper               complaintMapper;
     private final NotificationService           notificationService;
     private final BookingService bookingService;
+    private final HostelService hostelService;
 
     // -------------------------------------------------------------------------
     // Student actions
@@ -205,30 +208,52 @@ public class ComplaintService {
     // -------------------------------------------------------------------------
 
     /**
-     * Attaches a file URL to a complaint (S3 URL from a prior upload).
-     * Only the complaint author can add attachments.
+     * Attaches a file URL to a complaint (Cloudinary URL from a prior signed upload).
+     *
+     * <p>Any of three actors may add supporting evidence: the complaint's author,
+     * the manager assigned to the complaint's hostel, or an admin. Each attachment
+     * records who added it via {@code submittedBy} — deletion is scoped to that
+     * specific submitter (see {@link #deleteAttachment}), not to this broader set.
+     *
+     * @throws HostelAccessDeniedException if the actor is a MANAGER not assigned
+     *                                      to this complaint's hostel, or a STUDENT
+     *                                      who is not the complaint's author
      */
     @Transactional
-    public AttachmentDto addAttachment(UUID complaintId, UUID authorId, AddAttachmentRequest request) {
+    public AttachmentDto addAttachment(UUID complaintId, UUID actorId, UserRole actorRole, AddAttachmentRequest request) {
         var complaint = requireComplaint(complaintId);
-        if (!complaint.getAuthor().getId().equals(authorId)) {
-            throw new HostelAccessDeniedException();
+        boolean isAuthor = complaint.getAuthor().getId().equals(actorId);
+
+        if (!isAuthor) {
+            if (actorRole == UserRole.MANAGER) {
+                hostelService.assertManagerOwns(complaint.getHostel().getId(), actorId);
+            } else if (actorRole != UserRole.ADMIN) {
+                throw new HostelAccessDeniedException();
+            }
         }
+
+        var actor = requireUser(actorId);
 
         var attachment = new ComplaintAttachment();
         attachment.setComplaint(complaint);
         attachment.setFileUrl(request.fileUrl());
         attachment.setFileType(request.fileType());
+        attachment.setSubmittedBy(actor);
 
         return complaintMapper.toAttachmentDto(attachmentRepository.save(attachment));
     }
 
-    /** Deletes an attachment. Author or admin/manager only. */
+    /**
+     * Deletes an attachment. Restricted to the specific user who submitted it —
+     * not the complaint's author generally, and not managers/admins by virtue of
+     * their role, since one contributor's evidence should not be removable by
+     * another without a dedicated moderation workflow.
+     */
     @Transactional
-    public void deleteAttachment(UUID attachmentId, UUID requesterId, boolean isPrivileged) {
+    public void deleteAttachment(UUID attachmentId, UUID requesterId) {
         var attachment = attachmentRepository.findById(attachmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Attachment not found: " + attachmentId));
-        if (!isPrivileged && !attachment.getComplaint().getAuthor().getId().equals(requesterId)) {
+        if (!attachment.getSubmittedBy().getId().equals(requesterId)) {
             throw new HostelAccessDeniedException();
         }
         attachmentRepository.delete(attachment);
@@ -265,6 +290,11 @@ public class ComplaintService {
     private Complaint requireComplaint(UUID id) {
         return complaintRepository.findByIdWithDetails(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Complaint not found: " + id));
+    }
+
+    private com.leroy.hostelbackend.module.user.model.User requireUser(UUID id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
     }
 
     private void validateStatusTransition(ComplaintStatus current, ComplaintStatus next) {

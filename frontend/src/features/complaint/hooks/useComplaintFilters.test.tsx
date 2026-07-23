@@ -6,9 +6,7 @@ import { useComplaintFilters } from './useComplaintFilters';
 
 function wrapper(initialEntry = '/complaints') {
     return ({ children }: PropsWithChildren) => (
-        <MemoryRouter initialEntries={[initialEntry]}>
-            {children}
-        </MemoryRouter>
+        <MemoryRouter initialEntries={[initialEntry]}>{children}</MemoryRouter>
     );
 }
 

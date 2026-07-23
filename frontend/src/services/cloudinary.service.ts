@@ -2,12 +2,12 @@ import { apiClient } from '@/lib/axios';
 
 const ROOT_FOLDER = 'hostellife';
 
-interface SignatureResponse  {
-        signature: string;
-        timestamp: number;
-        apiKey: string;
-        folder: string;
-    }
+interface SignatureResponse {
+    signature: string;
+    timestamp: number;
+    apiKey: string;
+    folder: string;
+}
 
 /**
  * Uploads a file directly to Cloudinary using a backend-generated signature.
@@ -31,14 +31,11 @@ export async function uploadImageToCloudinary(
 
     // 1. Ask your Spring Boot backend for a signature
     // This requires the user to be authenticated in your app
-    const signatureRes = await apiClient.get<never, SignatureResponse>(`/cloudinary/signature?folder=${fullFolderPath}`);
+    const signatureRes = await apiClient.get<never, SignatureResponse>(
+        `/cloudinary/signature?folder=${fullFolderPath}`
+    );
 
-    const {
-        signature,
-        timestamp,
-        apiKey,
-        folder: signedFolder,
-    } = signatureRes;
+    const { signature, timestamp, apiKey, folder: signedFolder } = signatureRes;
 
     // 2. Prepare the payload for Cloudinary
     const formData = new FormData();
@@ -57,9 +54,6 @@ export async function uploadImageToCloudinary(
         method: 'POST',
         body: formData,
     });
-
-    console.log(JSON.stringify(response));
-    
 
     if (!response.ok) {
         const errorData = await response.json();

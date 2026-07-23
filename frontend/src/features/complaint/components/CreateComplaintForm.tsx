@@ -90,7 +90,7 @@ export function CreateComplaintForm({
         setError,
         watch,
         control,
-reset,
+        reset,
         formState: { errors },
     } = useForm<CreateComplaintFormValues>({
         resolver: zodResolver(createComplaintSchema),
@@ -131,8 +131,8 @@ reset,
 
         mutate(payload, {
             onSuccess: (complaint) => {
-                reset()
-                onSuccess?.(complaint.id)
+                reset();
+                onSuccess?.(complaint.id);
             },
             onError: (err: ApiError) => {
                 if (err.code === 'VALIDATION_FAILED' && err.details) {

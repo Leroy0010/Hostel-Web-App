@@ -8,5 +8,6 @@ public record AttachmentDto(
         UUID id,
         String fileUrl,
         String fileType,
+        UUID submittedById,
         LocalDateTime uploadedAt
 ) {}

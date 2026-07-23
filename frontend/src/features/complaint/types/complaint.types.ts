@@ -10,12 +10,7 @@ export type ComplaintStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
 
 /** Mirrors {@code ComplaintCategory}. */
 export type ComplaintCategory =
-    | 'MAINTENANCE'
-    | 'CLEANLINESS'
-    | 'SECURITY'
-    | 'NOISE'
-    | 'BILLING'
-    | 'OTHER';
+    'MAINTENANCE' | 'CLEANLINESS' | 'SECURITY' | 'NOISE' | 'BILLING' | 'OTHER';
 
 // =============================================================================
 // Response shapes
@@ -33,6 +28,7 @@ export interface AttachmentDto {
     id: string;
     fileUrl: string;
     fileType: string | null;
+    submittedById: string;
     uploadedAt: string;
 }
 

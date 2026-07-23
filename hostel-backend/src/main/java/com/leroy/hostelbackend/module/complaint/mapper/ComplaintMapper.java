@@ -29,6 +29,7 @@ public interface ComplaintMapper {
     @Mapping(target = "lastName",  source = "lastName")
     ComplaintDto.AuthorSummary toAuthorSummary(com.leroy.hostelbackend.module.user.model.User user);
 
+    @Mapping(target = "submittedById", source = "submittedBy.id")
     AttachmentDto toAttachmentDto(ComplaintAttachment attachment);
 
     List<AttachmentDto> toAttachmentDtos(List<ComplaintAttachment> attachments);

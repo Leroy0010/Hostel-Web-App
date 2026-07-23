@@ -14,7 +14,7 @@ new InfrastructureStack(app, 'InfrastructureStack', {
 
   /* Uncomment the next line if you know exactly what Account and Region you
    * want to deploy the stack to. */
-  env: { account: '889947798102', region: 'eu-north-1' },
+//   env: { account: '1243438223892', region: 'eu-north-2' },
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 });

@@ -79,8 +79,10 @@ import java.util.UUID;
  * <h2>Semester linearity rules (per-student, per-room)</h2>
  * <ul>
  *   <li><strong>FIRST</strong>  — no constraint; always bookable (subject to capacity).</li>
- *   <li><strong>SECOND</strong> — room must already have a CHECKED_IN or CHECKED_OUT
- *       booking for FIRST semester of the same year.</li>
+ *   <li><strong>SECOND</strong> — no constraint; always bookable (subject to capacity).
+ *       A room with no FIRST semester booking can still be booked for SECOND — the
+ *       manager reviewing the request decides whether that makes sense to approve,
+ *       rather than the system hard-blocking it at creation time.</li>
  *   <li><strong>FULL</strong>   — blocked only if this student already holds an active
  *       FIRST or SECOND booking for the same room+year. Other students' bookings do
  *       not affect FULL availability — the capacity check handles that.</li>
@@ -109,7 +111,7 @@ public class BookingService {
      * <p>Validation order (fails fast on first violation):
      * <ol>
      *   <li>Academic year format and range.</li>
-     *   <li>Semester linearity — SECOND gate; FULL self-conflict gate.</li>
+     *   <li>Semester linearity — FULL self-conflict gate only.</li>
      *   <li>Room not blocked (UNDER_MAINTENANCE or RESERVED).</li>
      *   <li>Duplicate guard — student cannot hold two active bookings for the
      *       same room in the same period.</li>
@@ -728,9 +730,13 @@ public class BookingService {
      * Enforces semester ordering rules.
      *
      * <h3>SECOND semester</h3>
-     * <p>The room must have a CHECKED_IN or CHECKED_OUT booking for FIRST semester
-     * of the same year. Approval-only is not enough — the first semester must
-     * have been physically lived in. This prevents skipping the first semester.
+     * <p>No system-level constraint. A room with no FIRST semester booking can
+     * still be booked for SECOND — for example, a room that went unbooked for
+     * FIRST/FULL semester of a given academic year should not be permanently
+     * unbookable for the rest of that year. The manager reviewing the pending
+     * request is in a better position than a hard-coded rule to judge whether a
+     * SECOND-only booking makes sense for a given room and student, and can
+     * reject it if it does not.
      *
      * <h3>FULL semester</h3>
      * <p>This student must not already hold an active FIRST or SECOND booking for
@@ -743,21 +749,12 @@ public class BookingService {
      *
      * @param studentId the student attempting the booking
      * @param request   the booking request
-     * @throws IllegalArgumentException if a linearity rule is violated
+     * @throws IllegalArgumentException if the FULL-semester self-conflict rule is violated
      */
     private void validateSemesterLinearity(UUID studentId, CreateBookingRequest request) {
         String semester    = request.semester();
         UUID   roomId      = request.roomId();
         String academicYear = request.academicYear();
-
-        if ("SECOND".equals(semester)) {
-            if (!bookingRepository.hasFirstSemesterOccupancy(roomId, academicYear)) {
-                throw new IllegalArgumentException(
-                        "Cannot book SECOND semester for " + academicYear
-                                + " — this room has no FIRST semester booking that has been "
-                                + "checked in or checked out.");
-            }
-        }
 
         if ("FULL".equals(semester)) {
             // Block only if THIS student already has a partial booking for this room+year

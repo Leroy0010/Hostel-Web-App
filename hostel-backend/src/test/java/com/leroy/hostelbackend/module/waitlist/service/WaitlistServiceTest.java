@@ -276,27 +276,6 @@ class WaitlistServiceTest {
         }
 
         @Test
-        @DisplayName("Guard 2: skips the entire promotion for a SECOND-semester vacancy with no FIRST occupancy on record")
-        void guard2_skipsSecondSemesterWithoutFirstOccupancy() {
-            when(bookingRepository.hasFirstSemesterOccupancy(room.getId(), currentAcademicYear))
-                    .thenReturn(false);
-
-            waitlistService.promoteNextInLine(hostel.getId(), room, currentAcademicYear, "SECOND");
-
-            verifyNoInteractions(waitlistRepository, notificationService);
-        }
-
-        @Test
-        @DisplayName("Guard 2 does not apply to FIRST or FULL semester vacancies")
-        void guard2_doesNotApplyToNonSecondSemesters() {
-            when(waitlistRepository.findNextInLine(any(), any(), any(), any())).thenReturn(Optional.empty());
-
-            waitlistService.promoteNextInLine(hostel.getId(), room, currentAcademicYear, "FIRST");
-
-            verify(bookingRepository, never()).hasFirstSemesterOccupancy(any(), any());
-        }
-
-        @Test
         @DisplayName("does nothing (but does not error) when the queue is empty")
         void noOpWhenQueueEmpty() {
             when(waitlistRepository.findNextInLine(
@@ -310,8 +289,8 @@ class WaitlistServiceTest {
         }
 
         @Test
-        @DisplayName("Guard 3: skips a candidate who already holds an active booking for this room+period, then recurses")
-        void guard3_skipsDuplicateCandidateAndRecurses() {
+        @DisplayName("Guard 2: skips a candidate who already holds an active booking for this room+period, then recurses")
+        void guard2_skipsDuplicateCandidateAndRecurses() {
             var ineligible = waitlistEntry(1, student("Ama", "Owusu"));
             // Was second in the original queue — a distinct position from
             // `ineligible` matters here: decrementPositionsAfter is called
@@ -347,8 +326,8 @@ class WaitlistServiceTest {
         }
 
         @Test
-        @DisplayName("Guard 4: skips a FULL-semester candidate who already holds a FIRST/SECOND booking for the room+year, then recurses")
-        void guard4_skipsFullSemesterSelfConflictAndRecurses() {
+        @DisplayName("Guard 3: skips a FULL-semester candidate who already holds a FIRST/SECOND booking for the room+year, then recurses")
+        void guard3_skipsFullSemesterSelfConflictAndRecurses() {
             var ineligible = waitlistEntry(1, student("Ama", "Owusu"));
             var eligible   = waitlistEntry(2, student("Kwame", "Mensah"));
 
@@ -374,8 +353,8 @@ class WaitlistServiceTest {
         }
 
         @Test
-        @DisplayName("Guard 4 does not apply to FIRST or SECOND semester vacancies")
-        void guard4_doesNotApplyToNonFullSemesters() {
+        @DisplayName("Guard 3 does not apply to FIRST or SECOND semester vacancies")
+        void guard3_doesNotApplyToNonFullSemesters() {
             var candidate = waitlistEntry(1, student("Ama", "Owusu"));
             when(waitlistRepository.findNextInLine(
                     hostel.getId(), RoomType.SINGLE, currentAcademicYear, "FIRST"))

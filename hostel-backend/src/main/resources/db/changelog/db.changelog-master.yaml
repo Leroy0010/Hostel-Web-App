@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/db.changelog-002-index.yaml
   - include:
       file: db/changelog/db.changelog-003-audit-logs-schema.yaml
+  - include:
+      file: db/changelog/db.changelog-004-complaint-attachment-submitted-by.yaml
