@@ -80,12 +80,7 @@ public class UserService {
         // Update fields safely
         user.setFirstName(request.getFirstName().trim());
         user.setLastName(request.getLastName().trim());
-
-        if (request.getPhone() != null && !request.getPhone().isBlank()) {
-            user.setPhone(request.getPhone().trim());
-        } else {
-            user.setPhone(null);
-        }
+        user.setPhone(request.getPhone().trim());
 
         userRepository.save(user);
     }

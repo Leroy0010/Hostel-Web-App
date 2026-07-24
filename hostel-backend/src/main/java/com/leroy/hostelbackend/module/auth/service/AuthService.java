@@ -78,7 +78,7 @@ public class AuthService {
 
         if (tokenEntity.isExpired()) {
             authTokenRepository.delete(tokenEntity);
-            throw new TokenExpiredException("Verification token has expired. Please register again.");
+            throw new TokenExpiredException("Verification token has expired. Please request for a new token.");
         }
 
         User user = tokenEntity.getUser();

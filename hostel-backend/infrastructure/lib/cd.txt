@@ -1,4 +1,4 @@
-aws ssm start-session --target "i-0979ae821d6fa508c" --document-name AWS-StartPortForwardingSessionToRemoteHost --parameters '{"host":["infrastructurestack-hosteldatabased840a868-yel7y1y0q0r9.c5qy0y2020zs.eu-north-1.rds.amazonaws.com"],"portNumber":["5432"],"localPortNumber":["5432"]}'
+aws ssm start-session --target "i-012076fd5721f6e64" --document-name AWS-StartPortForwardingSessionToRemoteHost --parameters '{"host":["hostelbookingdb.c5qy0y2020zs.eu-north-1.rds.amazonaws.com"],"portNumber":["5432"],"localPortNumber":["5432"]}'
 
 
 cp ../../downloads/leroy-hostels-frontend-tests-batch3/src/features/room/components/AvailablePeriodsBadge.test.tsx frontend/src/features/room/components/AvailablePeriodsBadge.test.

@@ -20,18 +20,20 @@ import { authKeys } from './auth.keys';
 export function useVerifyEmail(params: { token: string }) {
     return useQuery<boolean, ApiError>({
         queryKey: authKeys.verifyEmail(params.token),
-        queryFn: () => {
-            apiClient.get(`/auth/verify-email`, {
+        queryFn: async () => {
+            // Wait for the API call to finish
+            await apiClient.get(`/auth/verify-email`, {
                 params,
             });
+            // Only return true if the request above doesn't throw an error
             return true;
         },
 
         enabled: !!params.token,
         retry: false,
-        refetchOnWindowFocus: false, // Don't refetch if user switches browser tabs
-        refetchOnMount: false, // Don't refetch if component re-mounts
-        refetchOnReconnect: false, // Don't refetch if network drops and restores
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
         staleTime: Infinity,
     });
 }

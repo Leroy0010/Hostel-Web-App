@@ -1,5 +1,6 @@
 package com.leroy.hostelbackend.module.user.model;
 
+import com.leroy.hostelbackend.shared.util.AppUtils;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -111,15 +112,28 @@ public class User {
     public static @NonNull User create(String email, String firstName, String lastName, String phone, boolean isActive) {
         var user = new User();
         user.setEmail(email.toLowerCase().trim());
-        user.setFirstName(firstName.trim());
-        user.setLastName(lastName.trim());
+        user.setFirstName(AppUtils.toTitleCase(firstName.trim()));
+        user.setLastName(AppUtils.toTitleCase(lastName.trim()));
         user.setPhone(normalizeGhanaianPhoneNumber(phone));
         user.setIsActive(isActive);
         return user;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = AppUtils.toTitleCase(firstName.trim());
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = AppUtils.toTitleCase(lastName.trim());
+    }
+
     public void updateProfileUrl(String profileUrl) {
-        this.profileUrl = profileUrl;
+        if (profileUrl != null && !profileUrl.isBlank()) {
+            this.profileUrl = profileUrl;
+        } else {
+            this.profileUrl = null;
+        }
+
     }
 
     private static String normalizeGhanaianPhoneNumber(String phone) {
