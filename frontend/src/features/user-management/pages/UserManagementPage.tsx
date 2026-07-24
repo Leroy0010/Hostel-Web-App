@@ -41,6 +41,7 @@ import {
 import type { UserDto, UserRole } from '../types/user-management.types';
 import { transition } from '@/features/auth/utils/transition';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useAuthStore } from '@/features/auth/store/useAuthStore';
 
 // =============================================================================
 // Types
@@ -80,6 +81,8 @@ const pageVariants = {
 export default function UserManagementPage() {
     const [activeDialog, setActiveDialog] = useState<ActiveDialog | null>(null);
     const closeDialog = () => setActiveDialog(null);
+
+    const { user: authUser } = useAuthStore((state) => state);
 
     // ── Filter state ──────────────────────────────────────────────────────────
     const [page, setPage] = useState(0);
@@ -343,6 +346,10 @@ export default function UserManagementPage() {
                                                         }
                                                         className="h-7 gap-1.5 px-2 text-xs text-gray-400 hover:bg-red-50 hover:text-red-600 dark:text-gray-600 dark:hover:bg-red-950/30 dark:hover:text-red-400"
                                                         aria-label={`Deactivate ${user.name}`}
+                                                        disabled={
+                                                            authUser?.id ===
+                                                            user.id
+                                                        }
                                                     >
                                                         <PowerOff
                                                             className="h-3.5 w-3.5"
