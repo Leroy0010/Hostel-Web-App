@@ -27,6 +27,9 @@ import {
 import { FieldError } from '@/components/ui/FieldError';
 import { transition } from '@/features/auth/utils/transition';
 import { cn } from '@/lib/utils';
+import { useGetManagers } from '@/features/user/hooks/user.hooks';
+import { useMemo } from 'react';
+import { Combobox } from '@/components/ui/my-combobox';
 
 // =============================================================================
 // Types
@@ -105,6 +108,18 @@ export function CreateHostelForm({
 }: CreateHostelFormProps) {
     const { mutate, isPending } = useCreateHostel();
     const shouldReduceMotion = useReducedMotion();
+
+    const { data: managers = [], isLoading: isManagersLoading } =
+        useGetManagers();
+
+    const managerOptions = useMemo(
+        () =>
+            managers.map((manager) => ({
+                value: manager.id,
+                label: manager.name,
+            })),
+        [managers]
+    );
 
     const {
         register,
@@ -282,7 +297,10 @@ export function CreateHostelForm({
                             )
                         }
                     >
-                        <SelectTrigger id="h-gender" className={cn(inputCls, 'w-56')}>
+                        <SelectTrigger
+                            id="h-gender"
+                            className={cn(inputCls, 'w-56')}
+                        >
                             <SelectValue placeholder="Select policy" />
                         </SelectTrigger>
                         <SelectContent className="border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
@@ -319,7 +337,7 @@ export function CreateHostelForm({
                             step="any"
                             placeholder="e.g. 5.1264"
                             className={inputCls}
-                            {...register('latitude', {valueAsNumber: true})}
+                            {...register('latitude', { valueAsNumber: true })}
                         />
                         {errors.latitude && (
                             <FieldError message={errors.latitude.message!} />
@@ -341,7 +359,7 @@ export function CreateHostelForm({
                             step="any"
                             placeholder="e.g. -1.2922"
                             className={inputCls}
-                            {...register('longitude', {valueAsNumber: true})}
+                            {...register('longitude', { valueAsNumber: true })}
                         />
                         {errors.longitude && (
                             <FieldError message={errors.longitude.message!} />
@@ -363,11 +381,23 @@ export function CreateHostelForm({
                             (optional — assign after creation)
                         </span>
                     </Label>
-                    <Input
-                        id="h-manager"
-                        placeholder="UUID of a MANAGER account"
-                        className={inputCls}
-                        {...register('managerId')}
+                    <Controller
+                        control={control}
+                        name="managerId"
+                        render={({ field: { value, onChange } }) => (
+                            <Combobox
+                                options={managerOptions}
+                                placeholder={
+                                    isManagersLoading
+                                        ? 'Loading managers...'
+                                        : 'Select manager'
+                                }
+                                onValueChange={onChange}
+                                value={value}
+                                disabled={isManagersLoading}
+                                width="w-full"
+                            />
+                        )}
                     />
                     {errors.managerId && (
                         <FieldError message={errors.managerId.message!} />
