@@ -297,8 +297,7 @@ export function CreateRoomForm({
                             htmlFor="cr-price"
                             className="text-sm font-medium text-gray-700 dark:text-gray-300"
                         >
-                            Price per semester{' '}
-                            <span className="text-red-500">*</span>
+                            Price <span className="text-red-500">*</span>
                         </Label>
                         <div className="relative">
                             <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-sm text-gray-400 dark:text-gray-500">

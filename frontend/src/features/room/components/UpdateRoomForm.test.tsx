@@ -58,7 +58,7 @@ describe('UpdateRoomForm', () => {
         );
         expect(screen.getByLabelText(/room number/i)).toHaveValue('A12');
         expect(screen.getByLabelText(/capacity/i)).toHaveValue(2);
-        expect(screen.getByLabelText(/price per semester/i)).toHaveValue(1500);
+        expect(screen.getByLabelText(/price/i)).toHaveValue(1500);
         expect(screen.getByLabelText(/floor number/i)).toHaveValue(3);
         expect(screen.getAllByText('Double').length).toBeGreaterThan(0);
     });
@@ -111,7 +111,7 @@ describe('UpdateRoomForm', () => {
             />
         );
 
-        const priceInput = screen.getByLabelText(/price per semester/i);
+        const priceInput = screen.getByLabelText(/price/i);
         await user.clear(priceInput);
         await user.type(priceInput, '1750');
 
@@ -119,7 +119,7 @@ describe('UpdateRoomForm', () => {
 
         await waitFor(() => expect(mockUpdateDetails).toHaveBeenCalledTimes(1));
         expect(mockUpdateDetails.mock.calls[0][0]).toEqual({
-            pricePerSemester: '1750',
+            pricePerSemester: 1750,
         });
     });
 

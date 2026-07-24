@@ -131,7 +131,7 @@ describe('CreateRoomForm', () => {
         await user.click(await screen.findByRole('option', { name: 'Double' }));
 
         await user.type(screen.getByLabelText(/capacity/i), '2');
-        await user.type(screen.getByLabelText(/price per semester/i), '1500');
+        await user.type(screen.getByLabelText(/price/i), '1500');
 
         await user.click(screen.getByRole('button', { name: /^add$/i }));
         await user.type(
@@ -147,7 +147,7 @@ describe('CreateRoomForm', () => {
             roomNumber: 'A-101',
             roomType: 'DOUBLE',
             capacity: 2,
-            pricePerSemester: '1500',
+            pricePerSemester: 1500,
             imageUrl: 'https://example.com/room.jpg',
             amenities: [{ amenity: 'Air Conditioning' }],
         });
@@ -173,7 +173,7 @@ describe('CreateRoomForm', () => {
         await user.click(screen.getByLabelText(/room type/i));
         await user.click(await screen.findByRole('option', { name: 'Single' }));
         await user.type(screen.getByLabelText(/capacity/i), '1');
-        await user.type(screen.getByLabelText(/price per semester/i), '1000');
+        await user.type(screen.getByLabelText(/price/i), '1000');
         await user.click(screen.getByRole('button', { name: /create room/i }));
 
         await waitFor(() => expect(onSuccess).toHaveBeenCalledWith('room-99'));
@@ -201,7 +201,7 @@ describe('CreateRoomForm', () => {
         await user.click(screen.getByLabelText(/room type/i));
         await user.click(await screen.findByRole('option', { name: 'Single' }));
         await user.type(screen.getByLabelText(/capacity/i), '1');
-        await user.type(screen.getByLabelText(/price per semester/i), '1000');
+        await user.type(screen.getByLabelText(/price/i), '1000');
         await user.click(screen.getByRole('button', { name: /create room/i }));
 
         expect(

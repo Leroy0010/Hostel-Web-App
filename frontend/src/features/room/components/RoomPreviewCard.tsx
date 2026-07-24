@@ -2,7 +2,11 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Layers } from 'lucide-react';
 import { AvailablePeriodsBadge } from './AvailablePeriodsBadge';
-import { roomImageFallback, formatPrice, roomTypeLabel } from '../utils/room.utils';
+import {
+    roomImageFallback,
+    formatPrice,
+    roomTypeLabel,
+} from '../utils/room.utils';
 import type { RoomDisplayDto } from '@/features/hostel/types/hostel.types';
 
 interface RoomPreviewCardProps {
@@ -21,7 +25,7 @@ interface RoomPreviewCardProps {
  * │   Room image (aspect)    │
  * ├──────────────────────────┤
  * │ Room #  ·  Type          │
- * │ ₵ Price / semester       │
+ * │ ₵ Price       │
  * │ [availability badge]     │
  * └──────────────────────────┘
  *
@@ -55,12 +59,16 @@ export function RoomPreviewCard({ room, hostelId }: RoomPreviewCardProps) {
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                     onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src = roomImageFallback();
+                        (e.currentTarget as HTMLImageElement).src =
+                            roomImageFallback();
                     }}
                 />
                 {/* Floor number badge */}
-                <div className="absolute bottom-1.5 right-1.5 flex items-center gap-0.5 rounded-md bg-black/50 px-1.5 py-0.5 backdrop-blur-sm">
-                    <Layers className="h-2.5 w-2.5 text-white/80" aria-hidden="true" />
+                <div className="absolute right-1.5 bottom-1.5 flex items-center gap-0.5 rounded-md bg-black/50 px-1.5 py-0.5 backdrop-blur-sm">
+                    <Layers
+                        className="h-2.5 w-2.5 text-white/80"
+                        aria-hidden="true"
+                    />
                     <span className="text-[10px] font-medium text-white">
                         Fl. {room.floorNumber}
                     </span>
@@ -82,14 +90,17 @@ export function RoomPreviewCard({ room, hostelId }: RoomPreviewCardProps) {
                 {/* Price */}
                 <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
                     {formatPrice(room.pricePerSemester)}
-                    <span className="ml-1 text-xs font-normal text-gray-400 dark:text-gray-500">
+                    {/* <span className="ml-1 text-xs font-normal text-gray-400 dark:text-gray-500">
                         / semester
-                    </span>
+                    </span> */}
                 </p>
 
                 {/* Available periods — compact mode */}
-                
-                <AvailablePeriodsBadge periods={room.availablePeriods} compact />
+
+                <AvailablePeriodsBadge
+                    periods={room.availablePeriods}
+                    compact
+                />
             </div>
         </motion.button>
     );

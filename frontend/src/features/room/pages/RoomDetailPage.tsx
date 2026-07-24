@@ -34,7 +34,11 @@ import { AvailablePeriodsBadge } from '../components/AvailablePeriodsBadge';
 import { CreateBookingForm } from '@/features/booking/components/CreateBookingForm';
 import { BackButton } from '@/components/ui/BackButton';
 import { ZoomableImage } from '@/components/ui/ZoomableImage';
-import { useGetRoomAvailablePeriods, useRoomDetail, useDeleteRoom } from '../hooks/room.hooks';
+import {
+    useGetRoomAvailablePeriods,
+    useRoomDetail,
+    useDeleteRoom,
+} from '../hooks/room.hooks';
 import { bedsLabel, formatPrice, roomImageFallback } from '../utils/room.utils';
 import { useAuthStore } from '@/features/auth/store/useAuthStore';
 import { handleUploadImage } from '@/services/cloudinary.service';
@@ -111,16 +115,10 @@ export default function RoomDetailPage() {
     const [isAmenitiesExpanded, setIsAmenitiesExpanded] = useState(false);
 
     // ── Queries ───────────────────────────────────────────────────────────────
-    const {
-        data: room,
-        isLoading,
-        isError,
-        refetch,
-    } = useRoomDetail(roomId);
+    const { data: room, isLoading, isError, refetch } = useRoomDetail(roomId);
 
     // Available periods are fetched separately — used for booking CTA gating.
-    const { data: availablePeriods = [] } =
-        useGetRoomAvailablePeriods(roomId!);
+    const { data: availablePeriods = [] } = useGetRoomAvailablePeriods(roomId!);
 
     const hasBookingPeriods = availablePeriods.length > 0;
 
@@ -226,7 +224,7 @@ export default function RoomDetailPage() {
                     />
                     <StatCell
                         icon={<CalendarCheck className="h-5 w-5" />}
-                        label="Per semester"
+                        label="Price"
                         value={formatPrice(room.pricePerSemester)}
                         highlight
                     />
@@ -275,14 +273,17 @@ export default function RoomDetailPage() {
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: 'auto' }}
                                     exit={{ opacity: 0, height: 0 }}
-                                    transition={{ duration: 0.2, ease: 'easeInOut' }}
+                                    transition={{
+                                        duration: 0.2,
+                                        ease: 'easeInOut',
+                                    }}
                                     className="relative"
                                 >
                                     <div
                                         className="pointer-events-none absolute top-0 right-0 h-full w-12 bg-linear-to-l from-gray-50 dark:from-gray-900"
                                         aria-hidden="true"
                                     />
-                                    <div className="flex gap-2 overflow-x-auto pb-1 pr-10 scrollbar-none">
+                                    <div className="flex scrollbar-none gap-2 overflow-x-auto pr-10 pb-1">
                                         {room.amenities.map((amenity) => (
                                             <AmenityChip
                                                 key={amenity.id}
@@ -298,7 +299,10 @@ export default function RoomDetailPage() {
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: 'auto' }}
                                     exit={{ opacity: 0, height: 0 }}
-                                    transition={{ duration: 0.2, ease: 'easeInOut' }}
+                                    transition={{
+                                        duration: 0.2,
+                                        ease: 'easeInOut',
+                                    }}
                                     className="overflow-hidden"
                                 >
                                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
@@ -312,8 +316,12 @@ export default function RoomDetailPage() {
                                                 >
                                                     {amenity.imageUrl ? (
                                                         <ZoomableImage
-                                                            src={amenity.imageUrl}
-                                                            alt={amenity.amenity}
+                                                            src={
+                                                                amenity.imageUrl
+                                                            }
+                                                            alt={
+                                                                amenity.amenity
+                                                            }
                                                             className="h-full w-full object-cover"
                                                             fallbackNode={
                                                                 <ImageIcon className="h-5 w-5 text-gray-300 dark:text-gray-600" />
@@ -349,7 +357,9 @@ export default function RoomDetailPage() {
                     <ManagerRoomActions
                         roomNumber={room.roomNumber}
                         onEdit={() => setActiveDialog({ kind: 'edit' })}
-                        onAmenities={() => setActiveDialog({ kind: 'amenities' })}
+                        onAmenities={() =>
+                            setActiveDialog({ kind: 'amenities' })
+                        }
                         onDelete={() => setActiveDialog({ kind: 'delete' })}
                     />
                 ) : (
@@ -425,7 +435,7 @@ export default function RoomDetailPage() {
             {/* Book room (student) */}
             {roomId && activeDialog?.kind === 'book' && (
                 <Dialog open onOpenChange={(open) => !open && closeDialog()}>
-                    <DialogContent className="max-w-md border-gray-200 bg-white scrollbar-none sm:max-w-lg dark:border-gray-800 dark:bg-gray-950">
+                    <DialogContent className="max-w-md scrollbar-none border-gray-200 bg-white sm:max-w-lg dark:border-gray-800 dark:bg-gray-950">
                         <DialogHeader>
                             <DialogTitle className="text-gray-900 dark:text-gray-100">
                                 Book Room
