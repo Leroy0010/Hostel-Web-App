@@ -50,7 +50,6 @@ export default function Profile() {
     }
 
     const { user } = response;
-    const canEdit = user.role === 'ADMIN' || user.role === 'STUDENT';
 
     const handleAvatarChange = async (
         event: React.ChangeEvent<HTMLInputElement>
@@ -107,21 +106,17 @@ export default function Profile() {
                             className="hidden"
                             accept="image/jpeg, image/png, image/webp"
                             onChange={handleAvatarChange}
-                            disabled={
-                                !canEdit || isUploadingImage || isUpdatingUrl
-                            }
+                            disabled={isUploadingImage || isUpdatingUrl}
                         />
 
-                        {canEdit && (
-                            <button
-                                type="button"
-                                onClick={() => fileInputRef.current?.click()}
-                                disabled={isUploadingImage || isUpdatingUrl}
-                                className="absolute right-0 bottom-0 flex h-8 w-8 items-center justify-center rounded-full bg-[#7c3aed] text-white shadow-sm ring-4 ring-white transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 dark:ring-gray-900"
-                            >
-                                <Pencil className="h-4 w-4" />
-                            </button>
-                        )}
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={isUploadingImage || isUpdatingUrl}
+                            className="absolute right-0 bottom-0 flex h-8 w-8 items-center justify-center rounded-full bg-[#7c3aed] text-white shadow-sm ring-4 ring-white transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 dark:ring-gray-900"
+                        >
+                            <Pencil className="h-4 w-4" />
+                        </button>
                     </div>
 
                     <div>
