@@ -75,7 +75,7 @@ export interface ImageUploadProps {
 // Constants
 // =============================================================================
 
-const DEFAULT_ACCEPT = ['image/jpeg', 'image/png', 'image/webp'];
+const DEFAULT_ACCEPT = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
 const DEFAULT_MAX_BYTES = 5 * 1024 * 1024; // 5 MB
 const DEFAULT_MAX_LABEL = '5 MB';
 
@@ -403,7 +403,7 @@ export function ImageUpload({
                                 </p>
                                 <p className="text-xs text-gray-400 dark:text-gray-500">
                                     {hint ??
-                                        `JPEG, PNG, WEBP — max ${maxSizeLabel}`}
+                                        `JPEG, PNG, WEBP, AVIF — max ${maxSizeLabel}`}
                                 </p>
                             </div>
                         </motion.div>
