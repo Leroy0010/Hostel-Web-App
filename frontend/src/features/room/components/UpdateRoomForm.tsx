@@ -301,9 +301,6 @@ export function UpdateRoomForm({
                                         <SelectItem value="QUAD">
                                             Quad
                                         </SelectItem>
-                                        <SelectItem value="SHARED">
-                                            Shared
-                                        </SelectItem>
                                     </SelectContent>
                                 </Select>
                             )}

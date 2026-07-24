@@ -31,6 +31,7 @@ import { transition } from '@/features/auth/utils/transition';
 import type { ApiError } from '@/types/api';
 import { Combobox } from '@/components/ui/my-combobox';
 import { useActiveHostels } from '@/features/hostel/hooks/hostel.hooks';
+import { cn } from '@/lib/utils';
 
 // =============================================================================
 // Types
@@ -148,7 +149,7 @@ export function CreateLandmarkForm({
                       latitude: initialValues.latitude,
                       longitude: initialValues.longitude,
                       description: initialValues.description ?? '',
-                      hostelId: initialValues.hostelId ?? undefined
+                      hostelId: initialValues.hostelId ?? undefined,
                   }
                 : {
                       name: '',
@@ -289,7 +290,10 @@ export function CreateLandmarkForm({
                             }
                         }}
                     >
-                        <SelectTrigger id="cl-cat" className={INPUT_CLS}>
+                        <SelectTrigger
+                            id="cl-cat"
+                            className={cn(INPUT_CLS, 'w-36')}
+                        >
                             <SelectValue placeholder="Select category…" />
                         </SelectTrigger>
                         <SelectContent className="border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
@@ -327,7 +331,7 @@ export function CreateLandmarkForm({
                                     value={value}
                                     emptyText="Select a hostel"
                                     placeholder="Select a corresponding hostel if exists"
-                                    width='full'
+                                    width="full"
                                 />
                             )}
                         />

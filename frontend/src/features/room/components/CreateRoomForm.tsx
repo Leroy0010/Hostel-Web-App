@@ -256,7 +256,6 @@ export function CreateRoomForm({
                                 <SelectItem value="DOUBLE">Double</SelectItem>
                                 <SelectItem value="TRIPLE">Triple</SelectItem>
                                 <SelectItem value="QUAD">Quad</SelectItem>
-                                <SelectItem value="SHARED">Shared</SelectItem>
                             </SelectContent>
                         </Select>
                         {errors.roomType && (
