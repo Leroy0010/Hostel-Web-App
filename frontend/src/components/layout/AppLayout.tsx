@@ -19,7 +19,7 @@ import { NavContent } from './NavContent';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { useTheme } from '@/components/theme-provider';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useUnreadCount } from '@/features/notification/hooks/useNotifications';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/features/auth/store/useAuthStore';
@@ -56,6 +56,8 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
 
     // Theme context
     const { setTheme, resolvedTheme } = useTheme();
+
+    const location = useLocation();
 
     // Desktop Sidebar Width Configurations
     const SIDEBAR_WIDTH_EXPANDED = 256; // 16rem (w-64)
@@ -291,6 +293,7 @@ export function AppLayout({ isHomePage }: AppLayoutProps) {
 
                 {/* ── Page Content ───────────────────────────────────────────── */}
                 <main
+                    key={location.pathname}
                     className={`flex-1 scrollbar-none overflow-y-auto ${isHomePage ? '' : 'p-4 md:p-6 lg:p-8'}`}
                 >
                     <Outlet />
