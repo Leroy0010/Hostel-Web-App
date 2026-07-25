@@ -181,7 +181,7 @@ public class RoomService {
         if (request.roomType()         != null) room.setRoomType(request.roomType());
         if (request.pricePerSemester() != null) room.setPricePerSemester(request.pricePerSemester());
         if (request.imageUrl()         != null) room.setImageUrl(request.imageUrl());
-        room.setFloorNumber(request.floorNumber().shortValue());
+        room.setFloorNumber(request.floorNumber() != null ? request.floorNumber().shortValue() : null);
 
         // Capacity can only increase — never below current occupancy
         if (request.capacity() != null) {
