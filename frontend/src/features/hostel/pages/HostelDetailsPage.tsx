@@ -721,7 +721,7 @@ const ManagerActionBar = forwardRef<HTMLDivElement, { hostelId: string }>(
                     <Button
                         variant="outline"
                         onClick={() =>
-                            navigate(`/manager/hostels/${hostelId}/waitlists`)
+                            navigate(`/manager/hostels/${hostelId}/waitlist`)
                         }
                         className="w-full gap-2 border-blue-200 bg-white text-blue-700 hover:bg-blue-100 hover:text-blue-800 dark:border-blue-800 dark:bg-gray-950 dark:text-blue-400 dark:hover:bg-blue-900/50"
                     >
