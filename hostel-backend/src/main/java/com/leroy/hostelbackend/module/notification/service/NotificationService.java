@@ -218,6 +218,10 @@ public class NotificationService {
                     existing.setP256dh(request.p256dh());
                     existing.setAuth(request.auth());
                     existing.setActive(true);
+
+                    // FIX: Reassign the subscription to the new user who just logged in
+                    existing.setUser(user);
+
                     if (request.userAgent() != null) existing.setUserAgent(request.userAgent());
                     pushSubscriptionRepository.save(existing);
                 }, () -> {

@@ -237,7 +237,10 @@ export default function BookingDetailPage() {
                                     </span>
                                 </div>
                                 <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                                    Room {booking.room.roomNumber}
+                                    <span className="hidden sm:inline">
+                                        Room
+                                    </span>{' '}
+                                    {booking.room.roomNumber}
                                 </h1>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
                                     {booking.room.roomType} ·{' '}

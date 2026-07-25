@@ -6,6 +6,7 @@ import { useAuthStore } from '@/features/auth/store/useAuthStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { navigation } from './navigation';
 import type { UserRole } from '@/features/user/types/user.types';
+import { notificationApi } from '@/features/notification/api/notification.api';
 
 export interface NavItem {
     name: string;
@@ -35,8 +36,11 @@ export function NavContent({
     const user = useAuthStore((state) => state.user);
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const isInitialized = useAuthStore((state) => state.isInitialized); // Add this
+    const clearAuthState = useAuthStore((state) => state.clearAuth);
     const navigate = useNavigate();
     const { mutate: logout, isPending: isLoggingOut } = useLogoutMutation();
+    // We'll call the notification API directly to unsubscribe using
+    // the service worker push subscription endpoint.
 
     // ── 1. Skeleton Loading State ─────────────────────────────────────────
     if (!isInitialized) {
@@ -79,10 +83,47 @@ export function NavContent({
         (item) => (user && item.roles?.includes(user.role)) || !item.roles
     );
 
-    const handleLogout = () => {
-        logout(undefined, {
-            onSettled: () => navigate('/login', { replace: true }),
-        });
+    const handleLogout = async () => {
+        // Try to read the current push subscription from the service worker
+        try {
+            if ('serviceWorker' in navigator && 'PushManager' in window) {
+                const registration = await navigator.serviceWorker.ready;
+                const subscription =
+                    await registration.pushManager.getSubscription();
+                if (subscription && subscription.endpoint) {
+                    try {
+                        await notificationApi.unsubscribeFromPush({
+                            endpoint: subscription.endpoint,
+                        });
+                    } catch (err) {
+                        console.error(
+                            'Failed to notify server to unsubscribe push:',
+                            err
+                        );
+                    }
+
+                    // Also attempt to unsubscribe on the client
+                    try {
+                        await subscription.unsubscribe();
+                    } catch (err) {
+                        console.warn(
+                            'Failed to unsubscribe client push subscription:',
+                            err
+                        );
+                    }
+                }
+            }
+        } catch (err) {
+            console.error(
+                'Error while attempting to unsubscribe from push:',
+                err
+            );
+        } finally {
+            logout(undefined, {
+                onSettled: () => navigate('/login', { replace: true }),
+            });
+            clearAuthState();
+        }
     };
 
     return (
