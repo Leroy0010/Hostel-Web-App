@@ -372,6 +372,25 @@ export default function BookingDetailPage() {
                     )}
 
                     {/* B. Financials (Total Cost & Balance) */}
+                    <DetailRow
+                        icon={<Wallet className="h-4 w-4" />}
+                        label="Total Room Price"
+                        value={`₵${roomPrice.toLocaleString('en-GH', { minimumFractionDigits: 2 })}`}
+                    />
+
+                    <DetailRow
+                        icon={<Wallet className="h-4 w-4" />}
+                        label="Balance Due"
+                        value={`₵${balanceDue.toLocaleString('en-GH', { minimumFractionDigits: 2 })}`}
+                        valueClass={
+                            balanceDue > 0
+                                ? 'text-red-600 dark:text-red-400 font-medium'
+                                : 'text-green-600 dark:text-green-500 font-medium'
+                        }
+                        subValue={balanceDue <= 0 ? 'Fully Paid' : undefined}
+                    />
+
+                    {/* Only show these if a payment reference exists */}
                     {booking.paymentRef && (
                         <>
                             <DetailRow
@@ -381,27 +400,9 @@ export default function BookingDetailPage() {
                                 mono
                             />
                             <DetailRow
-                                icon={<Wallet className="h-4 w-4" />}
-                                label="Total Room Price"
-                                value={`₵${roomPrice.toLocaleString('en-GH', { minimumFractionDigits: 2 })}`}
-                            />
-                            <DetailRow
                                 icon={<CheckCircle className="h-4 w-4" />}
                                 label="Amount paid"
                                 value={`₵${amountPaid.toLocaleString('en-GH', { minimumFractionDigits: 2 })}`}
-                            />
-                            <DetailRow
-                                icon={<Wallet className="h-4 w-4" />}
-                                label="Balance Due"
-                                value={`₵${balanceDue.toLocaleString('en-GH', { minimumFractionDigits: 2 })}`}
-                                valueClass={
-                                    balanceDue > 0
-                                        ? 'text-red-600 dark:text-red-400 font-medium'
-                                        : 'text-green-600 dark:text-green-500 font-medium'
-                                }
-                                subValue={
-                                    balanceDue <= 0 ? 'Fully Paid' : undefined
-                                }
                             />
                         </>
                     )}
@@ -430,9 +431,16 @@ export default function BookingDetailPage() {
                                     Payment Instructions
                                 </p>
                                 <p className="text-xs text-blue-700/90 dark:text-blue-400/90">
-                                    Contact manager for payment details (for
-                                    now). Once you have made the payment, submit
-                                    your reference below.
+                                    Please make a payment of{' '}
+                                    <span className="font-bold">
+                                        ₵
+                                        {balanceDue.toLocaleString('en-GH', {
+                                            minimumFractionDigits: 2,
+                                        })}
+                                    </span>
+                                    . Contact the manager for payment details.
+                                    Once you have made the payment, submit your
+                                    reference below.
                                 </p>
                                 {booking.managerPhone && (
                                     <a
