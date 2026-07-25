@@ -2,7 +2,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -154,7 +153,6 @@ export function CreateHostelForm({
 
         mutate(payload, {
             onSuccess: (hostel) => {
-                toast.success(`Hostel "${hostel.name}" created.`);
                 onSuccess?.(hostel.id);
             },
             onError: (err) => {

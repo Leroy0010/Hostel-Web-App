@@ -98,11 +98,11 @@ public class Hostel {
         return hostel;
     }
 
-    public double getLongitude(){
-        return location.getX();
+    public Double getLongitude(){
+        return location != null ? location.getX() : null;
     }
 
-    public double getLatitude(){
-        return location.getY();
+    public Double getLatitude(){
+        return location != null ? location.getY() : null;
     }
 }

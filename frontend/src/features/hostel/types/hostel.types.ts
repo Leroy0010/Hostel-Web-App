@@ -101,8 +101,8 @@ export interface HostelSummaryDto {
     genderPolicy: GenderPolicy;
     imageUrl: string;
     isActive: boolean;
-    longitude: number;
-    latitude: number;
+    longitude: number | null;
+    latitude: number | null;
 }
 
 /**

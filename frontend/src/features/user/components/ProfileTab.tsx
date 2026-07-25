@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Loader2, User, Building, MapPin } from 'lucide-react';
 import { useReducedMotion, motion } from 'framer-motion';
-import { toast } from 'sonner';
 
 import {
     Card,
@@ -19,9 +18,7 @@ import { Button } from '@/components/ui/button';
 import { FieldError } from '@/components/ui/FieldError';
 
 import { transition } from '@/features/auth/utils/transition';
-import {
-    useUpdateProfileMutation,
-} from '@/features/user/hooks/user.hooks';
+import { useUpdateProfileMutation } from '@/features/user/hooks/user.hooks';
 import type { ApiError } from '@/types/api';
 import type { MeResponse } from '../types/user.types';
 
@@ -101,7 +98,6 @@ export function ProfileTab({
     const onSubmit = (data: UpdateProfileValues) => {
         updateProfile(data, {
             onSuccess: () => {
-                toast.success('Profile updated successfully');
                 setIsEditing(false);
             },
             onError: (err: ApiError) => {

@@ -348,7 +348,7 @@ public class DashboardService {
                 FROM waitlists w
                 JOIN hostels h ON h.id = w.hostel_id
                 WHERE w.student_id = ?::uuid
-                ORDER BY w.position ASC
+                ORDER BY w.position
                 """,
                 (rs, _) -> new DashboardDto.StudentWaitlistEntry(
                         rs.getString("id"),
