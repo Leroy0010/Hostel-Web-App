@@ -24,6 +24,8 @@ import { transition } from '@/features/auth/utils/transition';
 interface SubmitPaymentFormProps {
     /** UUID of the booking to submit payment for. Must be in APPROVED status. */
     bookingId: string;
+    /** The remaining balance the student needs to pay. */
+    balanceDue: number;
     /** Called after the payment reference is successfully submitted. */
     onSuccess?: () => void;
     /** Called when the user clicks Cancel. */
@@ -72,6 +74,7 @@ const rowVariants = {
  */
 export function SubmitPaymentForm({
     bookingId,
+    balanceDue,
     onSuccess,
     onCancel,
 }: SubmitPaymentFormProps) {
@@ -115,6 +118,22 @@ export function SubmitPaymentForm({
 
     return (
         <motion.div {...motionProps}>
+            {/* NEW: Prominent Balance Due Display */}
+            <motion.div
+                variants={shouldReduceMotion ? {} : rowVariants}
+                className="mb-5 flex flex-col items-center justify-center rounded-lg bg-gray-50 py-4 dark:bg-gray-900/50"
+            >
+                <span className="text-xs font-medium tracking-wide text-gray-500 uppercase">
+                    Amount Due
+                </span>
+                <span className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                    ₵
+                    {balanceDue.toLocaleString('en-GH', {
+                        minimumFractionDigits: 2,
+                    })}
+                </span>
+            </motion.div>
+
             {/* Payment instructions notice */}
             <motion.div
                 variants={shouldReduceMotion ? {} : rowVariants}

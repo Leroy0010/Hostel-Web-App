@@ -584,6 +584,7 @@ export default function BookingDetailPage() {
                     </DialogHeader>
                     <SubmitPaymentForm
                         bookingId={booking.id}
+                        balanceDue={balanceDue}
                         onSuccess={closeDialog}
                         onCancel={closeDialog}
                     />
