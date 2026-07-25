@@ -16,13 +16,17 @@ import com.leroy.hostelbackend.module.waitlist.dto.WaitlistStatusDto;
 import com.leroy.hostelbackend.module.waitlist.mapper.WaitlistMapper;
 import com.leroy.hostelbackend.module.waitlist.model.Waitlist;
 import com.leroy.hostelbackend.module.waitlist.repository.WaitlistRepository;
+import com.leroy.hostelbackend.module.waitlist.specification.WaitlistSpecifications;
 import com.leroy.hostelbackend.shared.exception.AlreadyOnWaitlistException;
 import com.leroy.hostelbackend.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -257,12 +261,25 @@ public class WaitlistService {
                                                  String academicYear,
                                                  String semester,
                                                  Pageable pageable) {
-        if (!hostelRepository.existsById(hostelId)) {
+
+        // Optional check: Only validate hostel existence if hostelId is provided
+        if (hostelId != null && !hostelRepository.existsById(hostelId)) {
             throw new ResourceNotFoundException("Hostel not found: " + hostelId);
         }
-        return waitlistRepository
-                .findByHostelIdAndPeriodOrderByPosition(
-                        hostelId, roomType, academicYear, semester, pageable)
+
+        // Enforce the default dashboard sort rules dynamically onto the pageable request
+        Pageable sortedPageable = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                pageable.getSort().and(Sort.by("roomType").ascending().and(Sort.by("position").ascending()))
+        );
+
+        // Build specification with all fields completely optional
+        Specification<Waitlist> spec = WaitlistSpecifications.filterWaitlist(
+                hostelId, roomType, academicYear, semester
+        );
+
+        return waitlistRepository.findAll(spec, sortedPageable)
                 .map(waitlistMapper::toEntryDto);
     }
 

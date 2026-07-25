@@ -5,6 +5,7 @@ import com.leroy.hostelbackend.module.waitlist.model.Waitlist;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,7 +27,7 @@ import java.util.UUID;
  * {@code (hostel_id, room_type, academic_year, semester, position) WHERE notified = FALSE}
  * makes {@link #findNextInLine} a single index-scan lookup.
  */
-public interface WaitlistRepository extends JpaRepository<Waitlist, UUID> {
+public interface WaitlistRepository extends JpaRepository<Waitlist, UUID>, JpaSpecificationExecutor<Waitlist> {
 
     // -------------------------------------------------------------------------
     // Promotion
