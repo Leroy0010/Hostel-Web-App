@@ -174,7 +174,7 @@ export function UpdateRoomForm({
         if (data.imageUrl && data.imageUrl !== room.imageUrl)
             payload.imageUrl = data.imageUrl;
         if (data.floorNumber !== room.floorNumber)
-            payload.floorNumber = data.floorNumber ?? undefined;
+            payload.floorNumber = data.floorNumber;
 
         updateDetails(payload, {
             onSuccess: (updated) => onSuccess?.(updated),
