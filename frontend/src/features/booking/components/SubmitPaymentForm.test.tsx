@@ -11,21 +11,36 @@ vi.mock('../hooks/booking.hooks', () => ({
 }));
 
 const BOOKING_ID = '11111111-1111-4111-8111-111111111111';
+const MOCK_BALANCE = 2500;
 
 describe('SubmitPaymentForm', () => {
     beforeEach(() => {
         mockMutate.mockClear();
     });
 
-    it('renders the payment reference and amount fields empty by default', () => {
-        renderWithProviders(<SubmitPaymentForm bookingId={BOOKING_ID} />);
+    it('renders the payment reference, amount fields empty by default, and shows balance', () => {
+        renderWithProviders(
+            <SubmitPaymentForm
+                bookingId={BOOKING_ID}
+                balanceDue={MOCK_BALANCE}
+            />
+        );
+
+        // Assert the new balance display is present
+        expect(screen.getByText('₵2,500.00')).toBeInTheDocument();
+
         expect(screen.getByLabelText(/transaction reference/i)).toHaveValue('');
         expect(screen.getByLabelText(/amount paid/i)).toHaveValue(null);
     });
 
     it('blocks submission and shows both required-field errors when empty', async () => {
         const user = userEvent.setup();
-        renderWithProviders(<SubmitPaymentForm bookingId={BOOKING_ID} />);
+        renderWithProviders(
+            <SubmitPaymentForm
+                bookingId={BOOKING_ID}
+                balanceDue={MOCK_BALANCE}
+            />
+        );
 
         await user.click(
             screen.getByRole('button', { name: /submit payment reference/i })
@@ -40,7 +55,12 @@ describe('SubmitPaymentForm', () => {
 
     it('rejects a zero or negative amount with a friendly message', async () => {
         const user = userEvent.setup();
-        renderWithProviders(<SubmitPaymentForm bookingId={BOOKING_ID} />);
+        renderWithProviders(
+            <SubmitPaymentForm
+                bookingId={BOOKING_ID}
+                balanceDue={MOCK_BALANCE}
+            />
+        );
 
         await user.type(
             screen.getByLabelText(/transaction reference/i),
@@ -61,7 +81,11 @@ describe('SubmitPaymentForm', () => {
         const user = userEvent.setup();
         const onSuccess = vi.fn();
         renderWithProviders(
-            <SubmitPaymentForm bookingId={BOOKING_ID} onSuccess={onSuccess} />
+            <SubmitPaymentForm
+                bookingId={BOOKING_ID}
+                balanceDue={MOCK_BALANCE}
+                onSuccess={onSuccess}
+            />
         );
 
         await user.type(
@@ -86,7 +110,11 @@ describe('SubmitPaymentForm', () => {
         mockMutate.mockImplementation((_payload, { onSuccess: cb }) => cb());
 
         renderWithProviders(
-            <SubmitPaymentForm bookingId={BOOKING_ID} onSuccess={onSuccess} />
+            <SubmitPaymentForm
+                bookingId={BOOKING_ID}
+                balanceDue={MOCK_BALANCE}
+                onSuccess={onSuccess}
+            />
         );
 
         await user.type(
@@ -113,7 +141,12 @@ describe('SubmitPaymentForm', () => {
             });
         });
 
-        renderWithProviders(<SubmitPaymentForm bookingId={BOOKING_ID} />);
+        renderWithProviders(
+            <SubmitPaymentForm
+                bookingId={BOOKING_ID}
+                balanceDue={MOCK_BALANCE}
+            />
+        );
 
         await user.type(
             screen.getByLabelText(/transaction reference/i),
@@ -132,14 +165,21 @@ describe('SubmitPaymentForm', () => {
     it('renders and wires the Cancel button only when onCancel is provided', async () => {
         const onCancel = vi.fn();
         const { rerender } = renderWithProviders(
-            <SubmitPaymentForm bookingId={BOOKING_ID} />
+            <SubmitPaymentForm
+                bookingId={BOOKING_ID}
+                balanceDue={MOCK_BALANCE}
+            />
         );
         expect(
             screen.queryByRole('button', { name: /cancel/i })
         ).not.toBeInTheDocument();
 
         rerender(
-            <SubmitPaymentForm bookingId={BOOKING_ID} onCancel={onCancel} />
+            <SubmitPaymentForm
+                bookingId={BOOKING_ID}
+                balanceDue={MOCK_BALANCE}
+                onCancel={onCancel}
+            />
         );
         const user = userEvent.setup();
         await user.click(screen.getByRole('button', { name: /cancel/i }));
