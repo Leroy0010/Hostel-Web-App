@@ -173,6 +173,7 @@ export function SubmitPaymentForm({
                         placeholder="e.g. MoMo-20250115-XXXXXXXX"
                         className={INPUT_CLS}
                         {...register('paymentRef')}
+                        autoFocus={true}
                     />
                     {errors.paymentRef && (
                         <FieldError message={errors.paymentRef.message!} />

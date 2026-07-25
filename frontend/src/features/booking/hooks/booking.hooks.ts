@@ -54,6 +54,9 @@ export function useBookingDetail(id: string | null | undefined) {
         queryFn: () => fetchBookingById(id!),
         enabled: Boolean(id),
         staleTime: 3 * 1000, // booking detail is sensitive — keep it fresher
+        // 👇 Add this temporarily (or permanently) to poll every 5 seconds
+        refetchInterval: 5 * 1000,
+        refetchIntervalInBackground: true, // Optional: keeps polling even if tab is minimized
     });
 }
 
