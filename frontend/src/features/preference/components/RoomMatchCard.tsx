@@ -131,9 +131,9 @@ export function RoomMatchCard({
                         </div>
                         <p className="shrink-0 text-sm font-bold text-gray-900 dark:text-gray-100">
                             {formatPrice(suggestion.pricePerSemester)}
-                            <span className="ml-0.5 text-xs font-normal text-gray-400">
+                            {/* <span className="ml-0.5 text-xs font-normal text-gray-400">
                                 /sem
-                            </span>
+                            </span> */}
                         </p>
                     </div>
 
