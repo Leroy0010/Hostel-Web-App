@@ -337,7 +337,10 @@ export function CreateHostelForm({
                             step="any"
                             placeholder="e.g. 5.1264"
                             className={inputCls}
-                            {...register('latitude', { valueAsNumber: true })}
+                            {...register('latitude', {
+                                setValueAs: (value) =>
+                                    value === '' ? undefined : Number(value),
+                            })}
                         />
                         {errors.latitude && (
                             <FieldError message={errors.latitude.message!} />
@@ -359,7 +362,10 @@ export function CreateHostelForm({
                             step="any"
                             placeholder="e.g. -1.2922"
                             className={inputCls}
-                            {...register('longitude', { valueAsNumber: true })}
+                            {...register('longitude', {
+                                setValueAs: (value) =>
+                                    value === '' ? undefined : Number(value),
+                            })}
                         />
                         {errors.longitude && (
                             <FieldError message={errors.longitude.message!} />
