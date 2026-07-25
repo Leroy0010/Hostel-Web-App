@@ -375,9 +375,9 @@ export default function RoomDetailPage() {
                                 <div>
                                     <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                                         {formatPrice(room.pricePerSemester)}
-                                        <span className="ml-1 text-base font-normal text-gray-400 dark:text-gray-500">
+                                        {/* <span className="ml-1 text-base font-normal text-gray-400 dark:text-gray-500">
                                             / semester
-                                        </span>
+                                        </span> */}
                                     </p>
                                     <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
                                         {bedsLabel(room.bedsAvailable)}
