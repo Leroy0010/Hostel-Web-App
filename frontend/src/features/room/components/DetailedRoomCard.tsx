@@ -2,7 +2,11 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Users, Layers, ChevronRight } from 'lucide-react';
 import { AvailablePeriodsBadge } from './AvailablePeriodsBadge';
-import { roomImageFallback, formatPrice, roomTypeLabel } from '../utils/room.utils';
+import {
+    roomImageFallback,
+    formatPrice,
+    roomTypeLabel,
+} from '../utils/room.utils';
 import type { RoomDisplayDto } from '@/features/hostel/types/hostel.types';
 
 interface DetailedRoomCardProps {
@@ -66,7 +70,7 @@ export function DetailedRoomCard({ room, hostelId }: DetailedRoomCardProps) {
                         }}
                     />
                     {/* Floor badge overlaid on the image */}
-                    <div className="absolute bottom-1 right-1 flex items-center gap-0.5 rounded bg-black/50 px-1 py-0.5 backdrop-blur-sm">
+                    <div className="absolute right-1 bottom-1 flex items-center gap-0.5 rounded bg-black/50 px-1 py-0.5 backdrop-blur-sm">
                         <Layers
                             className="h-2.5 w-2.5 text-white/80"
                             aria-hidden="true"
@@ -91,9 +95,9 @@ export function DetailedRoomCard({ room, hostelId }: DetailedRoomCardProps) {
                         </div>
                         <p className="shrink-0 text-sm font-bold text-gray-900 dark:text-gray-100">
                             {formatPrice(room.pricePerSemester)}
-                            <span className="ml-0.5 text-xs font-normal text-gray-400 dark:text-gray-500">
+                            {/* <span className="ml-0.5 text-xs font-normal text-gray-400 dark:text-gray-500">
                                 /sem
-                            </span>
+                            </span> */}
                         </p>
                     </div>
 
@@ -107,7 +111,10 @@ export function DetailedRoomCard({ room, hostelId }: DetailedRoomCardProps) {
                     </div>
 
                     {/* Available periods — compact badge display */}
-                    <AvailablePeriodsBadge periods={room.availablePeriods} compact />
+                    <AvailablePeriodsBadge
+                        periods={room.availablePeriods}
+                        compact
+                    />
                 </div>
 
                 {/* Chevron affordance */}
