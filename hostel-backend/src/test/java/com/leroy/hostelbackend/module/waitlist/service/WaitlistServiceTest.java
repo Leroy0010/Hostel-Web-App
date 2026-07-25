@@ -322,7 +322,7 @@ class WaitlistServiceTest {
             verify(waitlistRepository).delete(eligible);
             verify(bookingRepository).save(argThat(b ->
                     b.getStudent().equals(eligible.getStudent()) && b.getIsWaitlistDraft()));
-            verify(notificationService).notifyWaitlistPromoted(eligible.getStudent(), hostel.getId());
+            verify(notificationService).notifyWaitlistPromoted(eligible.getStudent(), hostel.getId(), room.getId());
         }
 
         @Test
@@ -349,7 +349,7 @@ class WaitlistServiceTest {
 
             verify(waitlistRepository).delete(ineligible);
             verify(waitlistRepository).delete(eligible);
-            verify(notificationService).notifyWaitlistPromoted(eligible.getStudent(), hostel.getId());
+            verify(notificationService).notifyWaitlistPromoted(eligible.getStudent(), hostel.getId(), room.getId());
         }
 
         @Test
@@ -393,7 +393,7 @@ class WaitlistServiceTest {
             assertThat(draft.getRoom()).isEqualTo(room);
             assertThat(draft.getPendingExpiresAt()).isAfter(LocalDateTime.now());
 
-            verify(notificationService).notifyWaitlistPromoted(candidate.getStudent(), hostel.getId());
+            verify(notificationService).notifyWaitlistPromoted(candidate.getStudent(), hostel.getId(), room.getId());
             verify(notificationService).notifyManagerNewBookingRequest(
                     eq(manager), eq(candidate.getStudent().getName()), eq(room.getRoomNumber()), any());
             verify(waitlistRepository).delete(candidate);
@@ -413,7 +413,7 @@ class WaitlistServiceTest {
 
             waitlistService.promoteNextInLine(hostel.getId(), room, currentAcademicYear, "FIRST");
 
-            verify(notificationService).notifyWaitlistPromoted(candidate.getStudent(), hostel.getId());
+            verify(notificationService).notifyWaitlistPromoted(candidate.getStudent(), hostel.getId(), room.getId());
             verify(notificationService, never())
                     .notifyManagerNewBookingRequest(any(), any(), any(), any());
         }

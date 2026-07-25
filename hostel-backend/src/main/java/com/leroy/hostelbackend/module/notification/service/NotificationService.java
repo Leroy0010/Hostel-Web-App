@@ -150,10 +150,10 @@ public class NotificationService {
                 NotificationType.GENERAL, "BOOKING", bookingId, "/bookings/" + bookingId);
     }
 
-    public void notifyWaitlistPromoted(User student, UUID hostelId) {
+    public void notifyWaitlistPromoted(User student, UUID hostelId, UUID roomId) {
         notify(student, "Waitlist Update",
                 "A bed has become available at a hostel you are waiting for. Book now before it fills up!",
-                NotificationType.WAITLIST_PROMOTED, "HOSTEL", hostelId, "/hostels/" + hostelId);
+                NotificationType.WAITLIST_PROMOTED, "HOSTEL", hostelId, "/hostels/" + hostelId + "/rooms" + roomId);
     }
 
     public void notifyComplaintUpdated(User student, UUID complaintId, String newStatus) {

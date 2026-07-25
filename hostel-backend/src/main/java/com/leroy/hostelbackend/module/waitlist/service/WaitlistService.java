@@ -459,7 +459,7 @@ public class WaitlistService {
         bookingRepository.save(draft);
 
         // Notify the student — a booking has been pre-created for them
-        notificationService.notifyWaitlistPromoted(entry.getStudent(), hostelId);
+        notificationService.notifyWaitlistPromoted(entry.getStudent(), hostelId, freedRoom.getId());
 
         // Notify the manager — a waitlist draft is awaiting their action
         userRepository.findManagerByHostelId(hostelId).ifPresent(manager ->
