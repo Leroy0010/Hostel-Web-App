@@ -99,14 +99,14 @@ public interface WaitlistRepository extends JpaRepository<Waitlist, UUID> {
      * Used on the manager's dashboard. {@code roomType} may be null to show all types.
      */
     @Query("""
-            SELECT w FROM Waitlist w
-            JOIN FETCH w.student
-            WHERE w.hostel.id    = :hostelId
-              AND (:roomType IS NULL OR w.roomType = :roomType)
-              AND w.academicYear = :academicYear
-              AND w.semester     = :semester
-            ORDER BY w.roomType ASC, w.position ASC
-            """)
+        SELECT w FROM Waitlist w
+        JOIN FETCH w.student
+        WHERE w.hostel.id    = :hostelId
+          AND (CAST(:roomType AS string) IS NULL OR w.roomType = :roomType)
+          AND w.academicYear = :academicYear
+          AND w.semester     = :semester
+        ORDER BY w.roomType ASC, w.position ASC
+        """)
     Page<Waitlist> findByHostelIdAndPeriodOrderByPosition(
             @Param("hostelId")     UUID     hostelId,
             @Param("roomType")     RoomType roomType,
