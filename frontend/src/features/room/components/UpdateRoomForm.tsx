@@ -385,7 +385,10 @@ export function UpdateRoomForm({
                         type="number"
                         min={0}
                         className={INPUT_CLS}
-                        {...register('floorNumber', { valueAsNumber: true })}
+                        {...register('floorNumber', {
+                            setValueAs: (value) =>
+                                value === '' ? null : Number(value),
+                        })}
                     />
                     {errors.floorNumber && (
                         <FieldError message={errors.floorNumber.message!} />
