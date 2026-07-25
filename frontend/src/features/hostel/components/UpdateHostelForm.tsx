@@ -352,7 +352,10 @@ export function UpdateHostelForm({
                             step="any"
                             placeholder="e.g. 5.1264"
                             className={INPUT_CLS}
-                            {...register('latitude', { valueAsNumber: true })}
+                            {...register('latitude', {
+                                setValueAs: (value) =>
+                                    value === '' ? null : Number(value),
+                            })}
                         />
                         {errors.latitude && (
                             <FieldError message={errors.latitude.message!} />
@@ -374,7 +377,10 @@ export function UpdateHostelForm({
                             step="any"
                             placeholder="e.g. -1.2922"
                             className={INPUT_CLS}
-                            {...register('longitude', { valueAsNumber: true })}
+                            {...register('longitude', {
+                                setValueAs: (value) =>
+                                    value === '' ? null : Number(value),
+                            })}
                         />
                         {errors.longitude && (
                             <FieldError message={errors.longitude.message!} />
