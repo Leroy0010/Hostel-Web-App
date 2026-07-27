@@ -211,3 +211,23 @@ export function preferenceUpdatedLabel(isoTimestamp: string | null): string {
 export function matchCountLabel(count: number): string {
     return count === 1 ? '1 shared interest' : `${count} shared interests`;
 }
+
+/**
+ * Formats a list of occupant first names into a readable label.
+ *
+ * @example
+ * ```ts
+ * occupantFirstNamesLabel(['Ama']) // → 'Ama'
+ * occupantFirstNamesLabel(['Ama', 'Kojo']) // → 'Ama and Kojo'
+ * occupantFirstNamesLabel(['Ama', 'Kojo', 'Efua']) // → 'Ama, Kojo, and Efua'
+ * occupantFirstNamesLabel(['Ama', 'Kojo', 'Efua', 'Yaw', 'Abena']) // → 'Ama, Kojo, Efua, and 2 others'
+ * ```
+ */
+export function occupantFirstNamesLabel(names: string[]): string {
+    if (names.length === 0) return '';
+    if (names.length === 1) return names[0];
+    if (names.length === 2) return `${names[0]} and ${names[1]}`;
+    if (names.length === 3) return `${names[0]}, ${names[1]}, and ${names[2]}`;
+    const remaining = names.length - 3;
+    return `${names[0]}, ${names[1]}, ${names[2]}, and ${remaining} other${remaining === 1 ? '' : 's'}`;
+}

@@ -351,6 +351,18 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     boolean existsByStudentIdAndStatusAndRoom_Hostel_Id(
             UUID studentId, BookingStatus status, UUID hostelId);
 
+    /**
+     * Returns {@code true} if the student has ever held a genuine booking
+     * (APPROVED, CHECKED_IN, or CHECKED_OUT) — as opposed to merely a PENDING
+     * request — for any room at the given hostel. Used to scope which
+     * students may view and vote on that hostel's complaints (see
+     * {@code ComplaintService#hostelComplaintsForStudent}); a PENDING or
+     * REJECTED request alone should not grant visibility into a hostel's
+     * complaint history.
+     */
+    boolean existsByStudentIdAndStatusInAndRoom_Hostel_Id(
+            UUID studentId, List<BookingStatus> statuses, UUID hostelId);
+
     @Query("SELECT b FROM Booking b WHERE b.status = 'CHECKED_IN' AND b.student.id = :userId")
     List<Booking> findCurrentByUserId(@Param("userId") UUID userId);
 

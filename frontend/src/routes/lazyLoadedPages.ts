@@ -97,6 +97,10 @@ export const ManagerHostelComplaintsPage = lazy(
     () => import('@/features/complaint/pages/ManagerHostelComplaintsPage')
 );
 
+export const StudentHostelComplaintsPage = lazy(
+    () => import('@/features/complaint/pages/StudentHostelComplaintsPage')
+);
+
 export const AdminLandmarks = lazy(
     () => import('@/features/map/pages/AdminLandmarksPage')
 );

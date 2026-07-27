@@ -30,6 +30,7 @@ import java.util.UUID;
  * DELETE /complaints/{id}                         STUDENT: delete own OPEN complaint
  * PATCH  /manager/complaints/{id}/status         MANAGER/ADMIN: update status
  * GET    /manager/hostels/{hostelId}/complaints  MANAGER/ADMIN: hostel complaints
+ * GET    /hostels/{hostelId}/complaints          STUDENT: hostel complaints (booked hostels only)
  * POST   /complaints/{id}/react                  Any authenticated: vote
  * POST   /complaints/{id}/attachments            STUDENT (author): add attachment
  * DELETE /complaints/attachments/{attachmentId}  Author/MANAGER/ADMIN: remove
@@ -91,6 +92,24 @@ public class ComplaintController {
     ) {
         return ResponseEntity.ok(ApiResponse.success("Complaints fetched.",
                 complaintService.listByHostel(hostelId, status, pageable)));
+    }
+
+    /**
+     * Student-facing view of a hostel's complaints, so a student can see and
+     * upvote/downvote complaints raised by others at a hostel they have (or
+     * have had) a genuine booking with — not just their own complaints.
+     */
+    @GetMapping("/hostels/{hostelId}/complaints")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<ApiResponse<Page<ComplaintSummaryDto>>> hostelComplaintsForStudent(
+            @PathVariable UUID hostelId,
+            @RequestParam(required = false) ComplaintStatus status,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success("Complaints fetched.",
+                complaintService.hostelComplaintsForStudent(
+                        hostelId, customUserDetails.getUserId(), status, pageable)));
     }
 
     @PostMapping("/complaints/{id}/react")

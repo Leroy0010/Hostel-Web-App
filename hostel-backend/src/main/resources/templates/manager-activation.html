@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Student Email</title>
+    <title>Set Up Your Hostel Management Account</title>
     <style>
         /* Base Reset & Typography */
         body { font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; color: #374151; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
@@ -32,30 +32,33 @@
 <body>
 <div class="container">
     <div class="header">
-        <!-- Replace this URL with the actual live URL where your icon is hosted -->
-        <!-- Example using a placeholder text if images are blocked -->
         <img src="https://hostellifeplus.com/icon-192x192.png" alt="HostelLife+ Logo" />
     </div>
 
     <div class="content">
-        <h2>Welcome to HostelLife+!</h2>
-        <p>Hello <strong th:text="${userName}">Student</strong>,</p>
-        <p>Thank you for registering on our platform. Your account has been created successfully. Before you can log in and apply for accommodation, we need to verify your email address to ensure your account's security.</p>
-
-        <div class="button-wrapper">
-            <a th:href="${secureLink}" class="btn">Verify Email Address</a>
-        </div>
+        <h2>Welcome to HostelLife+ Management!</h2>
+        <p>Hello <strong th:text="${userName}">Hostel Manager</strong>,</p>
+        <p>An system administrator has officially provisioned your <strong>Hostel Manager</strong> account for the UCC HostelLife+ platform. You now have access to oversee operations, manage student accommodations, and monitor your facility's dashboard.</p>
 
         <div class="highlight-box">
-            <p style="margin: 0;"><strong>Note:</strong> This secure verification link will expire in 24 hours. If you did not create this account, you can safely ignore this email.</p>
+            <p style="margin: 0;"><strong>Action Required:</strong> Your managerial account is currently inactive. You must establish a secure password to complete your setup and access the management dashboard.</p>
         </div>
 
+        <p>Please click the button below to set your password and activate your account:</p>
+
+        <div class="button-wrapper">
+            <a th:href="${secureLink}" class="btn">Set Up Password & Activate</a>
+        </div>
+
+        <p style="font-size: 14px; color: #6b7280;"><strong>Note:</strong> For security purposes, this setup link is only valid for 24 hours. If it expires, you will need to request a new activation link from your system administrator.</p>
+
+        <br>
         <p>Warm regards,<br><strong>The HostelLife+ Team</strong><br>University of Cape Coast</p>
     </div>
 
     <div class="footer">
         <p>&copy; <span th:text="${currentYear}">2026</span> University of Cape Coast. All Rights Reserved.</p>
-        <p>Need help? Contact our <a href="#">support team</a>.</p>
+        <p>Need help? Contact our <a href="#">IT support team</a>.</p>
     </div>
 </div>
 </body>

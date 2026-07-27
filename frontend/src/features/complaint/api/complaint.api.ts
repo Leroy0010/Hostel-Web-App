@@ -64,6 +64,27 @@ export function fetchHostelComplaints(
     });
 }
 
+/**
+ * Student-facing view of a hostel's complaints — lets a student browse and
+ * vote on complaints raised by others at a hostel they have (or have had) a
+ * genuine booking with.
+ *
+ * Maps to: {@code GET /api/hostels/{hostelId}/complaints}
+ */
+export function fetchHostelComplaintsForStudent(
+    hostelId: string,
+    params: ComplaintPageParams = {}
+): Promise<PageResponse<ComplaintSummaryDto>> {
+    return apiClient.get(`/hostels/${hostelId}/complaints`, {
+        params: {
+            page: params.page ?? 0,
+            size: params.size ?? 20,
+            sort: 'createdAt,desc',
+            ...(params.status && { status: params.status }),
+        },
+    });
+}
+
 /** Maps to: {@code POST /api/complaints/{id}/react} */
 export function reactToComplaint(
     id: string,

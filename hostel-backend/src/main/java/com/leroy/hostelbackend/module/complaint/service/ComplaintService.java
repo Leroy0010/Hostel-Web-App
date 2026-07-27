@@ -276,6 +276,32 @@ public class ComplaintService {
                 .map(this::buildSummaryDto);
     }
 
+    /**
+     * Complaints for a hostel, as seen by a student — so a student can browse
+     * and upvote/downvote complaints raised by others at hostels they have
+     * (or have had) a genuine booking with, not just the complaints they
+     * personally authored.
+     *
+     * <p>Deliberately scoped to a student's own booking history rather than
+     * opened up to every hostel platform-wide: a student who has never booked
+     * a given hostel has no stake in its complaint history, and visibility
+     * without that relationship would let anyone browse and vote on any
+     * hostel's complaints regardless of whether they have ever stayed there.
+     *
+     * @throws HostelAccessDeniedException if the student has never held an
+     *                                      APPROVED, CHECKED_IN, or CHECKED_OUT
+     *                                      booking at this hostel
+     */
+    @Transactional(readOnly = true)
+    public Page<ComplaintSummaryDto> hostelComplaintsForStudent(
+            UUID hostelId, UUID studentId, ComplaintStatus status, Pageable pageable) {
+        if (!bookingService.hasOrHadBookingAtHostel(studentId, hostelId)) {
+            throw new HostelAccessDeniedException();
+        }
+        return complaintRepository.findByHostelId(hostelId, status, pageable)
+                .map(this::buildSummaryDto);
+    }
+
     /** Student's own complaints. */
     @Transactional(readOnly = true)
     public Page<ComplaintSummaryDto> myComplaints(UUID authorId, Pageable pageable) {

@@ -206,6 +206,12 @@ public class PreferenceService {
 
             short bedsAvailable = (short) (room.getCapacity() - room.getCurrentOccupancy());
 
+            // Light, privacy-safe profiles of current occupants — first name and
+            // avatar only, never contact details (see RoomMatchSuggestionDto Javadoc).
+            List<OccupantProfileDto> occupantProfiles = userRepository.findAllById(occupants).stream()
+                    .map(u -> new OccupantProfileDto(u.getId(), u.getFirstName(), u.getProfileUrl()))
+                    .toList();
+
             suggestions.add(new RoomMatchSuggestionDto(
                     room.getId(),
                     room.getRoomNumber(),
@@ -214,7 +220,8 @@ public class PreferenceService {
                     room.getPricePerSemester(),
                     room.getImageUrl(),
                     new ArrayList<>(matchingTags).stream().sorted().toList(),
-                    occupants.size()
+                    occupants.size(),
+                    occupantProfiles
             ));
         }
 

@@ -35,6 +35,7 @@ import {
     StudentPreferencePage,
     UserManamentPage,
     AuditLog,
+    StudentHostelComplaintsPage,
 } from './lazyLoadedPages';
 import { AppLayout } from '@/components/layout/AppLayout';
 
@@ -196,6 +197,10 @@ export function AppRoutes() {
                             <Route
                                 path="complaints"
                                 element={<MyComplaints />}
+                            />
+                            <Route
+                                path="hostels/:hostelId/complaints"
+                                element={<StudentHostelComplaintsPage />}
                             />
                             <Route path="reviews" element={<MyReviews />} />
                         </Route>

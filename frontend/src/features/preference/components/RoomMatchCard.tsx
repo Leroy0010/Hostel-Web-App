@@ -2,7 +2,10 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { BedDouble, ChevronRight, Sparkles, Users } from 'lucide-react';
 import { PreferenceTagBadge } from './PreferenceTagBadge';
-import { matchCountLabel } from '../utils/preference.utils';
+import {
+    matchCountLabel,
+    occupantFirstNamesLabel,
+} from '../utils/preference.utils';
 import {
     formatPrice,
     roomImageFallback,
@@ -176,6 +179,44 @@ export function RoomMatchCard({
                             ))}
                         </div>
                     </div>
+
+                    {/* Meet your potential roommates — first name + avatar only,
+                        never contact details (see backend RoomMatchSuggestionDto
+                        Javadoc for the privacy reasoning). */}
+                    {suggestion.occupants.length > 0 && (
+                        <div className="flex items-center gap-2 pt-0.5">
+                            <div className="flex -space-x-2">
+                                {suggestion.occupants
+                                    .slice(0, 4)
+                                    .map((occupant) => (
+                                        <div
+                                            key={occupant.id}
+                                            className="h-6 w-6 shrink-0 overflow-hidden rounded-full border-2 border-white bg-gray-100 dark:border-gray-950 dark:bg-gray-800"
+                                            title={occupant.firstName}
+                                        >
+                                            {occupant.avatarUrl ? (
+                                                <img
+                                                    src={occupant.avatarUrl}
+                                                    alt={occupant.firstName}
+                                                    className="h-full w-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="flex h-full w-full items-center justify-center text-[10px] font-semibold text-gray-500 dark:text-gray-400">
+                                                    {occupant.firstName
+                                                        .charAt(0)
+                                                        .toUpperCase()}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                            </div>
+                            <p className="truncate text-[11px] text-gray-500 dark:text-gray-400">
+                                {occupantFirstNamesLabel(
+                                    suggestion.occupants.map((o) => o.firstName)
+                                )}
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 {/* ── Chevron affordance ──────────────────────────────────── */}

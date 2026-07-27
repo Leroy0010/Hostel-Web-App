@@ -8,6 +8,7 @@ import {
     deleteComplaint,
     fetchComplaintById,
     fetchHostelComplaints,
+    fetchHostelComplaintsForStudent,
     fetchMyComplaints,
     reactToComplaint,
     updateComplaintStatus,
@@ -61,6 +62,29 @@ export function useHostelComplaints(
     });
 }
 
+/**
+ * Student: complaints for a hostel they have (or have had) a booking with —
+ * lets a student see and vote on complaints raised by others, not just their
+ * own. The backend returns a 403 if the student has no genuine booking
+ * relationship (APPROVED/CHECKED_IN/CHECKED_OUT) with the hostel.
+ */
+export function useHostelComplaintsForStudent(
+    hostelId: string | null | undefined,
+    params: ComplaintPageParams = {}
+) {
+    return useQuery({
+        queryKey: complaintKeys.hostelComplaintsForStudent(
+            hostelId ?? '',
+            params
+        ),
+        queryFn: () => fetchHostelComplaintsForStudent(hostelId!, params),
+        enabled: Boolean(hostelId),
+        staleTime: 30 * 1000,
+        placeholderData: (prev) => prev,
+        retry: false, // a 403 (no booking relationship) shouldn't be retried
+    });
+}
+
 // =============================================================================
 // Mutations
 // =============================================================================
@@ -78,8 +102,8 @@ export function useCreateComplaint() {
             toast.success('Complaint submitted successfully.');
         },
         onError: (error) => {
-             toast.error(error.message);
-        }
+            toast.error(error.message);
+        },
     });
 }
 

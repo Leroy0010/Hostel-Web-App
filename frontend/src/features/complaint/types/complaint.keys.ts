@@ -15,6 +15,13 @@ export const complaintKeys = {
     hostelComplaints: (hostelId: string, params: ComplaintPageParams = {}) =>
         [...complaintKeys.lists(), 'hostel', hostelId, params] as const,
 
+    /** Student: complaints for a hostel they have (or have had) a booking with. */
+    hostelComplaintsForStudent: (
+        hostelId: string,
+        params: ComplaintPageParams = {}
+    ) =>
+        [...complaintKeys.lists(), 'hostel-student', hostelId, params] as const,
+
     details: () => [...complaintKeys.all, 'detail'] as const,
     detail: (id: string) => [...complaintKeys.details(), id] as const,
 } as const;

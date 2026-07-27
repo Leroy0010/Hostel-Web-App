@@ -83,6 +83,22 @@ export interface RoomMatchSuggestionDto {
     matchingTags: PreferenceTag[];
     /** Number of students currently living in this room. */
     occupantCount: number;
+    /**
+     * Light, privacy-safe profiles of current occupants — first name and
+     * avatar only. Deliberately excludes contact details (email, phone) and
+     * gender/course-of-study, since neither of the latter two is currently
+     * captured anywhere in the system. See the backend's
+     * {@code RoomMatchSuggestionDto} Javadoc for the full reasoning.
+     */
+    occupants: OccupantProfileDto[];
+}
+
+/** Light occupant profile shown on a room-match suggestion. */
+export interface OccupantProfileDto {
+    id: string;
+    firstName: string;
+    /** May be null if the student hasn't uploaded a profile photo. */
+    avatarUrl: string | null;
 }
 
 /**

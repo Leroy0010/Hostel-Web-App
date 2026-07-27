@@ -70,8 +70,8 @@ public class EmailService  {
 
         EmailRequest emailRequest = EmailRequest.builder()
                 .toEmail(toEmail)
-                .subject("Welcome! Setup Your Staff Account")
-                .templateName("staff-activation") // Customize text to say "Setup Password"
+                .subject("Welcome! Setup Your Manager Account")
+                .templateName("manager-activation") // Customize text to say "Setup Password"
                 .contextVariables(variables)
                 .isHtml(true)
                 .build();

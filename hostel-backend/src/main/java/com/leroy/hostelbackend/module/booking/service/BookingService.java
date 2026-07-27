@@ -474,6 +474,20 @@ public class BookingService {
                 userId, BookingStatus.CHECKED_IN, complaint.getHostel().getId());
     }
 
+    /**
+     * Returns {@code true} if the student has (or has had) a genuine booking
+     * relationship with the given hostel — APPROVED, CHECKED_IN, or
+     * CHECKED_OUT — as opposed to only ever having a PENDING or REJECTED
+     * request. Gates a student's ability to view and vote on that hostel's
+     * complaints in {@code ComplaintService#hostelComplaintsForStudent}.
+     */
+    public boolean hasOrHadBookingAtHostel(UUID studentId, UUID hostelId) {
+        return bookingRepository.existsByStudentIdAndStatusInAndRoom_Hostel_Id(
+                studentId,
+                List.of(BookingStatus.APPROVED, BookingStatus.CHECKED_IN, BookingStatus.CHECKED_OUT),
+                hostelId);
+    }
+
     // =========================================================================
     // Package-visible — called by BookingExpiredSweeper
     // =========================================================================
