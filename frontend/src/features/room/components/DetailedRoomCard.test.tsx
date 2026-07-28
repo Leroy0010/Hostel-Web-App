@@ -20,7 +20,7 @@ const room: RoomDisplayDto = {
     roomNumber: 'A12',
     roomType: 'DOUBLE',
     capacity: 2,
-    pricePerSemester: 1500,
+    price: 1500,
     floorNumber: 3,
     imageUrl: '',
     availablePeriods: [{ academicYear: '2025/2026', semester: 'FIRST' }],

@@ -252,29 +252,6 @@ export default function HostelDetailPage() {
                 <ManagerActionBar hostelId={hostel.id} ref={controlsRef} />
             )}
 
-            {/* ── Student: link to this hostel's complaint board ────────── */}
-            {/* Always shown to students — the target page itself explains
-                and gracefully handles the case where the student has no
-                booking relationship with this hostel yet (403). */}
-            {user?.role === 'STUDENT' && (
-                <div className="flex justify-end">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                            navigate(`/student/hostels/${hostel.id}/complaints`)
-                        }
-                        className="gap-1.5 border-gray-200 text-gray-600 hover:bg-gray-100 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-800"
-                    >
-                        <MessageSquareWarning
-                            className="h-4 w-4"
-                            aria-hidden="true"
-                        />
-                        View hostel complaints
-                    </Button>
-                </div>
-            )}
-
             {/* ── Hostel info panel ─────────────────────────────────────── */}
             <motion.div
                 variants={sectionVariants}

@@ -61,7 +61,7 @@ public class RoomController {
             @PathVariable UUID hostelId,
             @RequestParam(required = false) RoomType roomType,
             @RequestParam(required = false) BigDecimal maxPrice,
-            @PageableDefault(size = 12, sort = "pricePerSemester", direction = Sort.Direction.ASC) Pageable pageable
+            @PageableDefault(size = 12, sort = "price", direction = Sort.Direction.ASC) Pageable pageable
     ) {
         return ResponseEntity.ok(ApiResponse.success("Available rooms fetched.",
                 roomService.listAvailableRooms(hostelId, roomType, maxPrice, pageable)));

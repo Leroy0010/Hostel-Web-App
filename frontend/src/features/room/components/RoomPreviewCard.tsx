@@ -89,10 +89,7 @@ export function RoomPreviewCard({ room, hostelId }: RoomPreviewCardProps) {
 
                 {/* Price */}
                 <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
-                    {formatPrice(room.pricePerSemester)}
-                    {/* <span className="ml-1 text-xs font-normal text-gray-400 dark:text-gray-500">
-                        / semester
-                    </span> */}
+                    {formatPrice(room.price)}
                 </p>
 
                 {/* Available periods — compact mode */}

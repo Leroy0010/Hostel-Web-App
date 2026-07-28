@@ -113,7 +113,7 @@ public class ComplaintService {
     public void deleteComplaint(UUID complaintId, UUID authorId) {
         var complaint = requireComplaint(complaintId);
         if (!complaint.getAuthor().getId().equals(authorId)) {
-            throw new HostelAccessDeniedException();
+            throw new HostelAccessDeniedException("You can only delete complaints you raised yourself.");
         }
         if (complaint.getStatus() != ComplaintStatus.OPEN) {
             throw new IllegalStateException("Cannot delete a complaint that is already being processed.");
@@ -228,7 +228,8 @@ public class ComplaintService {
             if (actorRole == UserRole.MANAGER) {
                 hostelService.assertManagerOwns(complaint.getHostel().getId(), actorId);
             } else if (actorRole != UserRole.ADMIN) {
-                throw new HostelAccessDeniedException();
+                throw new HostelAccessDeniedException(
+                        "Only the complaint's author, the hostel's assigned manager, or an admin can add attachments to this complaint.");
             }
         }
 
@@ -254,7 +255,7 @@ public class ComplaintService {
         var attachment = attachmentRepository.findById(attachmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Attachment not found: " + attachmentId));
         if (!attachment.getSubmittedBy().getId().equals(requesterId)) {
-            throw new HostelAccessDeniedException();
+            throw new HostelAccessDeniedException("You can only remove attachments you submitted yourself.");
         }
         attachmentRepository.delete(attachment);
     }
@@ -295,8 +296,10 @@ public class ComplaintService {
     @Transactional(readOnly = true)
     public Page<ComplaintSummaryDto> hostelComplaintsForStudent(
             UUID hostelId, UUID studentId, ComplaintStatus status, Pageable pageable) {
-        if (!bookingService.hasOrHadBookingAtHostel(studentId, hostelId)) {
-            throw new HostelAccessDeniedException();
+        if (!bookingService.hasResidedAtHostel(studentId, hostelId)) {
+            throw new HostelAccessDeniedException(
+                    "You can only view a hostel's complaints once you have checked in there. " +
+                            "If you're still deciding, check the hostel's reviews instead.");
         }
         return complaintRepository.findByHostelId(hostelId, status, pageable)
                 .map(this::buildSummaryDto);

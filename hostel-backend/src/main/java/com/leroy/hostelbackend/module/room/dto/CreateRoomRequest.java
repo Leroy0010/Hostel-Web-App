@@ -29,10 +29,10 @@ public record CreateRoomRequest(
         @Max(value = 20, message = "Capacity must not exceed 20")
         Short capacity,
 
-        @NotNull(message = "Price per semester is required")
+        @NotNull(message = "Price is required")
         @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
         @Digits(integer = 8, fraction = 2, message = "Price must have at most 8 integer digits and 2 decimal places")
-        BigDecimal pricePerSemester,
+        BigDecimal price,
 
         @NotBlank(message = "Room image URL is required")
         String imageUrl,

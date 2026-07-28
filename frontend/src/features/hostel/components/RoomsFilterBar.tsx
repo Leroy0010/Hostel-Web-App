@@ -72,7 +72,7 @@ export function RoomFilterBar({
                     type="number"
                     min="0"
                     step="100"
-                    placeholder="Max price / semester"
+                    placeholder="Max price"
                     value={filters.maxPrice}
                     onChange={(e) =>
                         onFiltersChange({

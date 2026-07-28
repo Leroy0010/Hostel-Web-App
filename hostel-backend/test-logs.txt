@@ -7,7 +7,7 @@
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ hostel-backend ---
 [INFO] Copying 1 resource from src\main\resources to target\classes
-[INFO] Copying 10 resources from src\main\resources to target\classes
+[INFO] Copying 12 resources from src\main\resources to target\classes
 [INFO] 
 [INFO] --- compiler:3.14.1:compile (default-compile) @ hostel-backend ---
 [INFO] Nothing to compile - all classes are up to date.
@@ -25,12 +25,12 @@
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.leroy.hostelbackend.config.JwtConfigTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.314 s -- in com.leroy.hostelbackend.config.JwtConfigTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.678 s -- in com.leroy.hostelbackend.config.JwtConfigTest
 [INFO] Running com.leroy.hostelbackend.HostelBackendApplicationTests
-12:50:00.052 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.leroy.hostelbackend.HostelBackendApplicationTests]: HostelBackendApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-12:50:00.398 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.HostelBackendApplicationTests
-12:50:00.634 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.leroy.hostelbackend.HostelBackendApplicationTests]: HostelBackendApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-12:50:00.637 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.HostelBackendApplicationTests
+20:45:31.167 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.leroy.hostelbackend.HostelBackendApplicationTests]: HostelBackendApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+20:45:32.544 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.HostelBackendApplicationTests
+20:45:33.358 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.leroy.hostelbackend.HostelBackendApplicationTests]: HostelBackendApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+20:45:33.444 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.HostelBackendApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -41,16 +41,16 @@
 
  :: Spring Boot ::                (v4.0.6)
 
-2026-07-27T12:50:01.527Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.HostelBackendApplicationTests      : Starting HostelBackendApplicationTests using Java 25.0.1 with PID 33240 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
-2026-07-27T12:50:01.533Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.HostelBackendApplicationTests      : The following 1 profile is active: "dev"
-2026-07-27T12:50:04.910Z  INFO 33240 --- [HOSTELBOOKING] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-07-27T12:50:05.244Z  INFO 33240 --- [HOSTELBOOKING] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 309 ms. Found 17 JPA repository interfaces.
-2026-07-27T12:50:06.916Z  INFO 33240 --- [HOSTELBOOKING] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-07-27T12:50:10.790Z  WARN 33240 --- [HOSTELBOOKING] [           main] o.s.w.c.s.GenericWebApplicationContext   : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Failed to initialize dependency 'liquibase' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/liquibase/autoconfigure/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
-2026-07-27T12:50:10.823Z  INFO 33240 --- [HOSTELBOOKING] [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+2026-07-28T20:45:36.464Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.HostelBackendApplicationTests      : Starting HostelBackendApplicationTests using Java 25.0.1 with PID 26256 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
+2026-07-28T20:45:36.471Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.HostelBackendApplicationTests      : The following 1 profile is active: "dev"
+2026-07-28T20:45:47.761Z  INFO 26256 --- [HOSTELBOOKING] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-28T20:45:48.592Z  INFO 26256 --- [HOSTELBOOKING] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 781 ms. Found 17 JPA repository interfaces.
+2026-07-28T20:45:51.951Z  INFO 26256 --- [HOSTELBOOKING] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-07-28T20:45:56.039Z  WARN 26256 --- [HOSTELBOOKING] [           main] o.s.w.c.s.GenericWebApplicationContext   : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Failed to initialize dependency 'liquibase' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/liquibase/autoconfigure/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
+2026-07-28T20:45:56.116Z  INFO 26256 --- [HOSTELBOOKING] [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
 
 Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-2026-07-27T12:50:10.850Z ERROR 33240 --- [HOSTELBOOKING] [           main] o.s.boot.SpringApplication               : Application run failed
+2026-07-28T20:45:56.197Z ERROR 26256 --- [HOSTELBOOKING] [           main] o.s.boot.SpringApplication               : Application run failed
 
 org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Failed to initialize dependency 'liquibase' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/liquibase/autoconfigure/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: The connection attempt failed.
 	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322) ~[spring-beans-7.0.7.jar:7.0.7]
@@ -203,9 +203,9 @@ Caused by: java.net.UnknownHostException: postgres
 	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:289) ~[postgresql-42.7.10.jar:42.7.10]
 	... 127 common frames omitted
 
-2026-07-27T12:50:10.869Z  WARN 33240 --- [HOSTELBOOKING] [           main] o.s.test.context.TestContextManager      : Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener] to prepare test instance [com.leroy.hostelbackend.HostelBackendApplicationTests@1ed52f44]
+2026-07-28T20:45:56.234Z  WARN 26256 --- [HOSTELBOOKING] [           main] o.s.test.context.TestContextManager      : Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener] to prepare test instance [com.leroy.hostelbackend.HostelBackendApplicationTests@7096d451]
 
-java.lang.IllegalStateException: Failed to load ApplicationContext for [WebMergedContextConfiguration@69944a90 testClass = com.leroy.hostelbackend.HostelBackendApplicationTests, locations = [], classes = [com.leroy.hostelbackend.HostelBackendApplication], contextInitializerClasses = [], activeProfiles = [], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [org.springframework.boot.test.context.PropertyMappingContextCustomizer@0, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@3359c978, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cda4919, org.springframework.boot.test.autoconfigure.OnFailureConditionReportContextCustomizerFactory$OnFailureConditionReportContextCustomizer@344b8190, org.springframework.test.context.support.DynamicPropertiesContextCustomizer@0, org.springframework.boot.webmvc.test.autoconfigure.WebDriverContextCustomizer@6826c41e, org.springframework.boot.web.server.context.SpringBootTestRandomPortContextCustomizer@1d269ed7, org.springframework.boot.test.context.SpringBootTestAnnotation@b6f9e974], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+java.lang.IllegalStateException: Failed to load ApplicationContext for [WebMergedContextConfiguration@78e97d4d testClass = com.leroy.hostelbackend.HostelBackendApplicationTests, locations = [], classes = [com.leroy.hostelbackend.HostelBackendApplication], contextInitializerClasses = [], activeProfiles = [], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [org.springframework.boot.test.context.PropertyMappingContextCustomizer@0, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@3359c978, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cda4919, org.springframework.boot.test.autoconfigure.OnFailureConditionReportContextCustomizerFactory$OnFailureConditionReportContextCustomizer@344b8190, org.springframework.test.context.support.DynamicPropertiesContextCustomizer@0, org.springframework.boot.webmvc.test.autoconfigure.WebDriverContextCustomizer@6826c41e, org.springframework.boot.web.server.context.SpringBootTestRandomPortContextCustomizer@1d269ed7, org.springframework.boot.test.context.SpringBootTestAnnotation@b6f9e974], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
 	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.lambda$loadContext$0(DefaultCacheAwareContextLoaderDelegate.java:195) ~[spring-test-7.0.7.jar:7.0.7]
 	at org.springframework.test.context.cache.DefaultContextCache.put(DefaultContextCache.java:214) ~[spring-test-7.0.7.jar:7.0.7]
 	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:160) ~[spring-test-7.0.7.jar:7.0.7]
@@ -359,9 +359,9 @@ Caused by: java.net.UnknownHostException: postgres
 	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:289) ~[postgresql-42.7.10.jar:42.7.10]
 	... 127 common frames omitted
 
-[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 11.27 s <<< FAILURE! -- in com.leroy.hostelbackend.HostelBackendApplicationTests
-[ERROR] com.leroy.hostelbackend.HostelBackendApplicationTests.contextLoads -- Time elapsed: 0.018 s <<< ERROR!
-java.lang.IllegalStateException: Failed to load ApplicationContext for [WebMergedContextConfiguration@69944a90 testClass = com.leroy.hostelbackend.HostelBackendApplicationTests, locations = [], classes = [com.leroy.hostelbackend.HostelBackendApplication], contextInitializerClasses = [], activeProfiles = [], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [org.springframework.boot.test.context.PropertyMappingContextCustomizer@0, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@3359c978, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cda4919, org.springframework.boot.test.autoconfigure.OnFailureConditionReportContextCustomizerFactory$OnFailureConditionReportContextCustomizer@344b8190, org.springframework.test.context.support.DynamicPropertiesContextCustomizer@0, org.springframework.boot.webmvc.test.autoconfigure.WebDriverContextCustomizer@6826c41e, org.springframework.boot.web.server.context.SpringBootTestRandomPortContextCustomizer@1d269ed7, org.springframework.boot.test.context.SpringBootTestAnnotation@b6f9e974], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 26.07 s <<< FAILURE! -- in com.leroy.hostelbackend.HostelBackendApplicationTests
+[ERROR] com.leroy.hostelbackend.HostelBackendApplicationTests.contextLoads -- Time elapsed: 0.029 s <<< ERROR!
+java.lang.IllegalStateException: Failed to load ApplicationContext for [WebMergedContextConfiguration@78e97d4d testClass = com.leroy.hostelbackend.HostelBackendApplicationTests, locations = [], classes = [com.leroy.hostelbackend.HostelBackendApplication], contextInitializerClasses = [], activeProfiles = [], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [org.springframework.boot.test.context.PropertyMappingContextCustomizer@0, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@3359c978, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cda4919, org.springframework.boot.test.autoconfigure.OnFailureConditionReportContextCustomizerFactory$OnFailureConditionReportContextCustomizer@344b8190, org.springframework.test.context.support.DynamicPropertiesContextCustomizer@0, org.springframework.boot.webmvc.test.autoconfigure.WebDriverContextCustomizer@6826c41e, org.springframework.boot.web.server.context.SpringBootTestRandomPortContextCustomizer@1d269ed7, org.springframework.boot.test.context.SpringBootTestAnnotation@b6f9e974], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
 	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.lambda$loadContext$0(DefaultCacheAwareContextLoaderDelegate.java:195)
 	at org.springframework.test.context.cache.DefaultContextCache.put(DefaultContextCache.java:214)
 	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:160)
@@ -452,50 +452,69 @@ Caused by: java.net.UnknownHostException: postgres
 
 [INFO] Running com.leroy.hostelbackend.module.auth.security.JwtAuthenticationFilterTest
 [INFO] Running requests that must NOT be authenticated
-2026-07-27T12:50:15.789Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.a.s.JwtAuthenticationFilter      : Rejected request from deactivated account: 7464e20c-f49e-4a5c-81a6-f6c6597cdb33
-[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.193 s -- in requests that must NOT be authenticated
+2026-07-28T20:46:01.045Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.a.s.JwtAuthenticationFilter      : Rejected request from deactivated account: 62aa31d8-a512-47be-be41-8f212174257f
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.389 s -- in requests that must NOT be authenticated
 [INFO] Running successful authentication
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.586 s -- in successful authentication
-[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.465 s -- in com.leroy.hostelbackend.module.auth.security.JwtAuthenticationFilterTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.407 s -- in successful authentication
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.230 s -- in com.leroy.hostelbackend.module.auth.security.JwtAuthenticationFilterTest
 [INFO] Running com.leroy.hostelbackend.module.auth.security.JwtServiceTest
-[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.887 s -- in com.leroy.hostelbackend.module.auth.security.JwtServiceTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.249 s -- in com.leroy.hostelbackend.module.auth.security.JwtServiceTest
 [INFO] Running com.leroy.hostelbackend.module.auth.security.JwtTest
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 s -- in com.leroy.hostelbackend.module.auth.security.JwtTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.036 s -- in com.leroy.hostelbackend.module.auth.security.JwtTest
 [INFO] Running com.leroy.hostelbackend.module.auth.service.AuthServiceTest
 [INFO] Running email verification flow
-2026-07-27T12:50:18.749Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Resend verification requested for non-existent email: nobody@ucc.edu.gh
-2026-07-27T12:50:18.806Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Resend verification requested for already active user ID: 29a6098a-c67e-4d91-adf9-5d786fa12071
-2026-07-27T12:50:18.819Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : New verification email sent securely for user ID: 1fbe6432-d518-479d-afe1-364a679e8d8e
-2026-07-27T12:50:18.834Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Email verified successfully for user ID: 14ad32a6-7173-475f-ad68-fc361b2b2faf
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.453 s -- in email verification flow
+2026-07-28T20:46:04.615Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Resend verification requested for non-existent email: nobody@ucc.edu.gh
+2026-07-28T20:46:04.674Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Resend verification requested for already active user ID: 0bb74c2c-faaf-496d-946b-5607f8c63a56
+2026-07-28T20:46:04.693Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : New verification email sent securely for user ID: 7d936cca-4112-4bc1-9b47-dda9298c2659
+2026-07-28T20:46:04.730Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Email verified successfully for user ID: 31b89ea6-abc0-4d25-8b38-5bde385d9673
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.828 s -- in email verification flow
 [INFO] Running password reset flow
-2026-07-27T12:50:18.847Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password has been successfully recovered and reset for user ID: b02abf76-7249-4b97-bdb9-e5bb6902f4cf
-2026-07-27T12:50:18.853Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password reset requested for non-existent email: nobody@ucc.edu.gh
-2026-07-27T12:50:18.860Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password has been successfully recovered and reset for user ID: 42bf0adc-6801-4e73-854f-ac8391c2f70a
-2026-07-27T12:50:18.874Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password has been successfully recovered and reset for user ID: 3c17a6ab-d7ff-46e2-8b91-6a05984cce78
-2026-07-27T12:50:18.880Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password reset token generated and emailed safely for user ID: 1b235e64-c6f2-481b-8b41-d39a52c7e505
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.044 s -- in password reset flow
+2026-07-28T20:46:04.769Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password has been successfully recovered and reset for user ID: fa0ed90f-430b-48dc-938b-7d84cd74bf6f
+2026-07-28T20:46:04.775Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password reset requested for non-existent email: nobody@ucc.edu.gh
+2026-07-28T20:46:04.791Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password has been successfully recovered and reset for user ID: 55c7fe8a-f12a-4e55-bf01-ee407f65c032
+2026-07-28T20:46:04.817Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password has been successfully recovered and reset for user ID: 264821f8-a1dd-4346-8d4d-708b1d5f7ae2
+2026-07-28T20:46:04.833Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password reset token generated and emailed safely for user ID: 079b17c2-ff13-48ce-99e9-0a6f0bd773e4
+[ERROR] Tests run: 7, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.158 s <<< FAILURE! -- in password reset flow
+[ERROR] com.leroy.hostelbackend.module.auth.service.AuthServiceTest.issuesFifteenMinuteToken -- Time elapsed: 0.069 s <<< FAILURE!
+Argument(s) are different! Wanted:
+emailService.sendPasswordResetEmail(
+    "lexa.doe@ucc.edu.gh",
+    "Lexa Doe",
+    <any string>
+);
+-> at com.leroy.hostelbackend.module.email.service.EmailService.sendPasswordResetEmail(EmailService.java:85)
+Actual invocations have different arguments at position [1]:
+emailService.sendPasswordResetEmail(
+    "lexa.doe@ucc.edu.gh",
+    "Lexa",
+    "f1ccf71a47f9391c5475bc09df5b3fc4a2a21ae7411acdf7e9bda82e8b75a51a"
+);
+-> at com.leroy.hostelbackend.module.auth.service.AuthService.initiatePasswordReset(AuthService.java:152)
+
+	at com.leroy.hostelbackend.module.email.service.EmailService.sendPasswordResetEmail(EmailService.java:85)
+	at com.leroy.hostelbackend.module.auth.service.AuthServiceTest$PasswordReset.issuesFifteenMinuteToken(AuthServiceTest.java:307)
+
 [INFO] Running setAuthCookie / clearAuthCookie attribute consistency
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.068 s -- in setAuthCookie / clearAuthCookie attribute consistency
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.123 s -- in setAuthCookie / clearAuthCookie attribute consistency
 [INFO] Running generateAndSaveToken
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in generateAndSaveToken
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 s -- in generateAndSaveToken
 [INFO] Running changePassword
-2026-07-27T12:50:19.007Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password changed securely via user settings for ID: 69d1a840-34af-4ea4-823d-fc321fc00380
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in changePassword
+2026-07-28T20:46:05.113Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.module.auth.service.AuthService    : Password changed securely via user settings for ID: c9ef0a77-ca03-460e-b923-dd18d338b433
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.046 s -- in changePassword
 [INFO] Running getAuthenticatedUserDetails / getAuthenticatedUser
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in getAuthenticatedUserDetails / getAuthenticatedUser
-[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.667 s -- in com.leroy.hostelbackend.module.auth.service.AuthServiceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.046 s -- in getAuthenticatedUserDetails / getAuthenticatedUser
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.280 s -- in com.leroy.hostelbackend.module.auth.service.AuthServiceTest
 [INFO] Running com.leroy.hostelbackend.module.booking.controller.BookingControllerTest
-2026-07-27T12:50:19.079Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:19.330Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest
-2026-07-27T12:50:19.334Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:19.372Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest
+2026-07-28T20:46:05.238Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:05.732Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest
+2026-07-28T20:46:05.739Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:05.772Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest
 [INFO] Running POST /api/bookings/{id}/payment
-2026-07-27T12:50:19.385Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$SubmitPayment]: SubmitPayment does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:19.418Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$SubmitPayment
-2026-07-27T12:50:19.421Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$SubmitPayment]: SubmitPayment does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:19.422Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:19.444Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$SubmitPayment
+2026-07-28T20:46:05.784Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$SubmitPayment]: SubmitPayment does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:05.814Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$SubmitPayment
+2026-07-28T20:46:05.819Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$SubmitPayment]: SubmitPayment does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:05.821Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:05.861Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$SubmitPayment
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -506,105 +525,105 @@ Caused by: java.net.UnknownHostException: postgres
 
  :: Spring Boot ::                (v4.0.6)
 
-2026-07-27T12:50:19.589Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.c.BookingControllerTest$SubmitPayment : Starting BookingControllerTest.SubmitPayment using Java 25.0.1 with PID 33240 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
-2026-07-27T12:50:19.589Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.c.BookingControllerTest$SubmitPayment : The following 1 profile is active: "dev"
+2026-07-28T20:46:06.092Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.c.BookingControllerTest$SubmitPayment : Starting BookingControllerTest.SubmitPayment using Java 25.0.1 with PID 26256 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
+2026-07-28T20:46:06.096Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.c.BookingControllerTest$SubmitPayment : The following 1 profile is active: "dev"
 === Custom ObjectMapper Bean Created with ISO-8601 string format ===
-2026-07-27T12:50:22.594Z  INFO 33240 --- [HOSTELBOOKING] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-07-27T12:50:22.594Z  INFO 33240 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-07-27T12:50:22.599Z  INFO 33240 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 4 ms
-2026-07-27T12:50:22.729Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.c.BookingControllerTest$SubmitPayment : Started BookingControllerTest.SubmitPayment in 3.26 seconds (process running for 26.312)
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.190 s -- in POST /api/bookings/{id}/payment
+2026-07-28T20:46:11.822Z  INFO 26256 --- [HOSTELBOOKING] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-28T20:46:11.822Z  INFO 26256 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-28T20:46:11.830Z  INFO 26256 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 8 ms
+2026-07-28T20:46:12.070Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.c.BookingControllerTest$SubmitPayment : Started BookingControllerTest.SubmitPayment in 6.173 seconds (process running for 48.657)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.147 s -- in POST /api/bookings/{id}/payment
 [INFO] Running GET /api/bookings/{id}
-2026-07-27T12:50:23.575Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$GetBooking]: GetBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:23.594Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$GetBooking
-2026-07-27T12:50:23.596Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$GetBooking]: GetBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:23.598Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:23.615Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$GetBooking
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.268 s -- in GET /api/bookings/{id}
+2026-07-28T20:46:13.941Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$GetBooking]: GetBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:13.976Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$GetBooking
+2026-07-28T20:46:13.980Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$GetBooking]: GetBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:13.982Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:14.031Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$GetBooking
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.747 s -- in GET /api/bookings/{id}
 [INFO] Running DELETE /api/bookings/{id}/cancel
-2026-07-27T12:50:23.843Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CancelBooking]: CancelBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:23.869Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CancelBooking
-2026-07-27T12:50:23.872Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CancelBooking]: CancelBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:23.874Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:23.890Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CancelBooking
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.298 s -- in DELETE /api/bookings/{id}/cancel
+2026-07-28T20:46:14.710Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CancelBooking]: CancelBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:14.746Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CancelBooking
+2026-07-28T20:46:14.750Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CancelBooking]: CancelBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:14.752Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:14.783Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CancelBooking
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.617 s -- in DELETE /api/bookings/{id}/cancel
 [INFO] Running POST /api/manager/bookings/{id}/action
-2026-07-27T12:50:24.142Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$ActionBooking]: ActionBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:24.151Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$ActionBooking
-2026-07-27T12:50:24.152Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$ActionBooking]: ActionBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:24.152Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:24.160Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$ActionBooking
-2026-07-27T12:50:24.283Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
-2026-07-27T12:50:24.335Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Illegal argument: A rejection reason is required.
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.528 s -- in POST /api/manager/bookings/{id}/action
+2026-07-28T20:46:15.333Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$ActionBooking]: ActionBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:15.361Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$ActionBooking
+2026-07-28T20:46:15.365Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$ActionBooking]: ActionBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:15.367Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:15.411Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$ActionBooking
+2026-07-28T20:46:15.739Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+2026-07-28T20:46:15.874Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Illegal argument: A rejection reason is required.
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.039 s -- in POST /api/manager/bookings/{id}/action
 [INFO] Running POST /api/manager/bookings/{id}/checkin and /checkout
-2026-07-27T12:50:24.671Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CheckInOut]: CheckInOut does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:24.690Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CheckInOut
-2026-07-27T12:50:24.692Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CheckInOut]: CheckInOut does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:24.694Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:24.710Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CheckInOut
-2026-07-27T12:50:24.810Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.272 s -- in POST /api/manager/bookings/{id}/checkin and /checkout
+2026-07-28T20:46:16.376Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CheckInOut]: CheckInOut does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:16.398Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CheckInOut
+2026-07-28T20:46:16.398Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CheckInOut]: CheckInOut does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:16.398Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:16.418Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CheckInOut
+2026-07-28T20:46:16.620Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.499 s -- in POST /api/manager/bookings/{id}/checkin and /checkout
 [INFO] Running POST /api/bookings
-2026-07-27T12:50:24.944Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CreateBooking]: CreateBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:24.954Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CreateBooking
-2026-07-27T12:50:24.956Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CreateBooking]: CreateBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:24.957Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:24.966Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CreateBooking
-2026-07-27T12:50:25.190Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.338 s -- in POST /api/bookings
-[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.239 s -- in com.leroy.hostelbackend.module.booking.controller.BookingControllerTest
+2026-07-28T20:46:16.875Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CreateBooking]: CreateBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:16.897Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CreateBooking
+2026-07-28T20:46:16.900Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CreateBooking]: CreateBooking does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:16.902Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.booking.controller.BookingControllerTest]: BookingControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:16.925Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.booking.controller.BookingControllerTest$CreateBooking
+2026-07-28T20:46:17.456Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.791 s -- in POST /api/bookings
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.49 s -- in com.leroy.hostelbackend.module.booking.controller.BookingControllerTest
 [INFO] Running com.leroy.hostelbackend.module.booking.service.BookingServiceTest
 [INFO] Running expireApprovedBooking
-2026-07-27T12:50:25.972Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : [SWEEPER] APPROVED booking expired: id=9b27e478-2ddb-4c04-9432-8ee6895c30ce, student=0067efb0-2bdd-4e91-b060-6c69a019c94d, room=A-796
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.670 s -- in expireApprovedBooking
+2026-07-28T20:46:18.848Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : [SWEEPER] APPROVED booking expired: id=5e43341d-7411-4b8a-8561-e1d847774890, student=81406c41-6acd-4151-82f1-34ebc983dcca, room=A-847
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.136 s -- in expireApprovedBooking
 [INFO] Running checkIn
-2026-07-27T12:50:25.995Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-in: bookingId=96e0f6ba-7525-42b3-a28b-9590767098f9, managerId=a3ea0bb5-6075-41e7-b149-5a5da6c62ecb, room=A-638
-2026-07-27T12:50:26.006Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : [REMINDER] Student fecbb3cf-35c3-4d8b-bc09-1332d8bebeb2 has 1 other active booking(s) after check-in
-2026-07-27T12:50:26.006Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-in: bookingId=d162243b-f68d-41bb-948b-6ffd06c7899d, managerId=13dd7220-09a4-43f8-91fd-80a4b75c6a3a, room=A-660
-2026-07-27T12:50:26.033Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-in: bookingId=85e9bfaa-4916-4cd5-8dda-c28a3f6910c2, managerId=e9c2a3ec-ea92-498f-b48c-0378c24d0b3a, room=A-738
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.076 s -- in checkIn
+2026-07-28T20:46:18.878Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-in: bookingId=7620eec8-4dd8-4180-9f60-9ec15ab6e20a, managerId=2f8bbf61-d89b-40d7-9aff-fc0629f0d0cb, room=A-209
+2026-07-28T20:46:18.897Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : [REMINDER] Student 3c946548-5142-4ffe-b10b-d54f6a645183 has 1 other active booking(s) after check-in
+2026-07-28T20:46:18.899Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-in: bookingId=647767ac-bd44-4796-9518-d2115a3acff7, managerId=41cf6d85-7bd6-4232-87fc-d86f1453fddc, room=A-858
+2026-07-28T20:46:18.943Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-in: bookingId=b5e6055c-94db-4ca9-899b-49b82e5aa948, managerId=a0790fb2-5c23-4ee2-b11f-461184b3af8e, room=A-707
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.121 s -- in checkIn
 [INFO] Running checkOut
-2026-07-27T12:50:26.074Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-out: bookingId=a4a19586-a3b9-487a-8b96-a05e495a8877, managerId=f22ccd46-36e5-4afc-819e-0ea80c105c1c
-2026-07-27T12:50:26.085Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-out: bookingId=bc31231b-f5de-4f22-ba9f-a057f4ef3b2a, managerId=a77e7322-70f2-46fb-96fc-5ab379928853
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 s -- in checkOut
+2026-07-28T20:46:18.999Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-out: bookingId=6ef9d4b8-5cfc-4ef2-93bc-0e28c7258b61, managerId=7758f935-a3d5-47d1-b948-8141b5e7a6ea
+2026-07-28T20:46:19.015Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Check-out: bookingId=467fed3f-93db-431c-960b-f6f40a98befc, managerId=489ecb05-85f6-49b8-adec-174f4271c927
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.046 s -- in checkOut
 [INFO] Running cancelBooking
-2026-07-27T12:50:26.119Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking cancelled by student: id=4a2c0e49-aed2-4c74-b1ed-29b10885a599, previousStatus=APPROVED
-2026-07-27T12:50:26.366Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking cancelled by student: id=c1af5157-b6b7-4bef-a9f7-70c9b75242b0, previousStatus=PENDING
-[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.261 s -- in cancelBooking
+2026-07-28T20:46:19.045Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking cancelled by student: id=9900f4da-6681-4f8d-9c81-fa32a05a5a16, previousStatus=APPROVED
+2026-07-28T20:46:19.290Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking cancelled by student: id=5cc0bc91-d8d2-4026-ad84-a854f24af1ba, previousStatus=PENDING
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.271 s -- in cancelBooking
 [INFO] Running actionBooking
-2026-07-27T12:50:26.381Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking approved by manager 6ddea2ed-cc2b-48cd-938e-2ac5d0cd8746: id=661f374d-79a0-44cf-a584-d28937af1181
-2026-07-27T12:50:26.395Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking approved by manager 60d5cfd0-9861-4f04-92a9-98bd9bf6954c: id=06c228b3-8039-4f20-bba0-a6f7cdfd44e5
-2026-07-27T12:50:26.404Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking rejected by manager ff312c1d-01e9-46e1-bf8c-47c524aa9bf6: id=178a523a-312f-4b27-a64a-d0e7f9d3d68d
-2026-07-27T12:50:26.511Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking approved by manager 3baea387-a5fa-4fae-8431-d9983d540a05: id=9172c617-761e-4975-bfeb-4921fe4ec2d1
-2026-07-27T12:50:26.602Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking approved by manager b1bf569e-85cd-47ea-b0d4-f4559d82f632: id=cb9b48aa-26b9-42df-b095-4529a0f05a37
-[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.233 s -- in actionBooking
+2026-07-28T20:46:19.323Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking approved by manager 74fe08f5-6db6-4498-abb1-a69941e42c7d: id=350f4267-4728-45b9-9b58-1a4a10edc868
+2026-07-28T20:46:19.344Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking approved by manager 7339bd66-840a-457f-9cf1-43f500674131: id=3d12bb73-cb37-4b8d-bdb9-adf3ac1ac22b
+2026-07-28T20:46:19.360Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking rejected by manager 94e71aff-0002-4e4e-9262-8932e542dd48: id=56882400-b505-48e3-a209-157adb81a7fe
+2026-07-28T20:46:19.397Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking approved by manager d5cdf116-0600-4298-9e29-44280f53b7f3: id=34697e50-f8ac-4763-9b11-0eb831cdbbbe
+2026-07-28T20:46:19.497Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking approved by manager 4e8553cd-ae20-4833-bb0c-5d1d211604c1: id=cb30b769-e50c-4038-881a-18fe635e9a8a
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.189 s -- in actionBooking
 [INFO] Running getBookingById
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in getBookingById
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s -- in getBookingById
 [INFO] Running createBooking
-2026-07-27T12:50:26.751Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking created: id=null, student=0fb05f9e-ab29-45d7-80be-566d2f09f228, room=A-823 [2026/2027 SECOND]
-2026-07-27T12:50:26.762Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking created: id=null, student=9f71391f-cd12-4989-9bca-6048009d4a2b, room=A-311 [2026/2027 SECOND]
-2026-07-27T12:50:26.770Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking created: id=null, student=47be25fe-419d-4d54-9a5a-bee70663b74d, room=A-879 [2026/2027 FIRST]
-2026-07-27T12:50:26.789Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking created: id=null, student=5b34f76d-b38c-48ac-acfc-70513443efe8, room=A-876 [2026/2027 FIRST]
-[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.153 s -- in createBooking
+2026-07-28T20:46:19.649Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking created: id=null, student=50f1427e-a4b4-4007-aa1e-26396984894b, room=A-805 [2026/2027 SECOND]
+2026-07-28T20:46:19.672Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking created: id=null, student=fb4e87df-70de-46d4-8a29-e300ad21ee15, room=A-944 [2026/2027 SECOND]
+2026-07-28T20:46:19.683Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking created: id=null, student=09dc88d6-ba83-4fb1-93cf-6e5d0f547ccd, room=A-352 [2026/2027 FIRST]
+2026-07-28T20:46:19.709Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Booking created: id=null, student=9dd12955-e3d3-412d-8fd0-10b7bdd220f1, room=A-611 [2026/2027 FIRST]
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.191 s -- in createBooking
 [INFO] Running expireWaitlistDraft
-2026-07-27T12:50:26.830Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : [SWEEPER] Waitlist draft expired: id=f6c83db9-4fd2-46ee-89a7-99a00dce07bf, student=bcecab34-4581-4b7e-a8be-072047270521, room=A-140
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in expireWaitlistDraft
+2026-07-28T20:46:19.769Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : [SWEEPER] Waitlist draft expired: id=b4799f9c-06c8-488f-9a8d-fcd250dbce34, student=f765638c-f154-4828-9182-4cc569070e96, room=A-849
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in expireWaitlistDraft
 [INFO] Running submitPayment
-2026-07-27T12:50:26.851Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Payment reference submitted: bookingId=5bb1b10f-54b1-4ea0-8402-ccb64f29289d
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 s -- in submitPayment
-[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.576 s -- in com.leroy.hostelbackend.module.booking.service.BookingServiceTest
+2026-07-28T20:46:19.800Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.booking.service.BookingService   : Payment reference submitted: bookingId=c8e22a77-99fc-4197-85c1-e671705a4439
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s -- in submitPayment
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.121 s -- in com.leroy.hostelbackend.module.booking.service.BookingServiceTest
 [INFO] Running com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest
-2026-07-27T12:50:26.886Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:27.178Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest
-2026-07-27T12:50:27.180Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:27.201Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest
+2026-07-28T20:46:19.843Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:20.223Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest
+2026-07-28T20:46:20.223Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:20.255Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest
 [INFO] Running GET /api/hostels and /api/hostels/{id} — public reads
-2026-07-27T12:50:27.206Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$PublicReads]: PublicReads does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:27.223Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$PublicReads
-2026-07-27T12:50:27.225Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$PublicReads]: PublicReads does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:27.225Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:27.239Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$PublicReads
+2026-07-28T20:46:20.263Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$PublicReads]: PublicReads does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:20.287Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$PublicReads
+2026-07-28T20:46:20.289Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$PublicReads]: PublicReads does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:20.289Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:20.311Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$PublicReads
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -615,53 +634,53 @@ Caused by: java.net.UnknownHostException: postgres
 
  :: Spring Boot ::                (v4.0.6)
 
-2026-07-27T12:50:27.316Z  INFO 33240 --- [HOSTELBOOKING] [           main] h.m.h.c.HostelControllerTest$PublicReads : Starting HostelControllerTest.PublicReads using Java 25.0.1 with PID 33240 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
-2026-07-27T12:50:27.316Z  INFO 33240 --- [HOSTELBOOKING] [           main] h.m.h.c.HostelControllerTest$PublicReads : The following 1 profile is active: "dev"
-2026-07-27T12:50:28.786Z  INFO 33240 --- [HOSTELBOOKING] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-07-27T12:50:28.786Z  INFO 33240 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-07-27T12:50:28.790Z  INFO 33240 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 3 ms
-2026-07-27T12:50:28.833Z  INFO 33240 --- [HOSTELBOOKING] [           main] h.m.h.c.HostelControllerTest$PublicReads : Started HostelControllerTest.PublicReads in 1.572 seconds (process running for 32.416)
-2026-07-27T12:50:28.912Z  WARN 33240 --- [HOSTELBOOKING] [           main] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+2026-07-28T20:46:20.487Z  INFO 26256 --- [HOSTELBOOKING] [           main] h.m.h.c.HostelControllerTest$PublicReads : Starting HostelControllerTest.PublicReads using Java 25.0.1 with PID 26256 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
+2026-07-28T20:46:20.487Z  INFO 26256 --- [HOSTELBOOKING] [           main] h.m.h.c.HostelControllerTest$PublicReads : The following 1 profile is active: "dev"
+2026-07-28T20:46:23.043Z  INFO 26256 --- [HOSTELBOOKING] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-28T20:46:23.043Z  INFO 26256 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-28T20:46:23.043Z  INFO 26256 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-07-28T20:46:23.121Z  INFO 26256 --- [HOSTELBOOKING] [           main] h.m.h.c.HostelControllerTest$PublicReads : Started HostelControllerTest.PublicReads in 2.765 seconds (process running for 59.706)
+2026-07-28T20:46:23.300Z  WARN 26256 --- [HOSTELBOOKING] [           main] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
 	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
 	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
 
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.767 s -- in GET /api/hostels and /api/hostels/{id} — public reads
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.186 s -- in GET /api/hostels and /api/hostels/{id} — public reads
 [INFO] Running POST /api/admin/hostels/{id}/manager
-2026-07-27T12:50:28.977Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$AssignManager]: AssignManager does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:28.992Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$AssignManager
-2026-07-27T12:50:28.993Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$AssignManager]: AssignManager does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:28.994Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:29.007Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$AssignManager
-2026-07-27T12:50:29.113Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.247 s -- in POST /api/admin/hostels/{id}/manager
+2026-07-28T20:46:23.456Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$AssignManager]: AssignManager does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:23.483Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$AssignManager
+2026-07-28T20:46:23.485Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$AssignManager]: AssignManager does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:23.485Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:23.510Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$AssignManager
+2026-07-28T20:46:23.820Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.601 s -- in POST /api/admin/hostels/{id}/manager
 [INFO] Running PUT /api/manager/hostels/{id}
-2026-07-27T12:50:29.229Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$ManagerUpdateHostel]: ManagerUpdateHostel does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:29.245Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$ManagerUpdateHostel
-2026-07-27T12:50:29.247Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$ManagerUpdateHostel]: ManagerUpdateHostel does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:29.248Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:29.265Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$ManagerUpdateHostel
-2026-07-27T12:50:29.527Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.354 s -- in PUT /api/manager/hostels/{id}
+2026-07-28T20:46:24.065Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$ManagerUpdateHostel]: ManagerUpdateHostel does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:24.096Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$ManagerUpdateHostel
+2026-07-28T20:46:24.098Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$ManagerUpdateHostel]: ManagerUpdateHostel does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:24.098Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:24.125Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$ManagerUpdateHostel
+2026-07-28T20:46:24.406Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.424 s -- in PUT /api/manager/hostels/{id}
 [INFO] Running POST /api/admin/hostels
-2026-07-27T12:50:29.585Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$CreateHostel]: CreateHostel does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:29.612Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$CreateHostel
-2026-07-27T12:50:29.614Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$CreateHostel]: CreateHostel does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:29.616Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:29.634Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$CreateHostel
-2026-07-27T12:50:29.865Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.433 s -- in POST /api/admin/hostels
-[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.147 s -- in com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest
+2026-07-28T20:46:24.491Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$CreateHostel]: CreateHostel does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:24.516Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$CreateHostel
+2026-07-28T20:46:24.519Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$CreateHostel]: CreateHostel does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:24.519Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest]: HostelControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:24.544Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest$CreateHostel
+2026-07-28T20:46:24.892Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.662 s -- in POST /api/admin/hostels
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.334 s -- in com.leroy.hostelbackend.module.hostel.controller.HostelControllerTest
 [INFO] Running com.leroy.hostelbackend.module.room.controller.RoomControllerTest
-2026-07-27T12:50:30.034Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:30.174Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest
-2026-07-27T12:50:30.175Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:30.182Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest
+2026-07-28T20:46:25.179Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:25.482Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest
+2026-07-28T20:46:25.487Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:25.511Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest
 [INFO] Running POST /api/manager/rooms/{id}/amenities
-2026-07-27T12:50:30.186Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$AddAmenity]: AddAmenity does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:30.195Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$AddAmenity
-2026-07-27T12:50:30.197Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$AddAmenity]: AddAmenity does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:30.198Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:30.208Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$AddAmenity
+2026-07-28T20:46:25.522Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$AddAmenity]: AddAmenity does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:25.542Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$AddAmenity
+2026-07-28T20:46:25.550Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$AddAmenity]: AddAmenity does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:25.552Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:25.580Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$AddAmenity
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -672,73 +691,73 @@ Caused by: java.net.UnknownHostException: postgres
 
  :: Spring Boot ::                (v4.0.6)
 
-2026-07-27T12:50:30.261Z  INFO 33240 --- [HOSTELBOOKING] [           main] .l.h.m.r.c.RoomControllerTest$AddAmenity : Starting RoomControllerTest.AddAmenity using Java 25.0.1 with PID 33240 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
-2026-07-27T12:50:30.262Z  INFO 33240 --- [HOSTELBOOKING] [           main] .l.h.m.r.c.RoomControllerTest$AddAmenity : The following 1 profile is active: "dev"
-2026-07-27T12:50:31.321Z  INFO 33240 --- [HOSTELBOOKING] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-07-27T12:50:31.321Z  INFO 33240 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-07-27T12:50:31.323Z  INFO 33240 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
-2026-07-27T12:50:31.361Z  INFO 33240 --- [HOSTELBOOKING] [           main] .l.h.m.r.c.RoomControllerTest$AddAmenity : Started RoomControllerTest.AddAmenity in 1.142 seconds (process running for 34.944)
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.299 s -- in POST /api/manager/rooms/{id}/amenities
+2026-07-28T20:46:25.726Z  INFO 26256 --- [HOSTELBOOKING] [           main] .l.h.m.r.c.RoomControllerTest$AddAmenity : Starting RoomControllerTest.AddAmenity using Java 25.0.1 with PID 26256 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
+2026-07-28T20:46:25.726Z  INFO 26256 --- [HOSTELBOOKING] [           main] .l.h.m.r.c.RoomControllerTest$AddAmenity : The following 1 profile is active: "dev"
+2026-07-28T20:46:27.571Z  INFO 26256 --- [HOSTELBOOKING] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-28T20:46:27.573Z  INFO 26256 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-28T20:46:27.577Z  INFO 26256 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 4 ms
+2026-07-28T20:46:27.644Z  INFO 26256 --- [HOSTELBOOKING] [           main] .l.h.m.r.c.RoomControllerTest$AddAmenity : Started RoomControllerTest.AddAmenity in 2.028 seconds (process running for 64.229)
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.316 s -- in POST /api/manager/rooms/{id}/amenities
 [INFO] Running POST /api/manager/hostels/{hostelId}/rooms
-2026-07-27T12:50:31.489Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$CreateRoom]: CreateRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:31.504Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$CreateRoom
-2026-07-27T12:50:31.505Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$CreateRoom]: CreateRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:31.506Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:31.531Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$CreateRoom
-2026-07-27T12:50:31.789Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
-2026-07-27T12:50:31.941Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.541 s -- in POST /api/manager/hostels/{hostelId}/rooms
+2026-07-28T20:46:27.854Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$CreateRoom]: CreateRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:27.882Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$CreateRoom
+2026-07-28T20:46:27.884Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$CreateRoom]: CreateRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:27.884Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:27.912Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$CreateRoom
+2026-07-28T20:46:28.248Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+2026-07-28T20:46:28.480Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.999 s -- in POST /api/manager/hostels/{hostelId}/rooms
 [INFO] Running PATCH /api/manager/rooms/{id}/status
-2026-07-27T12:50:32.029Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$UpdateStatus]: UpdateStatus does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:32.041Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$UpdateStatus
-2026-07-27T12:50:32.043Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$UpdateStatus]: UpdateStatus does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:32.043Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:32.059Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$UpdateStatus
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.158 s -- in PATCH /api/manager/rooms/{id}/status
+2026-07-28T20:46:28.858Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$UpdateStatus]: UpdateStatus does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:28.887Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$UpdateStatus
+2026-07-28T20:46:28.890Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$UpdateStatus]: UpdateStatus does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:28.891Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:28.917Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$UpdateStatus
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.354 s -- in PATCH /api/manager/rooms/{id}/status
 [INFO] Running DELETE /api/manager/rooms/{id}
-2026-07-27T12:50:32.189Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$DeleteRoom]: DeleteRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:32.198Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$DeleteRoom
-2026-07-27T12:50:32.199Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$DeleteRoom]: DeleteRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:32.200Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:32.208Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$DeleteRoom
-2026-07-27T12:50:32.240Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
-2026-07-27T12:50:32.306Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.137 s -- in DELETE /api/manager/rooms/{id}
+2026-07-28T20:46:29.215Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$DeleteRoom]: DeleteRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:29.240Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$DeleteRoom
+2026-07-28T20:46:29.242Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$DeleteRoom]: DeleteRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:29.244Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:29.269Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$DeleteRoom
+2026-07-28T20:46:29.333Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+2026-07-28T20:46:29.624Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.480 s -- in DELETE /api/manager/rooms/{id}
 [INFO] Running GET /api/rooms/{id}
-2026-07-27T12:50:32.327Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$GetRoom]: GetRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:32.335Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$GetRoom
-2026-07-27T12:50:32.337Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$GetRoom]: GetRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:32.337Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:32.344Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$GetRoom
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.180 s -- in GET /api/rooms/{id}
-[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.489 s -- in com.leroy.hostelbackend.module.room.controller.RoomControllerTest
+2026-07-28T20:46:29.691Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$GetRoom]: GetRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:29.729Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$GetRoom
+2026-07-28T20:46:29.729Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest$GetRoom]: GetRoom does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:29.729Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.room.controller.RoomControllerTest]: RoomControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:29.747Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.room.controller.RoomControllerTest$GetRoom
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.421 s -- in GET /api/rooms/{id}
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.976 s -- in com.leroy.hostelbackend.module.room.controller.RoomControllerTest
 [INFO] Running com.leroy.hostelbackend.module.room.service.RoomServiceTest
 [INFO] Running updateRoomStatus and deleteRoom
-2026-07-27T12:50:32.845Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.module.room.service.RoomService    : Room deleted: id=cd7c981f-f4c3-4655-adca-a0d7cff48b69
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.322 s -- in updateRoomStatus and deleteRoom
+2026-07-28T20:46:30.770Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.module.room.service.RoomService    : Room deleted: id=223b60c2-c754-4b24-be52-421d6ccfed5d
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.624 s -- in updateRoomStatus and deleteRoom
 [INFO] Running recalculateRoomStatus
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in recalculateRoomStatus
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.030 s -- in recalculateRoomStatus
 [INFO] Running amenity management
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in amenity management
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s -- in amenity management
 [INFO] Running updateRoom
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 s -- in updateRoom
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.074 s -- in updateRoom
 [INFO] Running createRoom
-2026-07-27T12:50:32.933Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.module.room.service.RoomService    : Room created: id=null, number=A-101, hostel=64013f90-1ec4-4f78-8613-d1c3456ad4fe
-2026-07-27T12:50:32.939Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.module.room.service.RoomService    : Room created: id=null, number=A-101, hostel=4a4a7b35-461f-483d-b66b-4b45118423ec
-2026-07-27T12:50:32.949Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.module.room.service.RoomService    : Room created: id=null, number=A-101, hostel=49ef9e4a-a5ed-45c5-bd0b-cfb3fb7ad525
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 s -- in createRoom
-[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.430 s -- in com.leroy.hostelbackend.module.room.service.RoomServiceTest
+2026-07-28T20:46:31.076Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.module.room.service.RoomService    : Room created: id=null, number=A-101, hostel=ec1e2a32-d2da-478d-bcc3-b8d13563b96a
+2026-07-28T20:46:31.097Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.module.room.service.RoomService    : Room created: id=null, number=A-101, hostel=ed0a9145-c7a5-4cdd-9521-3d90a34b2ea6
+2026-07-28T20:46:31.107Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.module.room.service.RoomService    : Room created: id=null, number=A-101, hostel=499a554a-1ce6-4068-a792-3f11e0f33c4a
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.149 s -- in createRoom
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.955 s -- in com.leroy.hostelbackend.module.room.service.RoomServiceTest
 [INFO] Running com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest
-2026-07-27T12:50:32.958Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:33.114Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest
-2026-07-27T12:50:33.116Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:33.127Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest
+2026-07-28T20:46:31.121Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:31.425Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest
+2026-07-28T20:46:31.429Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:31.449Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest
 [INFO] Running GET /api/waitlists/status/{hostelId}
-2026-07-27T12:50:33.133Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetStatus]: GetStatus does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:33.145Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetStatus
-2026-07-27T12:50:33.147Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetStatus]: GetStatus does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:33.148Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:33.159Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetStatus
+2026-07-28T20:46:31.462Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetStatus]: GetStatus does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:31.488Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetStatus
+2026-07-28T20:46:31.492Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetStatus]: GetStatus does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:31.494Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:31.511Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetStatus
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -749,93 +768,93 @@ Caused by: java.net.UnknownHostException: postgres
 
  :: Spring Boot ::                (v4.0.6)
 
-2026-07-27T12:50:33.222Z  INFO 33240 --- [HOSTELBOOKING] [           main] h.m.w.c.WaitlistControllerTest$GetStatus : Starting WaitlistControllerTest.GetStatus using Java 25.0.1 with PID 33240 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
-2026-07-27T12:50:33.222Z  INFO 33240 --- [HOSTELBOOKING] [           main] h.m.w.c.WaitlistControllerTest$GetStatus : The following 1 profile is active: "dev"
+2026-07-28T20:46:31.695Z  INFO 26256 --- [HOSTELBOOKING] [           main] h.m.w.c.WaitlistControllerTest$GetStatus : Starting WaitlistControllerTest.GetStatus using Java 25.0.1 with PID 26256 (started by Evans Kojo Aidoo in C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend)
+2026-07-28T20:46:31.696Z  INFO 26256 --- [HOSTELBOOKING] [           main] h.m.w.c.WaitlistControllerTest$GetStatus : The following 1 profile is active: "dev"
 === Custom ObjectMapper Bean Created with ISO-8601 string format ===
-2026-07-27T12:50:34.175Z  INFO 33240 --- [HOSTELBOOKING] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-07-27T12:50:34.176Z  INFO 33240 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-07-27T12:50:34.176Z  INFO 33240 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
-2026-07-27T12:50:34.199Z  INFO 33240 --- [HOSTELBOOKING] [           main] h.m.w.c.WaitlistControllerTest$GetStatus : Started WaitlistControllerTest.GetStatus in 1.026 seconds (process running for 37.782)
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.128 s -- in GET /api/waitlists/status/{hostelId}
+2026-07-28T20:46:33.508Z  INFO 26256 --- [HOSTELBOOKING] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-28T20:46:33.510Z  INFO 26256 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-28T20:46:33.511Z  INFO 26256 --- [HOSTELBOOKING] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-07-28T20:46:33.561Z  INFO 26256 --- [HOSTELBOOKING] [           main] h.m.w.c.WaitlistControllerTest$GetStatus : Started WaitlistControllerTest.GetStatus in 2.009 seconds (process running for 70.147)
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.234 s -- in GET /api/waitlists/status/{hostelId}
 [INFO] Running DELETE /api/waitlists/{hostelId}
-2026-07-27T12:50:34.263Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$LeaveWaitlist]: LeaveWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.276Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$LeaveWaitlist
-2026-07-27T12:50:34.278Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$LeaveWaitlist]: LeaveWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.279Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.290Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$LeaveWaitlist
-2026-07-27T12:50:34.398Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.171 s -- in DELETE /api/waitlists/{hostelId}
+2026-07-28T20:46:33.700Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$LeaveWaitlist]: LeaveWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:33.720Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$LeaveWaitlist
+2026-07-28T20:46:33.724Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$LeaveWaitlist]: LeaveWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:33.726Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:33.745Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$LeaveWaitlist
+2026-07-28T20:46:34.115Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.495 s -- in DELETE /api/waitlists/{hostelId}
 [INFO] Running POST /api/waitlists
-2026-07-27T12:50:34.436Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$JoinWaitlist]: JoinWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.447Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$JoinWaitlist
-2026-07-27T12:50:34.449Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$JoinWaitlist]: JoinWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.449Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.459Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$JoinWaitlist
-2026-07-27T12:50:34.600Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.232 s -- in POST /api/waitlists
+2026-07-28T20:46:34.198Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$JoinWaitlist]: JoinWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:34.220Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$JoinWaitlist
+2026-07-28T20:46:34.221Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$JoinWaitlist]: JoinWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:34.223Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:34.241Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$JoinWaitlist
+2026-07-28T20:46:34.508Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.512 s -- in POST /api/waitlists
 [INFO] Running GET /api/hostels/{hostelId}/waitlist-periods
-2026-07-27T12:50:34.671Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetWaitlistPeriods]: GetWaitlistPeriods does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.679Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetWaitlistPeriods
-2026-07-27T12:50:34.680Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetWaitlistPeriods]: GetWaitlistPeriods does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.681Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.690Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetWaitlistPeriods
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.105 s -- in GET /api/hostels/{hostelId}/waitlist-periods
+2026-07-28T20:46:34.715Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetWaitlistPeriods]: GetWaitlistPeriods does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:34.743Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetWaitlistPeriods
+2026-07-28T20:46:34.745Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetWaitlistPeriods]: GetWaitlistPeriods does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:34.745Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:34.763Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$GetWaitlistPeriods
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.394 s -- in GET /api/hostels/{hostelId}/waitlist-periods
 [INFO] Running GET /api/manager/hostels/{hostelId}/waitlist
-2026-07-27T12:50:34.774Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$HostelWaitlist]: HostelWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.781Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$HostelWaitlist
-2026-07-27T12:50:34.782Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$HostelWaitlist]: HostelWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.782Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.788Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$HostelWaitlist
-2026-07-27T12:50:34.812Z  WARN 33240 --- [HOSTELBOOKING] [           main] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+2026-07-28T20:46:35.109Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$HostelWaitlist]: HostelWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:35.132Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$HostelWaitlist
+2026-07-28T20:46:35.135Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$HostelWaitlist]: HostelWaitlist does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:35.135Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:35.157Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$HostelWaitlist
+2026-07-28T20:46:35.260Z  WARN 26256 --- [HOSTELBOOKING] [           main] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
 	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
 	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
 
-2026-07-27T12:50:34.843Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.085 s -- in GET /api/manager/hostels/{hostelId}/waitlist
+2026-07-28T20:46:35.380Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.341 s -- in GET /api/manager/hostels/{hostelId}/waitlist
 [INFO] Running DELETE /api/manager/waitlists/{waitlistId}
-2026-07-27T12:50:34.861Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$ManagerRemove]: ManagerRemove does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.868Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$ManagerRemove
-2026-07-27T12:50:34.869Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$ManagerRemove]: ManagerRemove does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.869Z  INFO 33240 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-27T12:50:34.874Z  INFO 33240 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$ManagerRemove
-2026-07-27T12:50:34.954Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.120 s -- in DELETE /api/manager/waitlists/{waitlistId}
-[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.036 s -- in com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest
+2026-07-28T20:46:35.455Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$ManagerRemove]: ManagerRemove does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:35.480Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$ManagerRemove
+2026-07-28T20:46:35.482Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$ManagerRemove]: ManagerRemove does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:35.483Z  INFO 26256 --- [HOSTELBOOKING] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest]: WaitlistControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T20:46:35.504Z  INFO 26256 --- [HOSTELBOOKING] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.leroy.hostelbackend.HostelBackendApplication for test class com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest$ManagerRemove
+2026-07-28T20:46:35.698Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.e.GlobalExceptionHandler         : Access denied: Access Denied
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.329 s -- in DELETE /api/manager/waitlists/{waitlistId}
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.695 s -- in com.leroy.hostelbackend.module.waitlist.controller.WaitlistControllerTest
 [INFO] Running com.leroy.hostelbackend.module.waitlist.service.WaitlistServiceTest
 [INFO] Running joinWaitlist
-2026-07-27T12:50:35.255Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : Student 6fbc2db3-20c0-4174-8fdc-cb18cf2c4c45 joined waitlist for hostel 8f17f182-8663-42e3-bcea-f8e2de628621 [SINGLE 2026/2027 FIRST] at position 4
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.264 s -- in joinWaitlist
+2026-07-28T20:46:36.391Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : Student ce0d930b-3cfc-4d87-8a69-b4ed72ef4e3e joined waitlist for hostel c3fac356-b0ab-4afd-83f5-00c54d0313a1 [SINGLE 2026/2027 FIRST] at position 4
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.587 s -- in joinWaitlist
 [INFO] Running leaveWaitlist
-2026-07-27T12:50:35.268Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : Student 7dabf3bd-755d-4991-aee8-9b332c7a8412 left waitlist for hostel 2ea4fb12-9533-4410-9723-16274a49355e [SINGLE 2026/2027 FIRST]
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in leaveWaitlist
+2026-07-28T20:46:36.435Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : Student 3b8bdb67-9823-4bd6-9a11-9c581e946937 left waitlist for hostel 8a97b6a5-9f0b-404c-85e3-1ede70ab34b7 [SINGLE 2026/2027 FIRST]
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in leaveWaitlist
 [INFO] Running getWaitlistPeriodsDropdown
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in getWaitlistPeriodsDropdown
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in getWaitlistPeriodsDropdown
 [INFO] Running promoteNextInLine
-2026-07-27T12:50:35.284Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student d033c7b8-8b3a-43f9-94ed-5c3cd1a72a49 ? draft booking null for room A-242 [SINGLE 2026/2027 FIRST]
-2026-07-27T12:50:35.289Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Candidate 08672aaa-32cf-406a-ab57-76c8847d20f3 already has an active booking for room A-225 [2026/2027 FIRST]. Removing entry and trying next candidate.
-2026-07-27T12:50:35.290Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student 29f3df58-abba-4063-b08e-d8d6e85dca3a ? draft booking null for room A-225 [SINGLE 2026/2027 FIRST]
-2026-07-27T12:50:35.297Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Candidate a0ae3860-ca25-439c-a4fc-5f5ce643ad09 already holds a FIRST/SECOND booking for room A-221 in 2026/2027. Cannot draft FULL semester. Trying next candidate.
-2026-07-27T12:50:35.298Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student 5bc0cf21-0408-47bf-849f-defaf3166f8c ? draft booking null for room A-221 [SINGLE 2026/2027 FULL]
-2026-07-27T12:50:35.306Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promotion skipped — room A-536 is RESERVED and cannot accept a draft.
-2026-07-27T12:50:35.311Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student fdc58734-de35-4fe0-b3cb-6b136771dc96 ? draft booking null for room A-790 [SINGLE 2026/2027 FIRST]
-2026-07-27T12:50:35.315Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student 98686164-0b6a-4752-873d-e65d91e806a3 ? draft booking null for room A-746 [SINGLE 2026/2027 FIRST]
-2026-07-27T12:50:35.320Z  WARN 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promotion skipped — room A-709 is UNDER_MAINTENANCE and cannot accept a draft.
-[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.043 s -- in promoteNextInLine
+2026-07-28T20:46:36.480Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student fe8f3ad8-bcd4-47a3-8c58-b330fa47b750 ? draft booking null for room A-209 [SINGLE 2026/2027 FIRST]
+2026-07-28T20:46:36.494Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Candidate 6a7291f3-586e-4bbd-8587-aadae7802aed already has an active booking for room A-301 [2026/2027 FIRST]. Removing entry and trying next candidate.
+2026-07-28T20:46:36.496Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student 47796968-1b1d-4fa7-8644-2701cbcd0e50 ? draft booking null for room A-301 [SINGLE 2026/2027 FIRST]
+2026-07-28T20:46:36.509Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Candidate 4f1110ba-a47c-47f6-bdae-d449be97d38e already holds a FIRST/SECOND booking for room A-216 in 2026/2027. Cannot draft FULL semester. Trying next candidate.
+2026-07-28T20:46:36.510Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student 15d4ff39-77bb-4b56-8647-6a68806bd5a2 ? draft booking null for room A-216 [SINGLE 2026/2027 FULL]
+2026-07-28T20:46:36.601Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promotion skipped — room A-445 is RESERVED and cannot accept a draft.
+2026-07-28T20:46:36.612Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student 71130630-7305-47ec-b5cd-2ae1fc8458a1 ? draft booking null for room A-552 [SINGLE 2026/2027 FIRST]
+2026-07-28T20:46:36.628Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promoted student 6bafa71f-cf23-476a-a3f2-fab3248a05a6 ? draft booking null for room A-948 [SINGLE 2026/2027 FIRST]
+2026-07-28T20:46:36.637Z  WARN 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [WAITLIST] Promotion skipped — room A-819 is UNDER_MAINTENANCE and cannot accept a draft.
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.171 s -- in promoteNextInLine
 [INFO] Running managerRemoveEntry
-2026-07-27T12:50:35.325Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [MANAGER] Waitlist entry 859efc8c-a1fe-4546-8cd2-1d9b5561ea9d removed
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in managerRemoveEntry
-[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.336 s -- in com.leroy.hostelbackend.module.waitlist.service.WaitlistServiceTest
+2026-07-28T20:46:36.648Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.m.w.service.WaitlistService        : [MANAGER] Waitlist entry 4228ceeb-6794-4f0e-863f-876b9d17c274 removed
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in managerRemoveEntry
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.845 s -- in com.leroy.hostelbackend.module.waitlist.service.WaitlistServiceTest
 [INFO] Running com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest
-2026-07-27T12:50:35.335Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 1 expired APPROVED booking(s) to process.
-2026-07-27T12:50:35.335Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] APPROVED sweep complete — expired: 1, failed: 0
-2026-07-27T12:50:35.335Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 1 expired waitlist draft(s) to process.
-2026-07-27T12:50:35.335Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Waitlist draft sweep complete — expired: 1, failed: 0
+2026-07-28T20:46:36.677Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 1 expired APPROVED booking(s) to process.
+2026-07-28T20:46:36.677Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] APPROVED sweep complete — expired: 1, failed: 0
+2026-07-28T20:46:36.677Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 1 expired waitlist draft(s) to process.
+2026-07-28T20:46:36.678Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Waitlist draft sweep complete — expired: 1, failed: 0
 [INFO] Running sweepExpiredWaitlistDrafts (via sweep())
-2026-07-27T12:50:35.344Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 2 expired waitlist draft(s) to process.
-2026-07-27T12:50:35.345Z ERROR 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Failed to expire waitlist draft 010b8e29-68bd-4312-b868-327dd67ad379: simulated failure
+2026-07-28T20:46:36.692Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 2 expired waitlist draft(s) to process.
+2026-07-28T20:46:36.694Z ERROR 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Failed to expire waitlist draft b9034138-f1e7-416c-9012-0375b6619648: simulated failure
 
 java.lang.IllegalStateException: simulated failure
-	at com.leroy.hostelbackend.module.booking.service.BookingService.expireWaitlistDraft(BookingService.java:543) ~[classes/:na]
+	at com.leroy.hostelbackend.module.booking.service.BookingService.expireWaitlistDraft(BookingService.java:557) ~[classes/:na]
 	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweepExpiredWaitlistDrafts(BookingExpiredSweeper.java:133) ~[classes/:na]
 	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweep(BookingExpiredSweeper.java:68) ~[classes/:na]
 	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest$SweepExpiredWaitlistDrafts.isolatesFailuresBetweenDrafts(BookingExpiredSweeperTest.java:164) ~[test-classes/:na]
@@ -931,24 +950,24 @@ java.lang.IllegalStateException: simulated failure
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.5.5.jar:3.5.5]
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.5.5.jar:3.5.5]
 
-2026-07-27T12:50:35.348Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Waitlist draft sweep complete — expired: 1, failed: 1
-2026-07-27T12:50:35.352Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 2 expired waitlist draft(s) to process.
-2026-07-27T12:50:35.352Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Waitlist draft sweep complete — expired: 2, failed: 0
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in sweepExpiredWaitlistDrafts (via sweep())
+2026-07-28T20:46:36.696Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Waitlist draft sweep complete — expired: 1, failed: 1
+2026-07-28T20:46:36.706Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 2 expired waitlist draft(s) to process.
+2026-07-28T20:46:36.706Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Waitlist draft sweep complete — expired: 2, failed: 0
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in sweepExpiredWaitlistDrafts (via sweep())
 [INFO] Running sweepExpiredApprovedBookings (via sweep())
-2026-07-27T12:50:35.370Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 2 expired APPROVED booking(s) to process.
-2026-07-27T12:50:35.371Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] APPROVED sweep complete — expired: 2, failed: 0
-2026-07-27T12:50:35.380Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 3 expired APPROVED booking(s) to process.
-2026-07-27T12:50:35.404Z ERROR 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Failed to expire APPROVED booking bc0d2eaa-1202-4e72-a2bd-cd7e0d26f32e: 
+2026-07-28T20:46:36.734Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 2 expired APPROVED booking(s) to process.
+2026-07-28T20:46:36.738Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] APPROVED sweep complete — expired: 2, failed: 0
+2026-07-28T20:46:36.746Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Found 3 expired APPROVED booking(s) to process.
+2026-07-28T20:46:36.748Z ERROR 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Failed to expire APPROVED booking 18925e32-8755-4642-a694-293fe41407c0: 
 Strict stubbing argument mismatch. Please check:
  - this invocation of 'expireApprovedBooking' method:
     bookingService.expireApprovedBooking(
-    com.leroy.hostelbackend.module.booking.model.Booking@e4efe41
+    com.leroy.hostelbackend.module.booking.model.Booking@18d4bad5
 );
     -> at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweepExpiredApprovedBookings(BookingExpiredSweeper.java:95)
  - has following stubbing(s) with different arguments:
     1. bookingService.expireApprovedBooking(
-    com.leroy.hostelbackend.module.booking.model.Booking@59682fa0
+    com.leroy.hostelbackend.module.booking.model.Booking@42ce0fdd
 );
       -> at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest$SweepExpiredApprovedBookings.isolatesFailuresBetweenBookings(BookingExpiredSweeperTest.java:93)
 Typically, stubbing argument mismatch indicates user mistake when writing tests.
@@ -964,12 +983,12 @@ org.mockito.exceptions.misusing.PotentialStubbingProblem:
 Strict stubbing argument mismatch. Please check:
  - this invocation of 'expireApprovedBooking' method:
     bookingService.expireApprovedBooking(
-    com.leroy.hostelbackend.module.booking.model.Booking@e4efe41
+    com.leroy.hostelbackend.module.booking.model.Booking@18d4bad5
 );
     -> at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweepExpiredApprovedBookings(BookingExpiredSweeper.java:95)
  - has following stubbing(s) with different arguments:
     1. bookingService.expireApprovedBooking(
-    com.leroy.hostelbackend.module.booking.model.Booking@59682fa0
+    com.leroy.hostelbackend.module.booking.model.Booking@42ce0fdd
 );
       -> at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest$SweepExpiredApprovedBookings.isolatesFailuresBetweenBookings(BookingExpiredSweeperTest.java:93)
 Typically, stubbing argument mismatch indicates user mistake when writing tests.
@@ -980,7 +999,7 @@ However, there are legit scenarios when this exception generates false negative 
   - stubbed method is intentionally invoked with different arguments by code under test
     Please use default or 'silent' JUnit Rule (equivalent of Strictness.LENIENT).
 For more information see javadoc for PotentialStubbingProblem class.
-	at com.leroy.hostelbackend.module.booking.service.BookingService.expireApprovedBooking(BookingService.java:507) ~[classes/:na]
+	at com.leroy.hostelbackend.module.booking.service.BookingService.expireApprovedBooking(BookingService.java:521) ~[classes/:na]
 	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweepExpiredApprovedBookings(BookingExpiredSweeper.java:95) ~[classes/:na]
 	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweep(BookingExpiredSweeper.java:67) ~[classes/:na]
 	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest$SweepExpiredApprovedBookings.isolatesFailuresBetweenBookings(BookingExpiredSweeperTest.java:95) ~[test-classes/:na]
@@ -1076,10 +1095,10 @@ For more information see javadoc for PotentialStubbingProblem class.
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.5.5.jar:3.5.5]
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.5.5.jar:3.5.5]
 
-2026-07-27T12:50:35.407Z ERROR 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Failed to expire APPROVED booking f8879dfc-49a5-476e-8613-c134cca5a790: simulated DB failure
+2026-07-28T20:46:36.750Z ERROR 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] Failed to expire APPROVED booking 17a19592-9895-40ed-a4c4-a32d2aba3cd6: simulated DB failure
 
 java.lang.RuntimeException: simulated DB failure
-	at com.leroy.hostelbackend.module.booking.service.BookingService.expireApprovedBooking(BookingService.java:507) ~[classes/:na]
+	at com.leroy.hostelbackend.module.booking.service.BookingService.expireApprovedBooking(BookingService.java:521) ~[classes/:na]
 	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweepExpiredApprovedBookings(BookingExpiredSweeper.java:95) ~[classes/:na]
 	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeper.sweep(BookingExpiredSweeper.java:67) ~[classes/:na]
 	at com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest$SweepExpiredApprovedBookings.isolatesFailuresBetweenBookings(BookingExpiredSweeperTest.java:95) ~[test-classes/:na]
@@ -1175,24 +1194,41 @@ java.lang.RuntimeException: simulated DB failure
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.5.5.jar:3.5.5]
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.5.5.jar:3.5.5]
 
-2026-07-27T12:50:35.409Z  INFO 33240 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] APPROVED sweep complete — expired: 1, failed: 2
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 s -- in sweepExpiredApprovedBookings (via sweep())
-[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.082 s -- in com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest
+2026-07-28T20:46:36.758Z  INFO 26256 --- [HOSTELBOOKING] [           main] c.l.h.s.scheduler.BookingExpiredSweeper  : [SWEEPER] APPROVED sweep complete — expired: 1, failed: 2
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 s -- in sweepExpiredApprovedBookings (via sweep())
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.103 s -- in com.leroy.hostelbackend.shared.scheduler.BookingExpiredSweeperTest
 [INFO] 
 [INFO] Results:
 [INFO] 
+[ERROR] Failures: 
+[ERROR]   AuthServiceTest.issuesFifteenMinuteToken 
+Argument(s) are different! Wanted:
+emailService.sendPasswordResetEmail(
+    "lexa.doe@ucc.edu.gh",
+    "Lexa Doe",
+    <any string>
+);
+-> at com.leroy.hostelbackend.module.email.service.EmailService.sendPasswordResetEmail(EmailService.java:85)
+Actual invocations have different arguments at position [1]:
+emailService.sendPasswordResetEmail(
+    "lexa.doe@ucc.edu.gh",
+    "Lexa",
+    "f1ccf71a47f9391c5475bc09df5b3fc4a2a21ae7411acdf7e9bda82e8b75a51a"
+);
+-> at com.leroy.hostelbackend.module.auth.service.AuthService.initiatePasswordReset(AuthService.java:152)
+
 [ERROR] Errors: 
-[ERROR]   HostelBackendApplicationTests.contextLoads » IllegalState Failed to load ApplicationContext for [WebMergedContextConfiguration@69944a90 testClass = com.leroy.hostelbackend.HostelBackendApplicationTests, locations = [], classes = [com.leroy.hostelbackend.HostelBackendApplication], contextInitializerClasses = [], activeProfiles = [], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [org.springframework.boot.test.context.PropertyMappingContextCustomizer@0, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@3359c978, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cda4919, org.springframework.boot.test.autoconfigure.OnFailureConditionReportContextCustomizerFactory$OnFailureConditionReportContextCustomizer@344b8190, org.springframework.test.context.support.DynamicPropertiesContextCustomizer@0, org.springframework.boot.webmvc.test.autoconfigure.WebDriverContextCustomizer@6826c41e, org.springframework.boot.web.server.context.SpringBootTestRandomPortContextCustomizer@1d269ed7, org.springframework.boot.test.context.SpringBootTestAnnotation@b6f9e974], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
+[ERROR]   HostelBackendApplicationTests.contextLoads » IllegalState Failed to load ApplicationContext for [WebMergedContextConfiguration@78e97d4d testClass = com.leroy.hostelbackend.HostelBackendApplicationTests, locations = [], classes = [com.leroy.hostelbackend.HostelBackendApplication], contextInitializerClasses = [], activeProfiles = [], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], contextCustomizers = [org.springframework.boot.test.context.PropertyMappingContextCustomizer@0, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@3359c978, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cda4919, org.springframework.boot.test.autoconfigure.OnFailureConditionReportContextCustomizerFactory$OnFailureConditionReportContextCustomizer@344b8190, org.springframework.test.context.support.DynamicPropertiesContextCustomizer@0, org.springframework.boot.webmvc.test.autoconfigure.WebDriverContextCustomizer@6826c41e, org.springframework.boot.web.server.context.SpringBootTestRandomPortContextCustomizer@1d269ed7, org.springframework.boot.test.context.SpringBootTestAnnotation@b6f9e974], resourceBasePath = "src/main/webapp", contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, parent = null]
 [INFO] 
-[ERROR] Tests run: 231, Failures: 0, Errors: 1, Skipped: 0
+[ERROR] Tests run: 231, Failures: 1, Errors: 1, Skipped: 0
 [INFO] 
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD FAILURE
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  45.043 s
-[INFO] Finished at: 2026-07-27T12:50:35Z
+[INFO] Total time:  01:45 min
+[INFO] Finished at: 2026-07-28T20:46:37Z
 [INFO] ------------------------------------------------------------------------
-[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.5:test (default-test) on project hostel-backend: 
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.5:test (default-test) on project hostel-backend: There are test failures.
 [ERROR] 
 [ERROR] See C:\Users\Evans Kojo Aidoo\Desktop\Hostel-Web-App\hostel-backend\target\surefire-reports for the individual test results.
 [ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.

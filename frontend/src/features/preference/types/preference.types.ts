@@ -72,8 +72,8 @@ export interface RoomMatchSuggestionDto {
     roomType: RoomType;
     /** Number of free beds remaining in this room. */
     bedsAvailable: number;
-    /** Price per semester in Cedis. */
-    pricePerSemester: number;
+    /** Price (per academic year) in Cedis. */
+    price: number;
     /** Room cover image URL. May be empty string if no image uploaded. */
     imageUrl: string;
     /**

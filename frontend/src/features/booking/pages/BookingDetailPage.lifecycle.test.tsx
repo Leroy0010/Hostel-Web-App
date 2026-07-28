@@ -82,7 +82,9 @@ describe('Booking lifecycle (MSW integration)', () => {
         setAuthUser(student);
         renderBookingDetail(queryClient);
 
-        expect(await screen.findByText('Room A12')).toBeInTheDocument();
+        expect(
+            await screen.findByRole('heading', { name: /Room\s*A12/i })
+        ).toBeInTheDocument();
         expect(screen.getByText('Pending')).toBeInTheDocument();
         // Awaiting manager action — student has no actions available yet.
         expect(

@@ -481,10 +481,24 @@ public class BookingService {
      * request. Gates a student's ability to view and vote on that hostel's
      * complaints in {@code ComplaintService#hostelComplaintsForStudent}.
      */
-    public boolean hasOrHadBookingAtHostel(UUID studentId, UUID hostelId) {
+    /**
+     * Returns {@code true} if the student has actually resided at the given
+     * hostel — a booking that reached CHECKED_IN or CHECKED_OUT — as opposed
+     * to only ever holding an APPROVED-but-not-yet-checked-in booking. Gates
+     * a student's ability to view and vote on that hostel's complaints in
+     * {@code ComplaintService#hostelComplaintsForStudent}.
+     *
+     * <p>APPROVED alone is deliberately excluded: a student who has been
+     * approved for a room but not yet checked in has not experienced the
+     * hostel and has no first-hand basis to weigh in on its complaint
+     * history. Reviews (see the review module) already serve that student's
+     * pre-move-in decision-making need; complaint visibility is reserved for
+     * students with actual residency.
+     */
+    public boolean hasResidedAtHostel(UUID studentId, UUID hostelId) {
         return bookingRepository.existsByStudentIdAndStatusInAndRoom_Hostel_Id(
                 studentId,
-                List.of(BookingStatus.APPROVED, BookingStatus.CHECKED_IN, BookingStatus.CHECKED_OUT),
+                List.of(BookingStatus.CHECKED_IN, BookingStatus.CHECKED_OUT),
                 hostelId);
     }
 

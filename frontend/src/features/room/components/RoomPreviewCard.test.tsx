@@ -20,7 +20,7 @@ const room: RoomDisplayDto = {
     roomNumber: 'B04',
     roomType: 'SINGLE',
     capacity: 1,
-    pricePerSemester: 2000,
+    price: 2000,
     floorNumber: 1,
     imageUrl: '',
     availablePeriods: [],

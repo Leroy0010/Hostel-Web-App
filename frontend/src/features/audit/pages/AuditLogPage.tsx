@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ScrollText } from 'lucide-react';
+import { AlertCircle, ScrollText } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Pagination } from '@/components/ui/CustomPagination';
@@ -37,7 +38,7 @@ export default function AuditLogPage() {
     const [page, setPage] = useState(0);
     const [selected, setSelected] = useState<AuditLogDto | null>(null);
 
-    const { data, isLoading, isFetching } = useAuditLogs({
+    const { data, isLoading, isFetching, isError, refetch } = useAuditLogs({
         page,
         size: 20,
         sort: 'createdAt,desc',
@@ -66,6 +67,21 @@ export default function AuditLogPage() {
                         />
                     ))}
                 </div>
+            ) : isError ? (
+                <EmptyState
+                    icon={<AlertCircle className="h-8 w-8 text-gray-400" />}
+                    title="Could not load audit logs"
+                    description="There was a problem fetching audit log data."
+                    action={
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => refetch()}
+                        >
+                            Retry
+                        </Button>
+                    }
+                />
             ) : logs.length === 0 ? (
                 <EmptyState
                     icon={<ScrollText className="h-8 w-8" />}

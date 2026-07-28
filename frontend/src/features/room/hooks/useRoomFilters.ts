@@ -11,7 +11,7 @@ export type RoomTypeFilter = 'ALL' | 'SINGLE' | 'DOUBLE' | 'TRIPLE' | 'QUAD';
  */
 export interface RoomFilterValues {
     roomType: RoomTypeFilter;
-    /** Max price per semester as a string (from the number input). Empty string = no filter. */
+    /** Max price as a string (from the number input). Empty string = no filter. */
     maxPrice: string;
 }
 
@@ -65,7 +65,7 @@ export function useRoomFilters(pageSize = 12) {
         maxPrice: debouncedMaxPrice ? Number(debouncedMaxPrice) : undefined,
         page,
         size: pageSize,
-        sort: 'pricePerSemester,asc',
+        sort: 'price,asc',
     };
 
     return { filters, page, setFilters, setPage, apiParams };

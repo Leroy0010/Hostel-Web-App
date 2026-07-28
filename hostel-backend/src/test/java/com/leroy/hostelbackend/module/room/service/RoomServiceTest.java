@@ -211,7 +211,7 @@ class RoomServiceTest {
             roomService.updateRoom(room.getId(), priceOnly, actorId);
 
             assertThat(room.getRoomNumber()).isEqualTo("A-101"); // unchanged
-            assertThat(room.getPricePerSemester()).isEqualByComparingTo("1800.00");
+            assertThat(room.getPrice()).isEqualByComparingTo("1800.00");
         }
 
         @Test

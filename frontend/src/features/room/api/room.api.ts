@@ -44,7 +44,7 @@ export function fetchAvailableRooms(
             ...(params.maxPrice && { maxPrice: params.maxPrice }),
             page: params.page ?? 0,
             size: params.size ?? 12,
-            sort: 'pricePerSemester,asc',
+            sort: 'price,asc',
         },
     });
 }
@@ -61,7 +61,7 @@ export function fetchRoomPreview(
     hostelId: string
 ): Promise<PageResponse<RoomSummaryDto>> {
     return apiClient.get(`/hostels/${hostelId}/rooms`, {
-        params: { page: 0, size: 6, sort: 'pricePerSemester,asc' },
+        params: { page: 0, size: 6, sort: 'price,asc' },
     });
 }
 
@@ -207,15 +207,14 @@ export function deleteAmenity(amenityId: string): Promise<void> {
     return apiClient.delete(`/manager/amenities/${amenityId}`);
 }
 
-
-export function getStudentActiveRoomsByHostelId(hostelId: string): Promise<RoomSummaryDto[]> {
-    return apiClient.get(`/student/hostels/${hostelId}/rooms`)
+export function getStudentActiveRoomsByHostelId(
+    hostelId: string
+): Promise<RoomSummaryDto[]> {
+    return apiClient.get(`/student/hostels/${hostelId}/rooms`);
 }
 
 export function getRoomAvailbalePeriods(
     roomId: string
 ): Promise<AvailablePeriodDto[]> {
-    return apiClient.get(
-        `/rooms/${roomId}/available-periods`
-    );
+    return apiClient.get(`/rooms/${roomId}/available-periods`);
 }

@@ -56,7 +56,7 @@ public interface RoomMapper {
         return new RoomDto(
                 dto.id(), dto.hostelId(), dto.hostelName(), dto.roomNumber(),
                 dto.roomType(), dto.capacity(), dto.currentOccupancy(), beds,
-                dto.pricePerSemester(), dto.status(), dto.floorNumber(), dto.imageUrl(),
+                dto.price(), dto.status(), dto.floorNumber(), dto.imageUrl(),
                 dto.amenities(), dto.createdAt(), dto.updatedAt()
         );
     }
@@ -66,7 +66,7 @@ public interface RoomMapper {
         short beds = (short) (room.getCapacity() - room.getCurrentOccupancy());
         return new RoomSummaryDto(
                 dto.id(), dto.roomNumber(), dto.roomType(), dto.capacity(),
-                dto.currentOccupancy(), beds, dto.pricePerSemester(),
+                dto.currentOccupancy(), beds, dto.price(),
                 dto.status(), dto.floorNumber(), dto.imageUrl()
         );
     }

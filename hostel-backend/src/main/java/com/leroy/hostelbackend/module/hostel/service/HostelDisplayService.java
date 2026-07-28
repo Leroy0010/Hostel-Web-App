@@ -88,11 +88,11 @@ public class HostelDisplayService {
         String yPlus1 = (currentYear + 1) + "/" + (currentYear + 2);
 
         // Safe conversion of incoming room pageable properties
-        String sortBy = "pricePerSemester";
+        String sortBy = "price";
         String sortOrder = "ASC";
         if (pageable.getSort().isSorted()) {
             var order = pageable.getSort().iterator().next();
-            sortBy = order.getProperty().equalsIgnoreCase("roomNumber") ? "roomNumber" : "pricePerSemester";
+            sortBy = order.getProperty().equalsIgnoreCase("roomNumber") ? "roomNumber" : "price";
             sortOrder = order.isAscending() ? "ASC" : "DESC";
         }
 
@@ -140,7 +140,7 @@ public class HostelDisplayService {
 
             roomMap.computeIfAbsent(roomId, k -> new RoomDisplayDto(
                     roomId, row.getRoomNumber(), row.getRoomType(),
-                    row.getCapacity(), row.getPricePerSemester(),
+                    row.getCapacity(), row.getPrice(),
                     row.getFloorNumber(), row.getRoomImageUrl(), new ArrayList<>()
             ));
 
@@ -188,7 +188,7 @@ public class HostelDisplayService {
 
                 roomsInHostel.computeIfAbsent(roomId, k -> new RoomDisplayDto(
                         roomId, row.getRoomNumber(), row.getRoomType(),
-                        row.getCapacity(), row.getPricePerSemester(),
+                        row.getCapacity(), row.getPrice(),
                         row.getFloorNumber(), row.getRoomImageUrl(), new ArrayList<>()
                 ));
 

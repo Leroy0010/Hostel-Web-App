@@ -39,7 +39,7 @@ interface RoomMatchCardProps {
  * **Layout:**
  * ```
  * ┌─────────────────────────────────────────────────────────┐
- * │ [Room thumbnail]  Room #  ·  Type      Price / semester │ ›
+ * │ [Room thumbnail]  Room #  ·  Type      Price          │ ›
  * │                   Beds available · Occupants            │
  * │                   [Matching tag chips…]                  │
  * │                   "N shared interests"                   │
@@ -133,10 +133,7 @@ export function RoomMatchCard({
                             </p>
                         </div>
                         <p className="shrink-0 text-sm font-bold text-gray-900 dark:text-gray-100">
-                            {formatPrice(suggestion.pricePerSemester)}
-                            {/* <span className="ml-0.5 text-xs font-normal text-gray-400">
-                                /sem
-                            </span> */}
+                            {formatPrice(suggestion.price)}
                         </p>
                     </div>
 

@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-rename-room-price-per-semester-to-price
+      author: Leroy
+      comment: >
+        HostelLife+ hostels are overwhelmingly booked for a full academic
+        year, not per semester (semester-only bookings are the exception,
+        priced by the manager as a fraction of the full-year rate rather
+        than a separately stored figure). The column name price_per_semester
+        was therefore misleading — this renames it to price, understood as
+        the full academic-year price, without changing its meaning for FULL
+        bookings or any stored values.
+      changes:
+        - renameColumn:
+            tableName: rooms
+            oldColumnName: price_per_semester
+            newColumnName: price
+            columnDataType: DECIMAL(10,2)

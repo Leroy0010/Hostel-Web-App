@@ -11,7 +11,7 @@ public record RoomDisplayDto(
         String roomNumber,
         String roomType,
         Short capacity,
-        BigDecimal pricePerSemester,
+        BigDecimal price,
         Short floorNumber,
         String imageUrl,
         List<AvailablePeriodDto> availablePeriods

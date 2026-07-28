@@ -30,7 +30,7 @@ const baseRoom: RoomDto = {
     capacity: 2,
     currentOccupancy: 1,
     bedsAvailable: 1,
-    pricePerSemester: 1500.0,
+    price: 1500.0,
     status: 'AVAILABLE',
     floorNumber: 3,
     imageUrl: 'https://example.com/existing.jpg',
@@ -119,7 +119,7 @@ describe('UpdateRoomForm', () => {
 
         await waitFor(() => expect(mockUpdateDetails).toHaveBeenCalledTimes(1));
         expect(mockUpdateDetails.mock.calls[0][0]).toEqual({
-            pricePerSemester: 1750,
+            price: 1750,
         });
     });
 

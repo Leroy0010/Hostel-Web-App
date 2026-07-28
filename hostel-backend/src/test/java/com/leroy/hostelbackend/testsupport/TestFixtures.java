@@ -89,7 +89,7 @@ public final class TestFixtures {
         room.setRoomType(roomType);
         room.setCapacity((short) capacity);
         room.setCurrentOccupancy((short) currentOccupancy);
-        room.setPricePerSemester(new BigDecimal("1500.00"));
+        room.setPrice(new BigDecimal("1500.00"));
         room.setStatus(RoomStatus.AVAILABLE);
         room.setVersion(0);
         return room;

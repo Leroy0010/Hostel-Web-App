@@ -27,7 +27,7 @@ public interface HostelDetailFlatProjection {
     String getRoomNumber();
     String getRoomType();
     Short getCapacity();
-    BigDecimal getPricePerSemester();
+    BigDecimal getPrice();
     Short getFloorNumber();
     String getRoomImageUrl();
     String getAcademicYear();

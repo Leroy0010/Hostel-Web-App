@@ -31,7 +31,7 @@ import java.util.UUID;
  * @param roomNumber       display room number
  * @param roomType         SINGLE | DOUBLE | TRIPLE | QUAD | DORMITORY
  * @param bedsAvailable    remaining free beds
- * @param pricePerSemester room price
+ * @param price room price
  * @param imageUrl         room cover image
  * @param matchingTags     tags shared between the student and at least one occupant
  * @param occupantCount    how many students currently live in this room
@@ -42,7 +42,7 @@ public record RoomMatchSuggestionDto(
         String roomNumber,
         RoomType roomType,
         short  bedsAvailable,
-        BigDecimal pricePerSemester,
+        BigDecimal price,
         String imageUrl,
         List<PreferenceTag> matchingTags,
         int occupantCount,

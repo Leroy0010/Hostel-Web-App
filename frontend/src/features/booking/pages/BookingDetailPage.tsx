@@ -13,6 +13,7 @@ import {
     ListOrdered,
     LogIn,
     LogOut,
+    MessageSquareWarning,
     Phone,
     Star,
     User,
@@ -195,6 +196,14 @@ export default function BookingDetailPage() {
     // Review — student who has checked in
     const canLeaveReview = isStudent && booking.status === 'CHECKED_IN';
 
+    // Hostel complaints — student who has actually resided here (matches the
+    // backend's hasResidedAtHostel rule). APPROVED-but-not-checked-in students
+    // don't qualify: reviews already serve their pre-move-in decision-making
+    // need, and they have no first-hand basis to weigh in on complaints yet.
+    const canViewHostelComplaints =
+        isStudent &&
+        (booking.status === 'CHECKED_IN' || booking.status === 'CHECKED_OUT');
+
     const hasAnyAction =
         canStudentCancel ||
         canSubmitPayment ||
@@ -237,9 +246,9 @@ export default function BookingDetailPage() {
                                     </span>
                                 </div>
                                 <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                                    <span className="hidden sm:inline">
+                                    <span className="hidden sm:mr-1 sm:inline">
                                         Room
-                                    </span>{' '}
+                                    </span>
                                     {booking.room.roomNumber}
                                 </h1>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -267,6 +276,25 @@ export default function BookingDetailPage() {
                                             aria-hidden="true"
                                         />
                                         Leave a Review
+                                    </Button>
+                                )}
+
+                                {canViewHostelComplaints && (
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() =>
+                                            navigate(
+                                                `/student/hostels/${hostelId}/complaints`
+                                            )
+                                        }
+                                        className="mt-2 gap-1.5 border-gray-200 text-gray-600 hover:bg-gray-100 sm:mt-0 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-800"
+                                    >
+                                        <MessageSquareWarning
+                                            className="h-3.5 w-3.5"
+                                            aria-hidden="true"
+                                        />
+                                        Hostel Complaints
                                     </Button>
                                 )}
                             </div>

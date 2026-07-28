@@ -19,7 +19,7 @@ describe('useRoomFilters', () => {
             maxPrice: undefined,
             page: 0,
             size: 12,
-            sort: 'pricePerSemester,asc',
+            sort: 'price,asc',
         });
     });
 

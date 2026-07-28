@@ -147,7 +147,7 @@ describe('CreateRoomForm', () => {
             roomNumber: 'A-101',
             roomType: 'DOUBLE',
             capacity: 2,
-            pricePerSemester: 1500,
+            price: 1500,
             imageUrl: 'https://example.com/room.jpg',
             amenities: [{ amenity: 'Air Conditioning' }],
         });

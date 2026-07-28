@@ -217,7 +217,7 @@ public class PreferenceService {
                     room.getRoomNumber(),
                     room.getRoomType(),
                     bedsAvailable,
-                    room.getPricePerSemester(),
+                    room.getPrice(),
                     room.getImageUrl(),
                     new ArrayList<>(matchingTags).stream().sorted().toList(),
                     occupants.size(),

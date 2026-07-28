@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, Sparkles, Tag, Users } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Sparkles, Tag, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     Select,
@@ -125,6 +125,8 @@ export default function StudentPreferencePage() {
         data: matchResult,
         isLoading: isLoadingMatches,
         isFetching: isFetchingMatches,
+        isError: isMatchError,
+        refetch: refetchMatches,
     } = useRoomMatches(selectedHostelId);
 
     return (
@@ -298,65 +300,99 @@ export default function StudentPreferencePage() {
                         </motion.div>
                     )}
 
-                    {/* Results */}
-                    {selectedHostelId && !isLoadingMatches && matchResult && (
+                    {/* Error — distinct from "no matches found": something actually
+                        went wrong fetching matches, not just an empty result set. */}
+                    {selectedHostelId && !isLoadingMatches && isMatchError && (
                         <motion.div
-                            key="results"
+                            key="error"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className={`space-y-3 transition-opacity duration-200 ${isFetchingMatches ? 'opacity-60' : 'opacity-100'}`}
                         >
-                            {/* Student's own tags — context for the results */}
-                            {matchResult.myTags.length > 0 && (
-                                <div className="flex flex-wrap items-center gap-1.5 rounded-lg bg-gray-50 px-3 py-2.5 dark:bg-gray-900">
-                                    <span className="mr-1 text-xs text-gray-400 dark:text-gray-500">
-                                        Matching on:
-                                    </span>
-                                    {matchResult.myTags.map((tag) => (
-                                        <PreferenceTagBadge
-                                            key={tag}
-                                            tag={tag}
-                                            size="sm"
-                                        />
-                                    ))}
-                                </div>
-                            )}
-
-                            {/* Suggestions */}
-                            {matchResult.suggestions.length === 0 ? (
-                                <EmptyState
-                                    icon={
-                                        <Users className="h-8 w-8 text-gray-400" />
-                                    }
-                                    title="No compatible rooms found"
-                                    description={
-                                        matchResult.myTags.length === 0
-                                            ? 'Add lifestyle tags above and save them — then try again.'
-                                            : 'No current occupants in this hostel share your lifestyle tags yet. Check back as more students book in.'
-                                    }
-                                />
-                            ) : (
-                                <>
-                                    <p className="text-xs text-gray-400 dark:text-gray-500">
-                                        {matchResult.suggestions.length} room
-                                        {matchResult.suggestions.length !== 1
-                                            ? 's'
-                                            : ''}{' '}
-                                        found — sorted by best lifestyle match
-                                    </p>
-                                    {matchResult.suggestions.map((s, i) => (
-                                        <RoomMatchCard
-                                            key={s.roomId}
-                                            suggestion={s}
-                                            hostelId={selectedHostelId}
-                                            rank={i + 1}
-                                        />
-                                    ))}
-                                </>
-                            )}
+                            <EmptyState
+                                icon={
+                                    <AlertCircle className="h-8 w-8 text-gray-400" />
+                                }
+                                title="Could not load roommate matches"
+                                description="There was a problem fetching suggestions for this hostel."
+                                action={
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => refetchMatches()}
+                                    >
+                                        Retry
+                                    </Button>
+                                }
+                            />
                         </motion.div>
                     )}
+
+                    {/* Results */}
+                    {selectedHostelId &&
+                        !isLoadingMatches &&
+                        !isMatchError &&
+                        matchResult && (
+                            <motion.div
+                                key="results"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className={`space-y-3 transition-opacity duration-200 ${isFetchingMatches ? 'opacity-60' : 'opacity-100'}`}
+                            >
+                                {/* Student's own tags — context for the results */}
+                                {matchResult.myTags.length > 0 && (
+                                    <div className="flex flex-wrap items-center gap-1.5 rounded-lg bg-gray-50 px-3 py-2.5 dark:bg-gray-900">
+                                        <span className="mr-1 text-xs text-gray-400 dark:text-gray-500">
+                                            Matching on:
+                                        </span>
+                                        {matchResult.myTags.map((tag) => (
+                                            <PreferenceTagBadge
+                                                key={tag}
+                                                tag={tag}
+                                                size="sm"
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Suggestions */}
+                                {matchResult.suggestions.length === 0 ? (
+                                    <EmptyState
+                                        icon={
+                                            <Users className="h-8 w-8 text-gray-400" />
+                                        }
+                                        title="No compatible rooms found"
+                                        description={
+                                            matchResult.myTags.length === 0
+                                                ? 'Add lifestyle tags above and save them — then try again.'
+                                                : 'No current occupants in this hostel share your lifestyle tags yet. Check back as more students book in.'
+                                        }
+                                    />
+                                ) : (
+                                    <>
+                                        <p className="text-xs text-gray-400 dark:text-gray-500">
+                                            {matchResult.suggestions.length}{' '}
+                                            room
+                                            {matchResult.suggestions.length !==
+                                            1
+                                                ? 's'
+                                                : ''}{' '}
+                                            found — sorted by best lifestyle
+                                            match
+                                        </p>
+                                        {matchResult.suggestions.map((s, i) => (
+                                            <RoomMatchCard
+                                                key={s.roomId}
+                                                suggestion={s}
+                                                hostelId={selectedHostelId}
+                                                rank={i + 1}
+                                            />
+                                        ))}
+                                    </>
+                                )}
+                            </motion.div>
+                        )}
                 </AnimatePresence>
             </motion.section>
         </motion.div>

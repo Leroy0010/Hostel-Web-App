@@ -107,7 +107,7 @@ public interface HostelRepository extends JpaRepository<Hostel, UUID>, JpaSpecif
                         WHEN vp.semester = 'FULL' THEN rpo.occupancy_full
                     END, 0) < r.capacity
                   AND (cast(:roomType as text) IS NULL OR r.room_type = cast(:roomType as text))
-                  AND (cast(:maxPrice as numeric) IS NULL OR r.price_per_semester <= cast(:maxPrice as numeric))
+                  AND (cast(:maxPrice as numeric) IS NULL OR r.price <= cast(:maxPrice as numeric))
             )
             SELECT COUNT(DISTINCT h.id)
             FROM hostels h
@@ -165,7 +165,7 @@ public interface HostelRepository extends JpaRepository<Hostel, UUID>, JpaSpecif
                         WHEN vp.semester = 'FULL' THEN rpo.occupancy_full
                     END, 0) < r.capacity
                   AND (cast(:roomType as text) IS NULL OR r.room_type = cast(:roomType as text))
-                  AND (cast(:maxPrice as numeric) IS NULL OR r.price_per_semester <= cast(:maxPrice as numeric))
+                  AND (cast(:maxPrice as numeric) IS NULL OR r.price <= cast(:maxPrice as numeric))
             ),
             MatchedHostels AS (
                 SELECT DISTINCT h.id, h.name, h.address, h.gender_policy, h.image_url, h.is_active
@@ -187,14 +187,14 @@ public interface HostelRepository extends JpaRepository<Hostel, UUID>, JpaSpecif
             ),
             RankedRooms AS (
                 SELECT room_id, hostel_id,
-                       ROW_NUMBER() OVER (PARTITION BY hostel_id ORDER BY price_per_semester ASC, room_id ASC) as rn
-                FROM (SELECT DISTINCT id AS room_id, hostel_id, price_per_semester FROM RoomAvailability) distinct_rooms
+                       ROW_NUMBER() OVER (PARTITION BY hostel_id ORDER BY price ASC, room_id ASC) as rn
+                FROM (SELECT DISTINCT id AS room_id, hostel_id, price FROM RoomAvailability) distinct_rooms
             )
             SELECT 
                 h.id AS hostelId, h.name AS hostelName, h.address AS hostelAddress, 
                 h.gender_policy AS hostelGenderPolicy, h.image_url AS hostelImageUrl, h.is_active AS hostelIsActive,
                 ra.id AS roomId, ra.room_number AS roomNumber, ra.room_type AS roomType, 
-                ra.capacity AS capacity, ra.price_per_semester AS pricePerSemester, ra.floor_number AS floorNumber, 
+                ra.capacity AS capacity, ra.price AS price, ra.floor_number AS floorNumber, 
                 ra.image_url AS roomImageUrl, ra.academic_year AS academicYear, ra.semester AS semester
             FROM PaginatedHostels h
             INNER JOIN RankedRooms rr ON h.id = rr.hostel_id AND rr.rn <= 6
@@ -204,7 +204,7 @@ public interface HostelRepository extends JpaRepository<Hostel, UUID>, JpaSpecif
                 CASE WHEN cast(:sortBy as text) = 'name' AND cast(:sortOrder as text) = 'DESC' THEN h.name END DESC,
                 CASE WHEN cast(:sortBy as text) = 'address' AND cast(:sortOrder as text) = 'ASC' THEN h.address END ASC,
                 CASE WHEN cast(:sortBy as text) = 'address' AND cast(:sortOrder as text) = 'DESC' THEN h.address END DESC,
-                ra.price_per_semester ASC, 
+                ra.price ASC, 
                 ra.id ASC
             """, nativeQuery = true)
     List<HostelRoomFlatProjection> findHostelsWithRoomPreviews(
@@ -260,7 +260,7 @@ public interface HostelRepository extends JpaRepository<Hostel, UUID>, JpaSpecif
                       WHEN vp.semester = 'FULL' THEN rpo.occupancy_full
                   END, 0) < r.capacity
               AND (cast(:roomType as text) IS NULL OR r.room_type = cast(:roomType as text))
-              AND (cast(:maxPrice as numeric) IS NULL OR r.price_per_semester <= cast(:maxPrice as numeric))
+              AND (cast(:maxPrice as numeric) IS NULL OR r.price <= cast(:maxPrice as numeric))
         )
         SELECT COUNT(*) FROM RoomAvailability
         """, nativeQuery = true)
@@ -312,17 +312,17 @@ public interface HostelRepository extends JpaRepository<Hostel, UUID>, JpaSpecif
                       WHEN vp.semester = 'FULL' THEN rpo.occupancy_full
                   END, 0) < r.capacity
               AND (cast(:roomType as text) IS NULL OR r.room_type = cast(:roomType as text))
-              AND (cast(:maxPrice as numeric) IS NULL OR r.price_per_semester <= cast(:maxPrice as numeric))
+              AND (cast(:maxPrice as numeric) IS NULL OR r.price <= cast(:maxPrice as numeric))
         ),
         DistinctRooms AS (
-            SELECT DISTINCT id, room_number, price_per_semester, floor_number, capacity, image_url, room_type
+            SELECT DISTINCT id, room_number, price, floor_number, capacity, image_url, room_type
             FROM RoomAvailability
         ),
         PaginatedRooms AS (
             SELECT * FROM DistinctRooms
             ORDER BY 
-                CASE WHEN cast(:sortBy as text) = 'pricePerSemester' AND cast(:sortOrder as text) = 'ASC' THEN price_per_semester END ,
-                CASE WHEN cast(:sortBy as text) = 'pricePerSemester' AND cast(:sortOrder as text) = 'DESC' THEN price_per_semester END DESC,
+                CASE WHEN cast(:sortBy as text) = 'price' AND cast(:sortOrder as text) = 'ASC' THEN price END ,
+                CASE WHEN cast(:sortBy as text) = 'price' AND cast(:sortOrder as text) = 'DESC' THEN price END DESC,
                 CASE WHEN cast(:sortBy as text) = 'roomNumber' AND cast(:sortOrder as text) = 'ASC' THEN room_number END ,
                 CASE WHEN cast(:sortBy as text) = 'roomNumber' AND cast(:sortOrder as text) = 'DESC' THEN room_number END DESC,
                 id
@@ -337,7 +337,7 @@ public interface HostelRepository extends JpaRepository<Hostel, UUID>, JpaSpecif
             m.id AS managerId, m.first_name AS managerFirstName, m.last_name AS managerLastName, 
             m.email AS managerEmail, m.phone AS managerPhone,
             pr.id AS roomId, pr.room_number AS roomNumber, pr.room_type AS roomType, 
-            pr.capacity AS capacity, pr.price_per_semester AS pricePerSemester, pr.floor_number AS floorNumber, 
+            pr.capacity AS capacity, pr.price AS price, pr.floor_number AS floorNumber, 
             pr.image_url AS roomImageUrl, ra.academic_year AS academicYear, ra.semester AS semester
         FROM hostels h
         LEFT JOIN users m ON h.manager_id = m.id
@@ -345,8 +345,8 @@ public interface HostelRepository extends JpaRepository<Hostel, UUID>, JpaSpecif
         LEFT JOIN RoomAvailability ra ON pr.id = ra.id
         WHERE h.id = cast(:hostelId as uuid)
         ORDER BY 
-            CASE WHEN cast(:sortBy as text) = 'pricePerSemester' AND cast(:sortOrder as text) = 'ASC' THEN pr.price_per_semester END ,
-            CASE WHEN cast(:sortBy as text) = 'pricePerSemester' AND cast(:sortOrder as text) = 'DESC' THEN pr.price_per_semester END DESC,
+            CASE WHEN cast(:sortBy as text) = 'price' AND cast(:sortOrder as text) = 'ASC' THEN pr.price END ,
+            CASE WHEN cast(:sortBy as text) = 'price' AND cast(:sortOrder as text) = 'DESC' THEN pr.price END DESC,
             CASE WHEN cast(:sortBy as text) = 'roomNumber' AND cast(:sortOrder as text) = 'ASC' THEN pr.room_number END ,
             CASE WHEN cast(:sortBy as text) = 'roomNumber' AND cast(:sortOrder as text) = 'DESC' THEN pr.room_number END DESC,
             pr.id

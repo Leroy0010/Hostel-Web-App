@@ -129,7 +129,7 @@ export function UpdateRoomForm({
             roomNumber: room.roomNumber,
             roomType: room.roomType,
             capacity: room.capacity,
-            pricePerSemester: room.pricePerSemester,
+            price: room.price,
             imageUrl: room.imageUrl,
             floorNumber: room.floorNumber,
         },
@@ -141,7 +141,7 @@ export function UpdateRoomForm({
             roomNumber: room.roomNumber,
             roomType: room.roomType,
             capacity: room.capacity,
-            pricePerSemester: room.pricePerSemester,
+            price: room.price,
             imageUrl: room.imageUrl,
             floorNumber: room.floorNumber,
         });
@@ -166,11 +166,8 @@ export function UpdateRoomForm({
             payload.roomType = data.roomType;
         if (data.capacity !== undefined && data.capacity !== room.capacity)
             payload.capacity = data.capacity;
-        if (
-            data.pricePerSemester &&
-            Number(data.pricePerSemester) !== Number(room.pricePerSemester)
-        )
-            payload.pricePerSemester = Number(data.pricePerSemester);
+        if (data.price && Number(data.price) !== Number(room.price))
+            payload.price = Number(data.price);
         if (data.imageUrl && data.imageUrl !== room.imageUrl)
             payload.imageUrl = data.imageUrl;
         if (data.floorNumber !== room.floorNumber)
@@ -353,15 +350,13 @@ export function UpdateRoomForm({
                                 min="0"
                                 step="0.01"
                                 className={`pl-7 ${INPUT_CLS}`}
-                                {...register('pricePerSemester', {
+                                {...register('price', {
                                     valueAsNumber: true,
                                 })}
                             />
                         </div>
-                        {errors.pricePerSemester && (
-                            <FieldError
-                                message={errors.pricePerSemester.message!}
-                            />
+                        {errors.price && (
+                            <FieldError message={errors.price.message!} />
                         )}
                     </div>
                 </motion.div>

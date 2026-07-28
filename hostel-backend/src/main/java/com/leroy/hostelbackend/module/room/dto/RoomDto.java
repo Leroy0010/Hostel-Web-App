@@ -17,7 +17,7 @@ public record RoomDto(
         Short capacity,
         Short currentOccupancy,
         Short bedsAvailable,        // computed: capacity - currentOccupancy
-        BigDecimal pricePerSemester,
+        BigDecimal price,
         String status,
         Integer floorNumber,
         String imageUrl,

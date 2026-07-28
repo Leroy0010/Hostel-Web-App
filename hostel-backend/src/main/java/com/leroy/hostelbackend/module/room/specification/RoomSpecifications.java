@@ -47,7 +47,7 @@ public class RoomSpecifications {
             if (maxPrice != null) {
                 predicates.add(
                         cb.lessThanOrEqualTo(
-                                root.get("pricePerSemester"),
+                                root.get("price"),
                                 maxPrice
                         )
                 );

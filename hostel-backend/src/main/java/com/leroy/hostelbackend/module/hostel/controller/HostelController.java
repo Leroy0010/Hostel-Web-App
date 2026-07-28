@@ -74,7 +74,7 @@ public class HostelController {
             @PathVariable UUID id,
             @RequestParam(required = false) RoomType roomType,
             @RequestParam(required = false) BigDecimal maxPrice,
-            @PageableDefault(size = 12, sort = "pricePerSemester", direction = Sort.Direction.ASC) Pageable pageable
+            @PageableDefault(size = 12, sort = "price", direction = Sort.Direction.ASC) Pageable pageable
     ) {
         return ResponseEntity.ok(ApiResponse
                 .success(
@@ -198,7 +198,7 @@ public class HostelController {
     @GetMapping("/hostels/with-room-sections")
     public ResponseEntity<ApiResponse<Page<HostelSectionDto>>> getHostelSections(
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) BigDecimal maxPricePerSemester,
+            @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) RoomType roomType,
             @RequestParam(required = false) GenderPolicy genderPolicy,
             @PageableDefault(size = 20, sort = "name") Pageable pageable){
@@ -210,7 +210,7 @@ public class HostelController {
                                         search,
                                         genderPolicy != null ? genderPolicy.name() : null,
                                         roomType != null ? roomType.name() : null,
-                                        maxPricePerSemester,
+                                        maxPrice,
                                         pageable)));
     }
 

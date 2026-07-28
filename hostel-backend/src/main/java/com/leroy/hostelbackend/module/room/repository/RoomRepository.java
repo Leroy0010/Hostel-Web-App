@@ -67,7 +67,7 @@ public interface RoomRepository extends JpaRepository<Room, UUID>,
      *
      * @param hostelId the hostel UUID
      * @param roomType optional room type filter (e.g. {@code "DOUBLE"}); null = any
-     * @param maxPrice optional maximum price per semester; null = any
+     * @param maxPrice optional maximum price; null = any
      */
     @Query("""
             SELECT r FROM Room r
@@ -75,7 +75,7 @@ public interface RoomRepository extends JpaRepository<Room, UUID>,
             WHERE r.hostel.id = :hostelId
               AND r.status    = 'AVAILABLE'
               AND (:roomType IS NULL OR r.roomType = :roomType)
-              AND (:maxPrice IS NULL OR r.pricePerSemester <= :maxPrice)
+              AND (:maxPrice IS NULL OR r.price <= :maxPrice)
             """)
     Page<Room> findAvailableFiltered(
             @Param("hostelId") UUID       hostelId,

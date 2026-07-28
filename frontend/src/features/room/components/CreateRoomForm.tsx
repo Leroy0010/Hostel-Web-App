@@ -88,7 +88,7 @@ interface CreateRoomFormProps {
  *  - Room number (string, max 20 chars).
  *  - Room type enum select (SINGLE / DOUBLE / TRIPLE / QUAD / SHARED).
  *  - Capacity (1-20).
- *  - Price per semester (Ghana Cedis, BigDecimal string).
+ *  - Price (per academic year; Ghana Cedis, BigDecimal string).
  *  - Floor number (optional integer).
  *  - Amenities (optional list — label + optional icon URL per item).
  *
@@ -120,7 +120,7 @@ export function CreateRoomForm({
         resolver: zodResolver(createRoomSchema),
         defaultValues: {
             roomNumber: '',
-            pricePerSemester: undefined,
+            price: undefined,
             imageUrl: '',
             floorNumber: null,
             amenities: [],
@@ -138,7 +138,7 @@ export function CreateRoomForm({
             roomNumber: data.roomNumber,
             roomType: data.roomType,
             capacity: data.capacity,
-            pricePerSemester: Number(data.pricePerSemester),
+            price: Number(data.price),
             imageUrl: data.imageUrl,
             ...(data.floorNumber !== null &&
                 data.floorNumber !== undefined && {
@@ -310,13 +310,11 @@ export function CreateRoomForm({
                                 step="0.01"
                                 placeholder="0.00"
                                 className={`pl-7 ${INPUT_CLS}`}
-                                {...register('pricePerSemester')}
+                                {...register('price')}
                             />
                         </div>
-                        {errors.pricePerSemester && (
-                            <FieldError
-                                message={errors.pricePerSemester.message!}
-                            />
+                        {errors.price && (
+                            <FieldError message={errors.price.message!} />
                         )}
                     </div>
                 </motion.div>

@@ -179,7 +179,7 @@ public class RoomService {
             room.setRoomNumber(request.roomNumber().trim());
         }
         if (request.roomType()         != null) room.setRoomType(request.roomType());
-        if (request.pricePerSemester() != null) room.setPricePerSemester(request.pricePerSemester());
+        if (request.price() != null) room.setPrice(request.price());
         if (request.imageUrl()         != null) room.setImageUrl(request.imageUrl());
         room.setFloorNumber(request.floorNumber() != null ? request.floorNumber().shortValue() : null);
 

@@ -78,7 +78,7 @@ const pageVariants = {
  *  1. Back navigation → hostel detail page.
  *  2. Hero cover image (zoomable).
  *  3. Room identity — number, hostel name, type badge, status badge, floor.
- *  4. Key stats grid — capacity, beds available, price per semester.
+ *  4. Key stats grid — capacity, beds available, price.
  *  5. Amenities section — collapsible horizontal strip / expanded grid.
  *  6. Available periods badge.
  *  7. Booking CTA (Book Now dialog) — shown when periods exist + student.
@@ -225,7 +225,7 @@ export default function RoomDetailPage() {
                     <StatCell
                         icon={<CalendarCheck className="h-5 w-5" />}
                         label="Price"
-                        value={formatPrice(room.pricePerSemester)}
+                        value={formatPrice(room.price)}
                         highlight
                     />
                 </div>
@@ -374,10 +374,7 @@ export default function RoomDetailPage() {
                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                 <div>
                                     <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                                        {formatPrice(room.pricePerSemester)}
-                                        {/* <span className="ml-1 text-base font-normal text-gray-400 dark:text-gray-500">
-                                            / semester
-                                        </span> */}
+                                        {formatPrice(room.price)}
                                     </p>
                                     <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
                                         {bedsLabel(room.bedsAvailable)}
@@ -443,8 +440,7 @@ export default function RoomDetailPage() {
                             <DialogDescription>
                                 <span className="mt-1 block text-sm text-gray-500 dark:text-gray-400">
                                     {room.hostelName} · {room.roomNumber} ·{' '}
-                                    {room.roomType} ·{' '}
-                                    {formatPrice(room.pricePerSemester)}
+                                    {room.roomType} · {formatPrice(room.price)}
                                 </span>
                                 <span className="mt-2 flex items-center gap-1 text-xs text-amber-600 dark:text-amber-500">
                                     <Info className="h-3 w-3" />

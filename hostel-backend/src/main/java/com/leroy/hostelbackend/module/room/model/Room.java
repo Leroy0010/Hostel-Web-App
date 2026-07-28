@@ -41,8 +41,8 @@ public class Room {
     @Column(name = "current_occupancy", nullable = false)
     private Short currentOccupancy;
 
-    @Column(name = "price_per_semester", nullable = false)
-    private BigDecimal pricePerSemester;
+    @Column(name = "price", nullable = false)
+    private BigDecimal price;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -77,7 +77,7 @@ public class Room {
         room.setRoomType(request.roomType());
         room.setCapacity(request.capacity());
         room.setCurrentOccupancy((short) 0);
-        room.setPricePerSemester(request.pricePerSemester());
+        room.setPrice(request.price());
         room.setStatus(RoomStatus.AVAILABLE);
         room.setImageUrl(request.imageUrl());
         if (request.floorNumber() != null) {

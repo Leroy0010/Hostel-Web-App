@@ -31,7 +31,7 @@ public interface BookingMapper {
     @Mapping(target = "roomType",   expression = "java(booking.getRoom().getRoomType().name())")
     @Mapping(target = "hostelId",   source = "room.hostel.id")
     @Mapping(target = "hostelName", source = "room.hostel.name")
-    @Mapping(target = "price", source = "room.pricePerSemester")
+    @Mapping(target = "price", source = "room.price")
     @Mapping(target = "capacity", source = "room.capacity")
     @Mapping(target = "currentOccupancy", source = "room.currentOccupancy")
     BookingDto.RoomSummary toRoomSummary(Booking booking);

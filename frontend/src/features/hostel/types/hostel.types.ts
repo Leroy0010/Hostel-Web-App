@@ -41,7 +41,7 @@ export interface RoomDisplayDto {
     roomNumber: string;
     roomType: RoomType;
     capacity: number;
-    pricePerSemester: number;
+    price: number;
     floorNumber: number;
     imageUrl: string;
     /** Periods during which this room currently accepts bookings. */
@@ -331,7 +331,7 @@ export interface HostelSectionParams extends PaginationParams {
     search?: string;
     genderPolicy?: GenderPolicy | 'ALL';
     roomType?: string;
-    maxPricePerSemester?: number;
+    maxPrice?: number;
 }
 
 /**

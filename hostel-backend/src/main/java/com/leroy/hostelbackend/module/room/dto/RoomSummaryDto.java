@@ -13,7 +13,7 @@ public record RoomSummaryDto(
         Short capacity,
         Short currentOccupancy,
         Short bedsAvailable,
-        BigDecimal pricePerSemester,
+        BigDecimal price,
         String status,
         Integer floorNumber,
         String imageUrl

@@ -304,12 +304,7 @@ export default function ManagerRoomsPage() {
                                             </div>
 
                                             <p className="font-bold text-gray-900 dark:text-gray-100">
-                                                {formatPrice(
-                                                    room.pricePerSemester
-                                                )}
-                                                {/* <span className="ml-0.5 text-xs font-normal text-gray-400">
-                                                    /sem
-                                                </span> */}
+                                                {formatPrice(room.price)}
                                             </p>
                                         </div>
 

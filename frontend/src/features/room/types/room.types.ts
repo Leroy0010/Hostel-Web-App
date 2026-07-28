@@ -47,7 +47,7 @@ export interface RoomDto {
     currentOccupancy: number;
     /** Computed server-side: capacity - currentOccupancy */
     bedsAvailable: number;
-    pricePerSemester: number;
+    price: number;
     status: RoomStatus;
     floorNumber: number | null;
     imageUrl: string;
@@ -67,7 +67,7 @@ export interface RoomSummaryDto {
     capacity: number;
     currentOccupancy: number;
     bedsAvailable: number;
-    pricePerSemester: number;
+    price: number;
     status: RoomStatus;
     floorNumber: number | null;
     imageUrl: string;
@@ -112,7 +112,7 @@ export type AmenityRequestForm = z.infer<typeof amenityRequestSchema>;
  * Notes:
  * - {@code imageUrl} is populated after a successful image upload.
  * - {@code capacity} is stored as {@code Short} on the backend (max 20).
- * - {@code pricePerSemester} is stored as {@code BigDecimal} — we validate as
+ * - {@code price} is stored as {@code BigDecimal} — we validate as
  *   a coerced number and format before sending.
  */
 export const createRoomSchema = z.object({
@@ -131,7 +131,7 @@ export const createRoomSchema = z.object({
         .int('Capacity must be a whole number')
         .min(1, 'Capacity must be at least 1')
         .max(20, 'Capacity cannot exceed 20'),
-    pricePerSemester: z
+    price: z
         .union([z.string(), z.number()]) // Input allows string or number
         .transform((val) => {
             const num = Number(val);
@@ -166,7 +166,7 @@ export const updateRoomSchema = z.object({
         .optional(),
     roomType: z.enum(['SINGLE', 'DOUBLE', 'TRIPLE', 'QUAD']).optional(),
     capacity: z.number().int().min(1).max(20).optional(),
-    pricePerSemester: z
+    price: z
         .union([z.string(), z.number()]) // Input allows string or number
         .transform((val) => {
             const num = Number(val);
@@ -208,7 +208,7 @@ export interface CreateRoomPayload {
     roomNumber: string;
     roomType: RoomType;
     capacity: number;
-    pricePerSemester: number;
+    price: number;
     imageUrl: string;
     floorNumber?: number | null;
     amenities?: { amenity: string; imageUrl?: string }[];
@@ -219,7 +219,7 @@ export interface UpdateRoomPayload {
     roomNumber?: string;
     roomType?: RoomType;
     capacity?: number;
-    pricePerSemester?: number;
+    price?: number;
     imageUrl?: string;
     floorNumber?: number | null;
 }
