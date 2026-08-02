@@ -49,5 +49,17 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
 
     List<User> findAllByRoleAndIsActiveTrue(UserRole role);
 
-    boolean existsByPhoneAndRoleNot(String phone, UserRole userRole);
+    /**
+     * True cross-role uniqueness check: a phone number may only ever back one
+     * account, regardless of role. Used at registration/profile-update time so
+     * a phone can't be reused across a STUDENT and a MANAGER/ADMIN, or between
+     * two STUDENTs.
+     */
+    boolean existsByPhone(String phone);
+
+    /**
+     * Same as {@link #existsByPhone(String)} but excludes the given user id,
+     * for use when a user is updating their own profile with an unchanged phone.
+     */
+    boolean existsByPhoneAndIdNot(String phone, UUID id);
 }

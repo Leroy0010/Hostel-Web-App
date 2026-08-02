@@ -36,6 +36,7 @@ public class UserService {
     @Transactional
     public void registerStudent(CreateStudentRequest request, HttpServletResponse response) {
         assertEmailAvailable(request.getEmail());
+        assertPhoneAvailable(User.normalizeGhanaianPhoneNumber(request.getPhone()), null);
 
         // Set to false initially — student must verify email before logging in
         var user = User.create(request.getEmail(), request.getFirstName(), request.getLastName(), request.getPhone(), false);
@@ -80,6 +81,9 @@ public class UserService {
         // Update fields safely
         user.setFirstName(request.getFirstName().trim());
         user.setLastName(request.getLastName().trim());
+
+        String normalizedPhone = User.normalizeGhanaianPhoneNumber(request.getPhone().trim());
+        assertPhoneAvailable(normalizedPhone, userId);
         user.setPhone(request.getPhone().trim());
 
         userRepository.save(user);
@@ -106,6 +110,27 @@ public class UserService {
     private void assertEmailAvailable(String email) {
         if (userRepository.existsByEmailIgnoreCase(email)) {
             throw new IllegalArgumentException("An account with this email address already exists.");
+        }
+    }
+
+    /**
+     * A phone number can only ever back one account — checked here across all
+     * roles (unlike the old staff-only check) so a student and a manager can't
+     * share a number, and two students can't share one either.
+     *
+     * @param normalizedPhone the phone already run through {@link User#normalizeGhanaianPhoneNumber}
+     * @param excludeUserId   when updating a profile, the current user's id so their own
+     *                        unchanged phone doesn't trip the check; null for new registrations
+     */
+    private void assertPhoneAvailable(String normalizedPhone, UUID excludeUserId) {
+        if (normalizedPhone == null) {
+            return;
+        }
+        boolean taken = excludeUserId == null
+                ? userRepository.existsByPhone(normalizedPhone)
+                : userRepository.existsByPhoneAndIdNot(normalizedPhone, excludeUserId);
+        if (taken) {
+            throw new IllegalArgumentException("An account with this phone number already exists.");
         }
     }
 }

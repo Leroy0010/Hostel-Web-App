@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, X } from 'lucide-react';
 import { requestPushPermission } from '../hooks/useWebPush';
+import { isIos, isStandalone } from '@/hooks/ios-detection';
 
 const DISMISSAL_KEY = 'hostel_push_prompt_dismissed';
 const COOLDOWN_PERIOD_MS = 3 * 24 * 60 * 60 * 1000; // 3 days
@@ -13,6 +14,16 @@ export function PushNotificationPrompt() {
     useEffect(() => {
         // 1. Silent exit if push isn't supported
         if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+            return;
+        }
+
+        // 1b. iOS only grants the native permission prompt to a home-screen
+        // installed app running standalone — Notification.requestPermission()
+        // silently does nothing in a regular Safari tab (WebKit still exposes
+        // `window.Notification`, so check #1 alone doesn't catch this). Wait
+        // until the user has installed and is running standalone before
+        // asking; IosInstallPrompt nudges them to install in the meantime.
+        if (isIos() && !isStandalone()) {
             return;
         }
 

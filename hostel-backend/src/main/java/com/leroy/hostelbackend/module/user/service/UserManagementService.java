@@ -98,9 +98,9 @@ public class UserManagementService {
         }
         assertEmailAvailable(request.getEmail());
 
-        // Business Rule: Validate that the corporate staff number is unique among active staff members
+        // Business Rule: a phone number can only ever back one account, across all roles
         if (request.getPhone() != null && !request.getPhone().isBlank()) {
-            assertStaffPhoneAvailable(request.getPhone().trim());
+            assertPhoneAvailable(request.getPhone().trim());
         }
 
         var user = User.create(
@@ -180,10 +180,10 @@ public class UserManagementService {
         }
     }
 
-    private void assertStaffPhoneAvailable(String phone) {
-        // Enforce uniqueness check against normalized values inside repository
-        if (userRepository.existsByPhoneAndRoleNot(phone, UserRole.STUDENT)) {
-            throw new IllegalArgumentException("This phone number is already assigned to another staff member.");
+    private void assertPhoneAvailable(String phone) {
+        String normalizedPhone = User.normalizeGhanaianPhoneNumber(phone);
+        if (normalizedPhone != null && userRepository.existsByPhone(normalizedPhone)) {
+            throw new IllegalArgumentException("An account with this phone number already exists.");
         }
     }
 

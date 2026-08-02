@@ -166,34 +166,16 @@ export interface HostelSectionDto {
  * Optional: when the field is empty the value is undefined.
  */
 const latitudeSchema = z
-    .union([z.number()])
-    .transform((val) => {
-        if (val === undefined || val === null) return undefined;
-        const num = Number(val);
-        return isNaN(num) ? undefined : num;
-    })
-    .pipe(
-        z
-            .number({ message: 'Latitude must be a number' })
-            .min(-90, 'Latitude must be between -90 and 90')
-            .max(90, 'Latitude must be between -90 and 90')
-    )
+    .number({ message: 'Latitude must be a number' })
+    .min(-90, 'Latitude must be between -90 and 90')
+    .max(90, 'Latitude must be between -90 and 90')
     .optional();
 
 /** WGS 84 longitude validator. */
 const longitudeSchema = z
-    .union([z.number()])
-    .transform((val) => {
-        if (val === undefined || val === null) return undefined;
-        const num = Number(val);
-        return isNaN(num) ? undefined : num;
-    })
-    .pipe(
-        z
-            .number({ message: 'Longitude must be a number' })
-            .min(-180, 'Longitude must be between -180 and 180')
-            .max(180, 'Longitude must be between -180 and 180')
-    )
+    .number({ message: 'Longitude must be a number' })
+    .min(-180, 'Longitude must be between -180 and 180')
+    .max(180, 'Longitude must be between -180 and 180')
     .optional();
 
 /**

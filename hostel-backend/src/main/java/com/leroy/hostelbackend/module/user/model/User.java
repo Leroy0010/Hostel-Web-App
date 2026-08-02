@@ -70,7 +70,7 @@ public class User {
      * Phone number. Optional for STUDENT accounts; required when an ADMIN creates
      * a MANAGER or another ADMIN account (enforced at the DTO/service level).
      */
-    @Column(name = "phone")
+    @Column(name = "phone", unique = true)
     private String phone;
 
     /**
@@ -136,7 +136,7 @@ public class User {
 
     }
 
-    private static String normalizeGhanaianPhoneNumber(String phone) {
+    public static String normalizeGhanaianPhoneNumber(String phone) {
         if (phone == null || phone.isBlank()) {
             return null;
         }

@@ -9,3 +9,5 @@ databaseChangeLog:
       file: db/changelog/db.changelog-004-complaint-attachment-submitted-by.yaml
   - include:
       file: db/changelog/db.changelog-005-rename-room-price.yaml
+  - include:
+      file: db/changelog/db.changelog-006-unique-phone.yaml

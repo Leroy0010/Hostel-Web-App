@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-unique-phone-per-account
+      author: Leroy
+      comment: >
+        A phone number was previously reusable across multiple accounts
+        (students could share a phone with each other, or with a staff
+        member) because the only check in place, existsByPhoneAndRoleNot,
+        deliberately excluded students. This adds a real, DB-level unique
+        constraint on users.phone so a single phone number can only ever
+        back one account, matching the rule already enforced on email.
+      changes:
+        - addUniqueConstraint:
+            tableName: users
+            columnNames: phone
+            constraintName: uq_users_phone
