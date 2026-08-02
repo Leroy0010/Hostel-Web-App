@@ -59,7 +59,11 @@ jobs:
       - name: Deploy Infrastructure
         run: |
           cd infrastructure
-          cdk deploy --require-approval never
+          # 1. Bootstrap Account B (Idempotent: runs safely if already bootstrapped)
+          npx cdk bootstrap aws://${{ secrets.AWS_ACCOUNT_ID }}/${{ vars.AWS_REGION }}
+          
+          # 2. Deploy the stack
+          npx cdk deploy --require-approval never
         env:
           CDK_DEFAULT_REGION: ${{ vars.AWS_REGION }}
           CDK_DEFAULT_ACCOUNT: ${{ secrets.AWS_ACCOUNT_ID }}
