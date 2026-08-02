@@ -275,9 +275,9 @@ export class InfrastructureStack extends cdk.Stack {
         },
       );
 
-    const cfnService = fargateService.service.node
-      .defaultChild as ecs.CfnService;
-    cfnService.addPropertyOverride("DesiredCount", 0);
+    // const cfnService = fargateService.service.node
+    //   .defaultChild as ecs.CfnService;
+    // cfnService.addPropertyOverride("DesiredCount", 0);
 
     // Automatically allow traffic from the Spring Boot container to your RDS instance
     database.connections.allowFrom(fargateService.service, ec2.Port.tcp(5432));
