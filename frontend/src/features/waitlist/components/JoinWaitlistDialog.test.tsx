@@ -144,6 +144,36 @@ describe('JoinWaitlistDialog', () => {
         });
     });
 
+    it('only enables the available-periods query while the dialog is open', () => {
+        renderWithProviders(
+            <JoinWaitlistDialog
+                open={false}
+                onOpenChange={vi.fn()}
+                hostelId={HOSTEL_ID}
+                defaultRoomType="SINGLE"
+            />
+        );
+        expect(mockUseGetHostelWaitlistAvailablePeriods).toHaveBeenCalledWith(
+            HOSTEL_ID,
+            'SINGLE',
+            false
+        );
+
+        renderWithProviders(
+            <JoinWaitlistDialog
+                open
+                onOpenChange={vi.fn()}
+                hostelId={HOSTEL_ID}
+                defaultRoomType="SINGLE"
+            />
+        );
+        expect(mockUseGetHostelWaitlistAvailablePeriods).toHaveBeenCalledWith(
+            HOSTEL_ID,
+            'SINGLE',
+            true
+        );
+    });
+
     it('calls onOpenChange(false) and resets the form when Cancel is clicked', async () => {
         const user = userEvent.setup();
         const onOpenChange = vi.fn();

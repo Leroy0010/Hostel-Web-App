@@ -101,9 +101,7 @@ public interface HostelRepository extends JpaRepository<Hostel, UUID>, JpaSpecif
                 WHERE COALESCE(
                     CASE 
                         WHEN vp.semester = 'FIRST' THEN rpo.occupancy_first
-                        -- SECOND semester is only open if FIRST semester is already fully booked
-                        WHEN vp.semester = 'SECOND' THEN 
-                            CASE WHEN rpo.occupancy_first >= r.capacity THEN rpo.occupancy_second ELSE r.capacity END
+                        WHEN vp.semester = 'SECOND' THEN rpo.occupancy_second
                         WHEN vp.semester = 'FULL' THEN rpo.occupancy_full
                     END, 0) < r.capacity
                   AND (cast(:roomType as text) IS NULL OR r.room_type = cast(:roomType as text))
@@ -159,9 +157,7 @@ public interface HostelRepository extends JpaRepository<Hostel, UUID>, JpaSpecif
                 WHERE COALESCE(
                     CASE 
                         WHEN vp.semester = 'FIRST' THEN rpo.occupancy_first
-                        -- SECOND semester is only open if FIRST semester is already fully booked
-                        WHEN vp.semester = 'SECOND' THEN 
-                            CASE WHEN rpo.occupancy_first >= r.capacity THEN rpo.occupancy_second ELSE r.capacity END
+                        WHEN vp.semester = 'SECOND' THEN rpo.occupancy_second
                         WHEN vp.semester = 'FULL' THEN rpo.occupancy_full
                     END, 0) < r.capacity
                   AND (cast(:roomType as text) IS NULL OR r.room_type = cast(:roomType as text))
@@ -255,8 +251,7 @@ public interface HostelRepository extends JpaRepository<Hostel, UUID>, JpaSpecif
               AND COALESCE(
                   CASE 
                       WHEN vp.semester = 'FIRST' THEN rpo.occupancy_first
-                      WHEN vp.semester = 'SECOND' THEN 
-                          CASE WHEN rpo.occupancy_first >= r.capacity THEN rpo.occupancy_second ELSE r.capacity END
+                      WHEN vp.semester = 'SECOND' THEN rpo.occupancy_second
                       WHEN vp.semester = 'FULL' THEN rpo.occupancy_full
                   END, 0) < r.capacity
               AND (cast(:roomType as text) IS NULL OR r.room_type = cast(:roomType as text))
@@ -307,8 +302,7 @@ public interface HostelRepository extends JpaRepository<Hostel, UUID>, JpaSpecif
               AND COALESCE(
                   CASE 
                       WHEN vp.semester = 'FIRST' THEN rpo.occupancy_first
-                      WHEN vp.semester = 'SECOND' THEN 
-                          CASE WHEN rpo.occupancy_first >= r.capacity THEN rpo.occupancy_second ELSE r.capacity END
+                      WHEN vp.semester = 'SECOND' THEN rpo.occupancy_second
                       WHEN vp.semester = 'FULL' THEN rpo.occupancy_full
                   END, 0) < r.capacity
               AND (cast(:roomType as text) IS NULL OR r.room_type = cast(:roomType as text))

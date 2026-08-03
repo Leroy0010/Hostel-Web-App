@@ -112,7 +112,7 @@ export function JoinWaitlistDialog({
     const roomType = watch('roomType');
 
     const { data: availablePeriods = [] } =
-        useGetHostelWaitlistAvailablePeriods(hostelId, roomType);
+        useGetHostelWaitlistAvailablePeriods(hostelId, roomType, open);
 
     const periodOptions = useMemo(
         () =>

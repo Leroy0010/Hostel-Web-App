@@ -28,14 +28,15 @@ import type { ApiError } from '@/types/api';
 
 export function useGetHostelWaitlistAvailablePeriods(
     hostelId: string,
-    roomType: RoomType
+    roomType: RoomType,
+    isEnabled = true
 ) {
     return useQuery({
         queryKey: waitlistKeys.availablePeriods(hostelId, roomType),
         queryFn: () => fetchHostelWaitlistAvailablePeriods(hostelId, roomType),
         staleTime: 60 * 1000 * 10,
         placeholderData: keepPreviousData,
-        enabled: Boolean(hostelId && roomType),
+        enabled: Boolean(hostelId && roomType) && isEnabled,
     });
 }
 
