@@ -397,8 +397,7 @@ public interface HostelRepository extends JpaRepository<Hostel, UUID>, JpaSpecif
       AND COALESCE(
           CASE 
               WHEN vp.semester = 'FIRST' THEN rpo.occupancy_first
-              WHEN vp.semester = 'SECOND' THEN 
-                  CASE WHEN rpo.occupancy_first >= r.capacity THEN rpo.occupancy_second ELSE r.capacity END
+              WHEN vp.semester = 'SECOND' THEN rpo.occupancy_second
               WHEN vp.semester = 'FULL' THEN rpo.occupancy_full
           END, 0) < r.capacity
     ORDER BY 

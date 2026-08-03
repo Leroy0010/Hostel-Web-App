@@ -235,7 +235,7 @@ export default function BookingDetailPage() {
                     <div className="p-5">
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                             {/* Left — hostel, room, period */}
-                            <div className="min-w-0 space-y-1 pr-20 sm:pr-0">
+                            <div className="min-w-0 space-y-1">
                                 <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-gray-400 uppercase dark:text-gray-500">
                                     <Building2
                                         className="h-3.5 w-3.5 shrink-0"
@@ -259,7 +259,7 @@ export default function BookingDetailPage() {
                             </div>
 
                             {/* Right — status badge + review button */}
-                            <div className="absolute top-4 right-4 sm:relative sm:top-auto sm:right-auto sm:flex sm:shrink-0 sm:flex-col sm:items-end sm:gap-2">
+                            <div className="flex flex-wrap items-center gap-2 sm:shrink-0 sm:flex-col sm:items-end">
                                 <BookingStatusBadge status={booking.status} />
 
                                 {canLeaveReview && (
@@ -269,7 +269,7 @@ export default function BookingDetailPage() {
                                         onClick={() =>
                                             setActiveDialog('review')
                                         }
-                                        className="mt-2 gap-1.5 border-amber-200 text-amber-700 hover:bg-amber-50 sm:mt-0 dark:border-amber-800/50 dark:text-amber-400 dark:hover:bg-amber-950/30"
+                                        className="gap-1.5 border-amber-200 text-amber-700 hover:bg-amber-50 dark:border-amber-800/50 dark:text-amber-400 dark:hover:bg-amber-950/30"
                                     >
                                         <Star
                                             className="h-3.5 w-3.5 fill-amber-500 text-amber-500"
@@ -288,7 +288,7 @@ export default function BookingDetailPage() {
                                                 `/student/hostels/${hostelId}/complaints`
                                             )
                                         }
-                                        className="mt-2 gap-1.5 border-gray-200 text-gray-600 hover:bg-gray-100 sm:mt-0 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-800"
+                                        className="gap-1.5 border-gray-200 text-gray-600 hover:bg-gray-100 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-800"
                                     >
                                         <MessageSquareWarning
                                             className="h-3.5 w-3.5"
