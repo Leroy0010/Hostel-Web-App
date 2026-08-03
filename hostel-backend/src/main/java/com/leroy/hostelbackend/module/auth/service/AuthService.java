@@ -149,7 +149,7 @@ public class AuthService {
 
         User user = userOpt.get();
         String rawToken = generateAndSaveToken(user, AuthTokenType.PASSWORD_RESET, 15);
-        emailService.sendPasswordResetEmail(user.getEmail(), user.getFirstName(), rawToken);
+        emailService.sendPasswordResetEmail(user.getEmail(), user.getName(), rawToken);
 
         log.info("Password reset token generated and emailed safely for user ID: {}", user.getId());
     }
