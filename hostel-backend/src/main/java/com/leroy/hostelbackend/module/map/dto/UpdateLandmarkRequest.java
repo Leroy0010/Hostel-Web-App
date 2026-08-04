@@ -25,6 +25,7 @@ public record UpdateLandmarkRequest(
         @DecimalMax(value = "180.0",  message = "Longitude must be between −180 and 180")
         Double longitude,
 
+        /** Omit/null = leave unchanged; a blank string ("") clears the description. */
         String description,
 
         UUID hostelId

@@ -216,7 +216,12 @@ public class LandmarkService {
 
         if (request.name()        != null) landmark.setName(request.name().trim());
         if (request.category()    != null) landmark.setCategory(request.category());
-        if (request.description() != null) landmark.setDescription(request.description());
+        // A blank string is the sentinel for "clear the description" — an absent/null
+        // field (patch semantics) leaves it untouched, since a plain String can't
+        // otherwise distinguish "not provided" from "explicitly set to null".
+        if (request.description() != null) {
+            landmark.setDescription(request.description().isBlank() ? null : request.description());
+        }
 
         // Standard fallback coordinate tracking
         Point manualPoint = (request.latitude() != null && request.longitude() != null)

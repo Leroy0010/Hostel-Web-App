@@ -142,6 +142,7 @@ export default function CampusMap() {
     );
     const [selectedLandmark, setSelectedLandmark] =
         useState<SelectedLandmark | null>(null);
+    const [isLegendOpen, setIsLegendOpen] = useState(false);
 
     // ── Data ──────────────────────────────────────────────────────────────────
 
@@ -254,7 +255,7 @@ export default function CampusMap() {
 
             <div className="flex flex-col gap-4 lg:flex-row">
                 {/* ── Map ───────────────────────────────────────────────── */}
-                <div className="relative h-120 w-full lg:flex-1 overflow-hidden rounded-xl border border-gray-200 bg-gray-100 lg:h-150 dark:border-gray-800 dark:bg-gray-800">
+                <div className="relative h-120 w-full overflow-hidden rounded-xl border border-gray-200 bg-gray-100 lg:h-150 lg:flex-1 dark:border-gray-800 dark:bg-gray-800">
                     <Map
                         ref={mapRef}
                         attributionControl={false}
@@ -383,27 +384,72 @@ export default function CampusMap() {
                     )}
 
                     {/* Legend ──────────────────────────────────────────── */}
-                    <div className="absolute bottom-3 left-3 rounded-lg border border-gray-200 bg-white/90 px-3 py-2 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-950/90">
-                        <p className="mb-1 text-[10px] font-semibold tracking-wide text-gray-400 uppercase dark:text-gray-500">
-                            Legend
-                        </p>
-                        <div className="flex flex-col gap-0.5">
-                            <span className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
-                                <HostelPin
-                                    width={14}
-                                    height={14}
-                                    fontSize={8}
-                                    selected={false}
-                                />{' '}
-                                Active Platform Hostels
-                            </span>
-                            <span className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
-                                🏠 Non Active Hostel
-                            </span>
-                            <span className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
-                                📍 Landmark
-                            </span>
-                        </div>
+                    <div className="absolute bottom-3 left-3">
+                        <AnimatePresence mode="wait" initial={false}>
+                            {isLegendOpen ? (
+                                <motion.div
+                                    key="legend-open"
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    transition={{ duration: 0.15 }}
+                                    className="rounded-lg border border-gray-200 bg-white/95 px-3 py-2 shadow-lg backdrop-blur-sm dark:border-gray-800 dark:bg-gray-950/95"
+                                >
+                                    <div className="mb-1 flex items-center justify-between gap-3">
+                                        <p className="text-[10px] font-semibold tracking-wide text-gray-400 uppercase dark:text-gray-500">
+                                            Legend
+                                        </p>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setIsLegendOpen(false)
+                                            }
+                                            aria-label="Hide legend"
+                                            className="rounded p-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+                                        >
+                                            <X
+                                                className="h-3 w-3"
+                                                aria-hidden="true"
+                                            />
+                                        </button>
+                                    </div>
+                                    <div className="flex flex-col gap-0.5">
+                                        <span className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
+                                            <HostelPin
+                                                width={14}
+                                                height={14}
+                                                fontSize={8}
+                                                selected={false}
+                                            />{' '}
+                                            Active Platform Hostels
+                                        </span>
+                                        <span className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
+                                            🏠 Non Active Hostel
+                                        </span>
+                                        <span className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
+                                            📍 Landmark
+                                        </span>
+                                    </div>
+                                </motion.div>
+                            ) : (
+                                <motion.button
+                                    key="legend-closed"
+                                    type="button"
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    transition={{ duration: 0.15 }}
+                                    onClick={() => setIsLegendOpen(true)}
+                                    aria-label="Show map legend"
+                                    className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white/95 text-gray-500 shadow-lg backdrop-blur-sm hover:text-gray-700 dark:border-gray-800 dark:bg-gray-950/95 dark:text-gray-400 dark:hover:text-gray-200"
+                                >
+                                    <Info
+                                        className="h-4 w-4"
+                                        aria-hidden="true"
+                                    />
+                                </motion.button>
+                            )}
+                        </AnimatePresence>
                     </div>
 
                     {/* Empty state for active category filter ─────────── */}

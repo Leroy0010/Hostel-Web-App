@@ -202,8 +202,10 @@ export function CreateLandmarkForm({
                 payload.hostelId = data.hostelId;
             const newDesc = data.description ?? '';
             const existingDesc = initialValues.description ?? '';
-            if (newDesc !== existingDesc)
-                payload.description = newDesc || undefined;
+            // A blank string is sent as-is (not omitted) so the backend can tell
+            // "user cleared the field" apart from "field wasn't touched" — see
+            // UpdateLandmarkRequest's patch semantics.
+            if (newDesc !== existingDesc) payload.description = newDesc;
 
             update(payload, {
                 onSuccess: () => onSuccess?.(),

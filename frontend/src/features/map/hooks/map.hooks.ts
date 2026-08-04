@@ -94,6 +94,9 @@ export function useCreateLandmark() {
             queryClient.invalidateQueries({ queryKey: mapKeys.landmarks() });
             toast.success('Landmark created.');
         },
+        onError: (error) => {
+            if (error.code !== 'VALIDATION_FAILED') toast.error(error.message);
+        },
     });
 }
 
@@ -105,6 +108,9 @@ export function useUpdateLandmark(id: string) {
             queryClient.invalidateQueries({ queryKey: mapKeys.landmarks() });
             toast.success('Landmark updated.');
         },
+        onError: (error) => {
+            if (error.code !== 'VALIDATION_FAILED') toast.error(error.message);
+        },
     });
 }
 
@@ -115,6 +121,9 @@ export function useDeleteLandmark() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: mapKeys.landmarks() });
             toast.success('Landmark deleted.');
+        },
+        onError: (error) => {
+            if (error.code !== 'VALIDATION_FAILED') toast.error(error.message);
         },
     });
 }
