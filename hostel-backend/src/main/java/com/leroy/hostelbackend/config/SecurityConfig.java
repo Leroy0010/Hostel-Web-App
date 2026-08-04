@@ -111,6 +111,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login", "/api/auth/refresh").permitAll()
                         .requestMatchers("/api/auth/verify-email").permitAll() // Allow anonymous access
                         .requestMatchers("/api/auth/password-reset/**").permitAll() // Allow anonymous access
+                        .requestMatchers("/api/auth/verify-email/resend/**").permitAll()
                         // Swagger / OpenAPI docs — open in dev; restrict in prod via profiles
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/hostels").permitAll()
