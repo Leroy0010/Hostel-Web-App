@@ -8,6 +8,9 @@ import {
 } from '@/features/room/components/RoomPreviewCard';
 import type { HostelSectionDto, RoomDisplayDto } from '../types/hostel.types';
 
+/** Mirrors the backend's `RankedRooms rr.rn <= 6` preview cap (see HostelRepository). */
+const MAX_ROOM_PREVIEW = 6;
+
 interface HostelWithRoomsSectionProps {
     /**
      * Hostel section data from the sections endpoint.
@@ -100,7 +103,7 @@ export function HostelWithRoomsSection({
              *   Prevents card shadows from being clipped by overflow-hidden.
              */}
             <div className="relative">
-                <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-2 pt-1 scrollbar-none">
+                <div className="flex snap-x snap-mandatory scrollbar-none gap-4 overflow-x-auto scroll-smooth pt-1 pb-2">
                     {/* Loading skeletons — shown during page-level loading */}
                     {isLoading &&
                         Array.from({ length: 4 }).map((_, i) => (
@@ -161,7 +164,19 @@ function SeeAllCard({
                 />
             </div>
             <span className="px-2 text-center text-xs font-semibold text-gray-600 dark:text-gray-400">
-                See all {roomCount > 0 ? `${roomCount}+` : ''} rooms
+                {/*
+                 * roomCount is the length of the (up to MAX_ROOM_PREVIEW) preview
+                 * list, not the hostel's true total room count. Below the cap it's
+                 * necessarily the exact total; at the cap there could be more, so
+                 * only then do we hedge with a "+".
+                 */}
+                See all{' '}
+                {roomCount > 0
+                    ? roomCount >= MAX_ROOM_PREVIEW
+                        ? `${roomCount}+`
+                        : roomCount
+                    : ''}{' '}
+                rooms
             </span>
         </button>
     );
