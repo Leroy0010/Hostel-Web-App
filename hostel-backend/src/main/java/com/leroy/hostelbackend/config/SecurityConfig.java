@@ -109,7 +109,7 @@ public class SecurityConfig {
                         // Auth endpoints — open to everyone
                         // Inside your SecurityConfig.java securityFilterChain definition:
                         .requestMatchers("/api/auth/login", "/api/auth/refresh").permitAll()
-                        .requestMatchers("/api/auth/verify-email").permitAll() // Allow anonymous access
+                        .requestMatchers("/api/auth/verify-email/**").permitAll() // Allow anonymous access
                         .requestMatchers("/api/auth/password-reset/**").permitAll() // Allow anonymous access
                         .requestMatchers("/api/auth/verify-email/resend/**").permitAll()
                         // Swagger / OpenAPI docs — open in dev; restrict in prod via profiles
