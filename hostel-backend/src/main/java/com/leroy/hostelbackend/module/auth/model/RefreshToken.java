@@ -18,8 +18,13 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** SHA-256 hex digest of the raw token. The raw value is never persisted. */
     @Column(nullable = false, unique = true)
     private String token;
+
+    /** Raw token, only available on the instance that just created it (for the cookie). */
+    @Transient
+    private String rawToken;
 
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)

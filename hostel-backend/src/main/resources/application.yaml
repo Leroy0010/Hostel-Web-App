@@ -55,8 +55,8 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET}
-  tokenExpiration: ${JWT_EXPIRATION:1800000} # 30 minutes in milliseconds
-  refreshTokenExpiration: ${JWT_REFRESH_EXPIRATION:7200000}
+  tokenExpiration: ${JWT_EXPIRATION:1800000} # 30 minutes. Plain number = milliseconds; "30m" also works
+  refreshTokenExpiration: ${JWT_REFRESH_EXPIRATION:7200000} # 2 hours. Plain number = milliseconds
   cookieSecure: ${JWT_COOKIE_SECURE:false}
   cookieDomain: ${JWT_COOKIE_DOMAIN:localhost}
   cookieSameSite: ${JWT_COOKIE_SAME_SITE:LAX}
@@ -86,6 +86,8 @@ springdoc:
 # Server Configuration for Production
 server:
   port: ${SERVER_PORT:8080}
+  # Resolve the real client IP from X-Forwarded-For set by trusted (private-network) proxies only.
+  forward-headers-strategy: native
   servlet:
     session:
       cookie:

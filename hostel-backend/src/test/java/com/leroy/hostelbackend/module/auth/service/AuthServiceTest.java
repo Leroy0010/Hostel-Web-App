@@ -395,7 +395,7 @@ class AuthServiceTest {
             when(jwtConfig.isCookieSecure()).thenReturn(true);
             when(jwtConfig.getCookieDomain()).thenReturn("hostelifeplus.com");
             when(jwtConfig.getCookieSameSite()).thenReturn("None");
-            when(jwtConfig.getRefreshTokenExpiration()).thenReturn(1_209_600);
+            when(jwtConfig.getRefreshTokenExpiration()).thenReturn(java.time.Duration.ofDays(14));
         }
 
         /**

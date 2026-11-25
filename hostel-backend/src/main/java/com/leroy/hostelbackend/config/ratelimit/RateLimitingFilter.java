@@ -119,11 +119,14 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         }
     }
 
+    /**
+     * The first X-Forwarded-For entry is whatever the client sent, so trusting it let anyone
+     * bypass the limiter by sending a random value per request. With
+     * {@code server.forward-headers-strategy: native}, Tomcat's RemoteIpValve walks the header
+     * from the right, skipping only trusted (private-network) proxies such as the ALB, and puts
+     * the real client address into {@code getRemoteAddr()}.
+     */
     private String resolveClientIp(HttpServletRequest request) {
-        String forwardedFor = request.getHeader("X-Forwarded-For");
-        if (forwardedFor != null && !forwardedFor.isBlank()) {
-            return forwardedFor.split(",")[0].trim();
-        }
         return request.getRemoteAddr();
     }
 

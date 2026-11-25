@@ -43,8 +43,8 @@ class JwtServiceTest {
     void setUp() {
         jwtConfig = new JwtConfig();
         jwtConfig.setSecret(SECRET);
-        jwtConfig.setTokenExpiration(900);           // 15 minutes
-        jwtConfig.setRefreshTokenExpiration(1_209_600); // 14 days
+        jwtConfig.setTokenExpiration(java.time.Duration.ofMinutes(15));           // 15 minutes
+        jwtConfig.setRefreshTokenExpiration(java.time.Duration.ofDays(14)); // 14 days
         jwtService = new JwtService(jwtConfig);
     }
 
@@ -75,7 +75,7 @@ class JwtServiceTest {
     @DisplayName("generateRefreshToken produces a token that outlives an access token's expiration window")
     void refreshTokenOutlivesAccessToken() {
         var user = user(UserRole.STUDENT);
-        jwtConfig.setTokenExpiration(1); // 1 second — expires almost immediately
+        jwtConfig.setTokenExpiration(java.time.Duration.ofSeconds(1)); // 1 second — expires almost immediately
         jwtService = new JwtService(jwtConfig);
 
         var accessToken = jwtService.generateAccessToken(user);
@@ -112,7 +112,7 @@ class JwtServiceTest {
     void parseTokenReturnsNullForWrongSignature() {
         var otherConfig = new JwtConfig();
         otherConfig.setSecret("a-completely-different-secret-key-of-32-bytes!!");
-        otherConfig.setTokenExpiration(900);
+        otherConfig.setTokenExpiration(java.time.Duration.ofMinutes(15));
         var otherService = new JwtService(otherConfig);
         var user = user(UserRole.STUDENT);
 

@@ -72,11 +72,11 @@ public class JwtService {
     // Private helpers
     // -------------------------------------------------------------------------
 
-    private Jwt generateToken(User user, long expirationSeconds) {
+    private Jwt generateToken(User user, java.time.Duration lifetime) {
         var claims = Jwts.claims()
                 .subject(user.getId().toString())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000L * expirationSeconds))
+                .expiration(new Date(System.currentTimeMillis() + lifetime.toMillis()))
                 .add(Map.of(
                         "email", user.getEmail(),
                         "name",  user.getName(),
