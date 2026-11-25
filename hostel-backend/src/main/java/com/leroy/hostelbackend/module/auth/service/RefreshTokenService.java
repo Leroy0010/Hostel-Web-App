@@ -10,6 +10,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HexFormat;
@@ -34,8 +37,9 @@ public class RefreshTokenService {
 
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUser(user);
-        refreshToken.setToken(tokenStr);
-        refreshToken.setExpiresAt(LocalDateTime.now().plusSeconds(jwtConfig.getRefreshTokenExpiration()));
+        refreshToken.setToken(hash(tokenStr));          // store only the hash
+        refreshToken.setRawToken(tokenStr);             // transient: returned to the caller for the cookie
+        refreshToken.setExpiresAt(LocalDateTime.now().plus(jwtConfig.getRefreshTokenExpiration()));
         refreshToken.setIsRevoked(false);
 
         return refreshTokenRepository.save(refreshToken);
@@ -47,7 +51,7 @@ public class RefreshTokenService {
      */
     @Transactional
     public RefreshToken rotateRefreshToken(String rawToken) {
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(rawToken)
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(hash(rawToken))
                 .orElseThrow(() -> new IllegalArgumentException("Refresh token does not exist."));
 
         // Breach Detection: If token is already revoked, an attacker or compromised user is reusing it.
@@ -77,7 +81,7 @@ public class RefreshTokenService {
      */
     @Transactional
     public void revokeToken(String rawToken) {
-        refreshTokenRepository.findByToken(rawToken).ifPresent(refreshTokenRepository::delete);
+        refreshTokenRepository.findByToken(hash(rawToken)).ifPresent(refreshTokenRepository::delete);
     }
 
     /**
@@ -88,5 +92,14 @@ public class RefreshTokenService {
     public void cleanExpiredTokens() {
         log.info("Starting scheduled cleanup of expired or revoked database refresh tokens...");
         refreshTokenRepository.deleteAllExpiredOrRevoked(LocalDateTime.now());
+    }
+
+    static String hash(String rawToken) {
+        try {
+            byte[] digest = MessageDigest.getInstance("SHA-256").digest(rawToken.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(digest);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 algorithm missing from core environment.", e);
+        }
     }
 }

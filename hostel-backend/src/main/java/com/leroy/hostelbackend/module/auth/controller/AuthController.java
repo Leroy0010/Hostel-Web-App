@@ -69,7 +69,7 @@ public class AuthController {
         var refreshToken = refreshTokenService.createRefreshToken(user);
 
         // Attach token string directly to cookie
-        authService.setAuthCookie(response, refreshToken.getToken());
+        authService.setAuthCookie(response, refreshToken.getRawToken());
 
         var userResponse = userMapper.toResponse(user, null);
         return ResponseEntity.ok(ApiResponse.success("Login successful!", authMapper.toLoginResponse(userResponse, accessToken.toString())));
@@ -109,7 +109,7 @@ public class AuthController {
             var newAccessToken = jwtService.generateAccessToken(user);
 
             // 4. Safely commit cookie updates to the client
-            authService.setAuthCookie(response, rotatedTokenEntity.getToken());
+            authService.setAuthCookie(response, rotatedTokenEntity.getRawToken());
 
             var userResponse = userMapper.toResponse(user, null);
             return ResponseEntity.ok(ApiResponse.success("Token refresh successful", authMapper.toLoginResponse(userResponse, newAccessToken.toString())));
